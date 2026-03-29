@@ -1,13 +1,38 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
-    patientId: { type: String, required: true },
-    patientName: { type: String, required: true },
+    appointmentId: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    patientId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Patient',
+        required: true
+    },
+    queueNumber: { type: Number },
+    startTime: { type: String },
+    endTime: { type: String },
+    // Foreign Key (Reference to Doctor collection)
+    // doctorId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Doctor',
+    //     required: true
+    // },
     doctorId: { type: String, required: true },
     doctorName: { type: String, required: true },
     specialty: { type: String, required: true },
     date: { type: Date, required: true },
-    time: { type: String, required: true },
+    timeSlotId: {
+        type: String,
+        required: true
+    },
+    appointmentType: {
+        type: String,
+        enum: ['Physical', 'Online'],
+        required: true
+    },
     status: { 
         type: String, 
         enum: ['Scheduled', 'Completed', 'Cancelled'], 
