@@ -1,0 +1,5 @@
+node_modules/
+appointment-service/.env
+auth-service/.env
+.env
+** /.env
