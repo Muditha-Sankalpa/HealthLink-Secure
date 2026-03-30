@@ -47,9 +47,6 @@ app.use("/api/auth", createProxyMiddleware({
 app.use("/api/symptom-checker", createProxyMiddleware({
   target: "http://localhost:5007",
   changeOrigin: true,
-  pathRewrite: {
-    "^/api/symptom-checker": "",
-  },
 }));
 
 // Default Gateway Route
