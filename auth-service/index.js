@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
 // ==========================================
 // 1. REGISTER ROUTE
 // ==========================================
-app.post('/api/auth/register', async (req, res) => {
+app.post('/register', async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
 
@@ -40,11 +40,11 @@ app.post('/api/auth/register', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
+ 
 // ==========================================
 // 2. LOGIN ROUTE
 // ==========================================
-app.post('/api/auth/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -73,5 +73,5 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 5004;
+const PORT = process.env.PORT || 5006;
 app.listen(PORT, () => console.log(`🔐 Auth Service running on port ${PORT}`));
