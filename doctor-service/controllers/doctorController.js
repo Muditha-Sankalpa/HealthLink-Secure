@@ -184,6 +184,57 @@ const startTelemedicineSession = async (req, res) => {
   }
 };
 
+// PUT /api/doctors/consultation/:appointmentId/accept
+// Doctor accepts/rejects virtual consultation + creates telemedicine session if accepted
+const acceptConsultation = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const { accept } = req.body; // true = accept, false = reject
+    
+    // Verify doctor exists
+    const doctor = await Doctor.findOne({ userId: req.user.id });
+    if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+    
+    // Update appointment status via Appointment Service
+    const newStatus = accept ? 'Confirmed' : 'Rejected';
+    
+    const appointmentResponse = await axios.put(
+      `http://localhost:5003/api/appointments/${appointmentId}/status`,
+      { status: newStatus },
+      { headers: { Authorization: `Bearer ${req.headers.authorization?.split(' ')[1]}` } }
+    );
+    
+    let sessionData = null;
+    
+    // If accepted, create telemedicine session via teammate's service
+    if (accept) {
+      const teleResponse = await axios.post(
+        'http://localhost:5004/api/telemedicine/create', // ← Match teammate's route exactly
+        {
+          appointmentId,
+          doctorId: doctor._id,
+          patientId: appointmentResponse.data.appointment.patientId,
+          scheduledTime: appointmentResponse.data.appointment.date
+        },
+        { headers: { Authorization: `Bearer ${req.headers.authorization?.split(' ')[1]}` } }
+      );
+      sessionData = teleResponse.data;
+    }
+    
+    res.json({
+      message: `Consultation ${accept ? 'accepted' : 'rejected'}`,
+      appointment: appointmentResponse.data.appointment,
+      session: sessionData // null if rejected
+    });
+    
+  } catch (err) {
+    res.status(500).json({ 
+      error: 'Failed to process consultation request', 
+      details: err.response?.data?.message || err.message 
+    });
+  }
+};
+
 // GET /api/doctors/all - Get all doctors (public - for patient search)
 const getAllDoctors = async (req, res) => {
   try {
@@ -237,6 +288,7 @@ module.exports = {
   getPrescriptionHistory,
   viewPatientReports,
   startTelemedicineSession,
+  acceptConsultation,
   getAllDoctors,
   getAllDoctorsAdmin,
   verifyDoctor

@@ -5,7 +5,7 @@ const {
   createProfile,  getProfile,  updateProfile,    setAvailability,
   getAppointments,  updateAppointmentStatus,  issuePrescription, 
   getPrescriptionHistory,  viewPatientReports,  startTelemedicineSession,
-  getAllDoctors,  getAllDoctorsAdmin,  verifyDoctor
+  acceptConsultation,  getAllDoctors,  getAllDoctorsAdmin,  verifyDoctor
 } = require('../controllers/doctorController');
 
 // Public routes
@@ -22,6 +22,7 @@ router.post('/prescription', verifyToken, authorizeRole('Doctor'), issuePrescrip
 router.get('/prescriptions/history', verifyToken, authorizeRole('Doctor'), getPrescriptionHistory);
 router.get('/patient/:id/reports', verifyToken, authorizeRole('Doctor'), viewPatientReports);
 router.post('/telemedicine/start', verifyToken, authorizeRole('Doctor'), startTelemedicineSession);
+router.put('/consultation/:appointmentId/accept', verifyToken, authorizeRole('Doctor'), acceptConsultation);
 
 // Admin routes
 router.get('/admin/all', verifyToken, authorizeRole('Admin'), getAllDoctorsAdmin);
