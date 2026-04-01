@@ -23,7 +23,8 @@ exports.getAllSessions = async (req, res) => {
   }
 };
 
-// Create Session
+
+// Create Session - POST
 exports.createSession = async (req, res) => {
   try {
     const { appointmentId, doctorId, patientId, scheduledTime } = req.body;
