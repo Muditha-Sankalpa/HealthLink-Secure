@@ -1,0 +1,1001 @@
+symptoms,age,gender,severity,duration_days,specialty,min_experience_years
+"Blurred Vision,Nausea,Headache,Breast Pain",60,F,mild,7,Obstetrics & Gynecology,1
+"Swelling,Growth Issues",2,F,moderate,12,Pediatrics,5
+Itching,59,F,mild,3,Dermatology,1
+Diarrhea,7,F,severe,60,Pediatrics,10
+"Rash,Swelling",8,M,mild,1,Pediatric Dermatology,1
+"Dizziness,Excessive Sweating,Palpitations",12,F,mild,4,Pediatrics,1
+"Abdominal Pain,Fever,Urinary Problems,Testicular Pain",43,M,mild,12,Urology,1
+"Neck Pain,Indigestion,Earache",88,M,moderate,23,ENT,5
+"Rash,Menstrual Pain",61,F,moderate,17,Obstetrics & Gynecology,5
+"Fatigue,Headache,Cough,Memory Loss",77,M,mild,6,Geriatrics,1
+"Cough,Sore Throat,Fatigue",90,F,mild,7,ENT,1
+"Urinary Problems,Fever,Frequent Ear Infections",5,F,severe,19,Pediatrics,10
+"Fever,Breast Pain",22,F,severe,86,Obstetrics & Gynecology,10
+"Palpitations,Bloating,Frequent Ear Infections",36,F,moderate,26,Cardiology,5
+"Headache,Sensitivity to Light,Blurred Vision",24,M,moderate,7,Neurology,5
+"Itching,Swelling,Rash",25,M,mild,5,Dermatology,1
+"Prostate Issues,Weakness,Chest Pain",34,F,severe,46,Emergency Medicine,10
+"Blurred Vision,Nausea,Sensitivity to Light",39,M,mild,6,Internal Medicine,1
+"Blurred Vision,Nausea,Headache",21,F,mild,4,Internal Medicine,1
+"Excessive Sweating,Palpitations,Dizziness",36,F,moderate,11,Cardiology,5
+Hair Loss,1,M,mild,6,Pediatrics,1
+"Urinary Problems,Erectile Dysfunction",20,M,severe,74,Urology,10
+"Abdominal Pain,Vomiting,Diarrhea",43,F,mild,10,Internal Medicine,1
+"Headache,Fatigue,Cough",53,M,moderate,10,Neurology,5
+"Back Pain,Hair Loss,Dizziness",54,F,mild,13,Dermatology,1
+Urinary Problems,22,M,mild,3,General Practice,1
+"Diarrhea,Rash",53,F,moderate,25,Dermatology,5
+Sore Throat,45,M,severe,64,ENT,10
+"Nausea,Diarrhea,Growth Issues",3,M,severe,69,Pediatrics,10
+"Excessive Sweating,Palpitations,Dizziness",64,M,mild,10,Cardiology,1
+"Fever,Abdominal Pain,Urinary Problems",18,M,mild,6,Internal Medicine,1
+Excessive Sweating,27,F,mild,5,General Practice,1
+"Diarrhea,Nausea",49,F,mild,8,Internal Medicine,1
+Urinary Problems,22,F,moderate,23,General Practice,5
+"Headache,Sensitivity to Light,Nausea",51,F,moderate,24,Internal Medicine,5
+"Earache,Heartburn",47,M,mild,1,ENT,1
+"Palpitations,Dizziness",52,M,severe,47,Cardiology,10
+"Palpitations,Excessive Sweating,Dizziness,Prostate Issues",31,M,mild,7,Urology,1
+"Cough,Sore Throat",42,M,mild,10,ENT,1
+"Headache,Fatigue,Fever",62,F,mild,6,Neurology,1
+"Fever,Urinary Problems",62,F,moderate,7,General Practice,5
+"Blurred Vision,Nausea,Headache",94,M,mild,9,Internal Medicine,1
+"Fainting,Excessive Sweating",32,F,severe,51,Neurology,10
+Toothache,29,M,mild,8,General Practice,1
+Blurred Vision,68,F,moderate,11,Neurology,5
+"Dizziness,Growth Issues",14,F,moderate,17,Pediatrics,5
+"Heartburn,Breathlessness",57,M,mild,9,Internal Medicine,1
+"Abdominal Pain,Urinary Problems,Fever",47,F,moderate,10,Internal Medicine,5
+Breast Pain,50,M,severe,32,General Practice,10
+"Growth Issues,Rash,Swelling",61,F,mild,8,Dermatology,1
+"Bloating,Frequent Falls,Breathlessness",11,F,mild,4,Pediatrics,1
+"Vomiting,Abdominal Pain,Nausea",32,M,severe,26,Internal Medicine,10
+"Dry Mouth,Nosebleed",32,M,moderate,25,ENT,5
+"Swelling,Rash,Testicular Pain",47,M,mild,8,Urology,1
+Vomiting,79,M,mild,4,Internal Medicine,1
+Rash,30,F,mild,4,Dermatology,1
+"Muscle Pain,Cough",66,M,mild,1,General Practice,1
+"Vomiting,Abdominal Pain,Nausea",49,F,mild,10,Internal Medicine,1
+"Fever,Erectile Dysfunction",45,M,mild,9,Urology,1
+"Swelling,Earache",75,M,moderate,25,ENT,5
+"Headache,Sensitivity to Light,Blurred Vision",46,M,moderate,21,Neurology,5
+Neck Pain,52,M,moderate,21,Orthopedics,5
+"Sweating (excessive),Weakness,Prostate Issues",86,F,mild,2,Neurology,1
+Loss of Appetite,17,F,moderate,9,Pediatrics,5
+"Memory Loss,Shortness of Breath",41,F,moderate,18,Cardiology,5
+"Itching,Swelling",67,F,mild,10,Dermatology,1
+Frequent Falls,86,F,mild,11,Geriatrics,1
+"Abdominal Pain,Vomiting,Nausea,Testicular Pain",43,M,moderate,24,Urology,5
+"Fever,Sore Throat,Testicular Pain",36,M,moderate,27,Urology,5
+Nausea,30,M,mild,9,Internal Medicine,1
+"Excessive Sweating,Palpitations",58,M,mild,11,Cardiology,1
+Fever,32,M,mild,13,General Practice,1
+"Nausea,Diarrhea,Vomiting",14,F,moderate,15,Pediatrics,5
+"Headache,Sensitivity to Light,Nausea",5,F,mild,12,Pediatrics,1
+Developmental Delay,11,M,moderate,27,Pediatrics,5
+"Urinary Problems,Abdominal Pain",59,F,moderate,23,Internal Medicine,5
+"Fatigue,Sore Throat,Fever,Memory Loss",68,F,mild,2,Geriatrics,1
+"Palpitations,Testicular Pain",49,M,mild,13,Urology,1
+"Palpitations,Dizziness,Excessive Sweating",56,M,moderate,13,Cardiology,5
+"Cough,Headache,Fatigue",72,M,moderate,9,Neurology,5
+"Urinary Problems,Abdominal Pain",8,F,mild,3,Pediatrics,1
+"Vomiting,Diarrhea,Abdominal Pain",51,M,mild,8,Internal Medicine,1
+"Swelling,Rash,Itching,Erectile Dysfunction",47,M,moderate,18,Urology,5
+Swelling,5,F,severe,65,Pediatrics,10
+Abdominal Pain,2,M,mild,4,Pediatrics,1
+"Sore Throat,Headache,Fever",63,M,mild,3,ENT,1
+"Dizziness,Excessive Sweating,Urinary Incontinence",76,F,mild,12,Neurology,1
+"Headache,Fatigue",36,M,mild,3,Neurology,1
+Rash,67,M,mild,3,Dermatology,1
+"Bloating,Vaginal Discharge",55,M,moderate,11,Internal Medicine,5
+"Chest Pain,Nausea,Frequent Falls",1,F,severe,60,Pediatrics,10
+"Palpitations,Dizziness,Excessive Sweating",4,F,mild,9,Pediatrics,1
+"Diarrhea,Abdominal Pain,Vomiting,Erectile Dysfunction",49,M,mild,12,Urology,1
+"Nausea,Blurred Vision",39,F,mild,5,Internal Medicine,1
+Loss of Appetite,29,M,mild,5,General Practice,1
+"Dry Mouth,Constipation",44,M,moderate,22,Internal Medicine,5
+Hoarseness,84,M,mild,11,ENT,1
+"Itching,Rash,Swelling",38,F,mild,10,Dermatology,1
+"Fever,Cough,Sore Throat",86,M,mild,13,ENT,1
+"Dizziness,Memory Loss,Neck Pain",44,M,mild,2,Neurology,1
+"Nausea,Sensitivity to Light,Blurred Vision",79,F,mild,11,Internal Medicine,1
+"Shortness of Breath,Loss of Appetite,Vomiting",57,M,moderate,26,Cardiology,5
+"Sore Throat,Headache,Cough",36,F,mild,11,ENT,1
+"Rash,Swelling",44,M,mild,1,Dermatology,1
+Memory Loss,26,F,severe,6,General Practice,10
+Memory Loss,67,M,mild,4,Geriatrics,1
+"Fatigue,Cough,Sore Throat",1,F,mild,11,Pediatric ENT,1
+"Headache,Blurred Vision,Nausea",33,M,moderate,22,Internal Medicine,5
+"Abdominal Pain,Testicular Pain,Urinary Incontinence",69,M,mild,5,Urology,1
+Rash,29,F,moderate,15,Dermatology,5
+Rash,21,M,mild,12,Dermatology,1
+"Headache,Sore Throat",58,M,mild,6,ENT,1
+"Abdominal Pain,Prostate Issues",46,M,mild,8,Urology,1
+Fever,8,M,moderate,7,Pediatrics,5
+"Headache,Fever,Fatigue,Prostate Issues",54,M,moderate,27,Urology,5
+Neck Pain,8,F,moderate,14,Pediatrics,5
+"Itching,Rash,Swelling,Breast Pain,Growth Issues",16,F,mild,1,Pediatric Dermatology,1
+"Heartburn,Blisters",89,M,moderate,12,Dermatology,5
+"Palpitations,Excessive Sweating",91,M,severe,4,Cardiology,10
+"Vomiting,Abdominal Pain,Diarrhea",85,F,mild,10,Internal Medicine,1
+Excessive Sweating,91,M,mild,1,General Practice,1
+"Cough,Fatigue,Sore Throat",20,F,moderate,19,ENT,5
+Urinary Problems,3,M,moderate,17,Pediatrics,5
+"Itching,Rash",56,M,mild,5,Dermatology,1
+"Earache,Indigestion,Headache",62,M,moderate,27,ENT,5
+"Blurred Vision,Sensitivity to Light,Headache,Erectile Dysfunction,Frequent Falls",94,M,mild,2,Geriatrics,1
+Nausea,71,M,moderate,11,Internal Medicine,5
+"Palpitations,Dizziness",17,M,mild,10,Pediatrics,1
+"Palpitations,Dizziness",21,M,severe,8,Cardiology,10
+"Nausea,Diarrhea",12,M,mild,1,Pediatrics,1
+"Headache,Cough,Fatigue",61,M,mild,12,Neurology,1
+Vomiting,30,M,severe,56,Gastroenterology,10
+"Rash,Itching,Frequent Falls",77,M,moderate,8,Geriatrics,5
+"Cough,Fever",4,M,mild,3,Pediatrics,1
+"Palpitations,Breast Pain",34,F,severe,35,Obstetrics & Gynecology,10
+"Swelling,Vaginal Discharge,Erectile Dysfunction",90,F,moderate,29,Obstetrics & Gynecology,5
+Abdominal Pain,34,M,moderate,13,Internal Medicine,5
+"Cough,Fatigue,Sore Throat",21,M,mild,11,ENT,1
+Palpitations,17,F,mild,4,Pediatrics,1
+"Erectile Dysfunction,Night Sweats",22,F,mild,6,General Practice,1
+"Itching,Rash,Prostate Issues",12,M,moderate,10,Pediatric Dermatology,5
+Swelling,44,F,mild,9,Orthopedics,1
+Chest Pain,2,M,mild,9,Pediatrics,1
+"Excessive Sweating,Dizziness,Breast Pain",93,F,mild,3,Obstetrics & Gynecology,1
+"Abdominal Pain,Nausea,Vomiting,Urinary Incontinence",91,F,mild,4,Internal Medicine,1
+Urinary Problems,58,M,mild,12,General Practice,1
+"Vaginal Discharge,Itching",20,F,mild,4,Obstetrics & Gynecology,1
+Itching,9,M,mild,6,Pediatrics,1
+"Swelling,Memory Loss",18,M,mild,4,Orthopedics,1
+Toothache,34,F,mild,9,General Practice,1
+"Cough,Fever,Fatigue",56,M,mild,6,General Practice,1
+"Urinary Incontinence,Diarrhea",23,M,mild,9,Internal Medicine,1
+Palpitations,64,F,severe,63,Cardiology,10
+"Indigestion,Erectile Dysfunction",50,M,mild,7,Urology,1
+"Swelling,Rash,Itching",37,M,mild,5,Dermatology,1
+Nausea,88,M,moderate,20,Internal Medicine,5
+"Excessive Sweating,Dizziness,Palpitations",56,M,mild,3,Cardiology,1
+"Diarrhea,Abdominal Pain,Vomiting",27,F,moderate,7,Internal Medicine,5
+Vomiting,81,M,mild,13,Internal Medicine,1
+"Abdominal Pain,Urinary Problems,Fever",18,M,moderate,17,Internal Medicine,5
+Palpitations,89,F,moderate,7,Cardiology,5
+"Dizziness,Excessive Sweating,Prostate Issues,Frequent Falls",66,M,moderate,9,Geriatrics,5
+"Fever,Urinary Problems",72,F,moderate,26,General Practice,5
+"Indigestion,Diarrhea,Erectile Dysfunction",46,M,mild,6,Urology,1
+"Headache,Sensitivity to Light",32,F,mild,2,Neurology,1
+Urinary Problems,64,M,severe,61,General Practice,10
+"Dizziness,Excessive Sweating",71,M,moderate,10,Neurology,5
+"Chest Pain,Weakness",6,M,moderate,9,Pediatrics,5
+"Headache,Nausea,Blurred Vision",11,F,moderate,17,Pediatrics,5
+"Heartburn,Indigestion",38,F,mild,6,Internal Medicine,1
+"Fever,Fatigue,Cough",75,F,moderate,14,General Practice,5
+Muscle Pain,44,M,moderate,15,General Practice,5
+"Blurred Vision,Headache,Nausea,Breast Pain",22,F,mild,8,Obstetrics & Gynecology,1
+"Cough,Fatigue",59,M,mild,9,General Practice,1
+"Constipation,Prostate Issues",7,M,severe,9,Pediatrics,10
+"Abdominal Pain,Urinary Problems",22,F,severe,41,Gastroenterology,10
+"Excessive Sweating,Weakness",10,F,mild,4,Pediatrics,1
+"Frequent Falls,Erectile Dysfunction,Fainting",79,F,moderate,20,Geriatrics,5
+"Rash,Swelling",1,F,mild,8,Pediatric Dermatology,1
+"Dizziness,Palpitations",87,F,mild,2,Cardiology,1
+"Blurred Vision,Nausea,Neck Pain",22,M,moderate,22,Internal Medicine,5
+"Sensitivity to Light,Vaginal Discharge",22,F,mild,7,Obstetrics & Gynecology,1
+Sore Throat,94,M,mild,12,ENT,1
+"Vomiting,Diarrhea",64,M,mild,6,Internal Medicine,1
+Headache,12,M,mild,11,Pediatrics,1
+Rash,34,M,mild,1,Dermatology,1
+Testicular Pain,94,F,mild,12,General Practice,1
+"Shortness of Breath,Hair Loss,Breathlessness",52,F,mild,6,Dermatology,1
+"Fever,Menstrual Pain",59,F,mild,4,Obstetrics & Gynecology,1
+"Excessive Sweating,Dizziness,Palpitations,Prostate Issues",51,M,mild,6,Urology,1
+"Swelling,Rash,Itching",37,M,mild,2,Dermatology,1
+"Vomiting,Nausea",66,M,severe,7,Internal Medicine,10
+"Excessive Sweating,Dizziness,Palpitations",27,F,moderate,23,Cardiology,5
+Cough,21,M,mild,2,General Practice,1
+"Vomiting,Abdominal Pain,Nausea",88,F,mild,10,Internal Medicine,1
+"Fever,Sore Throat,Fatigue",33,F,mild,4,ENT,1
+"Itching,Rash",64,M,moderate,19,Dermatology,5
+"Abdominal Pain,Diarrhea,Vomiting,Vaginal Discharge",19,F,mild,12,Obstetrics & Gynecology,1
+Nosebleed,41,F,mild,9,ENT,1
+Frequent Ear Infections,31,M,moderate,27,General Practice,5
+Rash,36,F,mild,11,Dermatology,1
+"Nausea,Headache",36,F,mild,10,Internal Medicine,1
+"Palpitations,Dizziness,Excessive Sweating,Frequent Ear Infections",16,M,severe,79,Pediatrics,10
+"Indigestion,Sweating (excessive),Chills",55,M,moderate,7,General Practice,5
+"Fever,Headache,Sore Throat",39,M,severe,41,ENT,10
+"Rash,Growth Issues",2,F,moderate,17,Pediatric Dermatology,5
+Itching,84,M,moderate,20,Dermatology,5
+"Dizziness,Breast Pain",63,F,mild,9,Obstetrics & Gynecology,1
+"Nausea,Toothache",51,M,mild,2,Internal Medicine,1
+"Sore Throat,Cough,Prostate Issues",27,M,mild,8,Urology,1
+Palpitations,60,F,moderate,17,Cardiology,5
+"Swelling,Erectile Dysfunction",92,M,mild,9,Urology,1
+"Palpitations,Excessive Sweating",56,F,mild,5,Cardiology,1
+"Sensitivity to Light,Nausea,Headache",29,M,mild,9,Internal Medicine,1
+"Palpitations,Dizziness,Excessive Sweating",73,M,mild,7,Cardiology,1
+Dizziness,54,F,moderate,9,Neurology,5
+"Palpitations,Testicular Pain",16,M,mild,8,Pediatrics,1
+"Cough,Fatigue,Headache",60,M,mild,13,Neurology,1
+"Nausea,Sensitivity to Light",57,M,mild,2,Internal Medicine,1
+Fever,62,M,mild,4,General Practice,1
+"Sensitivity to Light,Headache,Frequent Ear Infections",6,M,mild,6,Pediatrics,1
+Fever,41,M,mild,1,General Practice,1
+Night Sweats,40,M,moderate,28,General Practice,5
+Rash,77,F,mild,12,Dermatology,1
+"Sweating (excessive),Swelling,Palpitations",38,M,mild,10,Cardiology,1
+"Fever,Fatigue,Headache",88,F,severe,29,Neurology,10
+"Sensitivity to Light,Headache,Nausea",90,F,mild,8,Internal Medicine,1
+"Sensitivity to Light,Urinary Incontinence",86,F,moderate,9,General Practice,5
+"Urinary Problems,Abdominal Pain,Fever",53,M,mild,1,Internal Medicine,1
+"Diarrhea,Nausea,Erectile Dysfunction",48,M,moderate,26,Urology,5
+"Abdominal Pain,Fever",25,M,mild,13,Internal Medicine,1
+"Abdominal Pain,Hair Loss,Weakness",46,F,mild,7,Dermatology,1
+Chills,68,M,mild,11,General Practice,1
+"Dizziness,Excessive Sweating",83,F,mild,7,Neurology,1
+Cough,18,M,mild,2,General Practice,1
+"Nausea,Breast Pain",1,F,moderate,12,Pediatrics,5
+Fever,16,F,moderate,16,Pediatrics,5
+"Breathlessness,Bleeding",31,F,mild,3,General Practice,1
+Swelling,24,F,mild,4,Orthopedics,1
+"Earache,Vaginal Discharge",29,F,mild,11,Obstetrics & Gynecology,1
+"Blurred Vision,Headache",13,M,mild,12,Pediatrics,1
+"Cough,Fatigue,Sore Throat",20,F,severe,19,ENT,10
+Nosebleed,53,M,moderate,20,ENT,5
+"Blurred Vision,Nausea,Vaginal Discharge",29,F,moderate,10,Obstetrics & Gynecology,5
+Sensitivity to Light,8,M,mild,3,Pediatrics,1
+"Fever,Abdominal Pain,Testicular Pain",22,M,moderate,15,Urology,5
+"Abdominal Pain,Nosebleed",59,F,moderate,29,ENT,5
+"Breast Pain,Chills",18,F,moderate,28,Obstetrics & Gynecology,5
+"Hoarseness,Erectile Dysfunction",43,F,mild,13,ENT,1
+"Abdominal Pain,Fever,Urinary Problems,Frequent Ear Infections",6,M,mild,12,Pediatrics,1
+"Erectile Dysfunction,Developmental Delay,Blisters",91,F,mild,4,Dermatology,1
+"Urinary Problems,Abdominal Pain",51,M,mild,13,Internal Medicine,1
+"Fever,Cough,Fatigue,Growth Issues",5,F,mild,7,Pediatrics,1
+"Nausea,Erectile Dysfunction",21,M,mild,4,Urology,1
+Skin Redness,60,F,moderate,23,Dermatology,5
+"Rash,Memory Loss",91,F,moderate,27,Geriatrics,5
+Joint Pain,8,F,mild,3,Pediatrics,1
+"Vomiting,Abdominal Pain,Prostate Issues",66,M,severe,7,Urology,10
+Swelling,56,F,mild,11,Orthopedics,1
+"Sore Throat,Fatigue,Fever",26,F,mild,5,ENT,1
+Rash,17,M,mild,12,Pediatric Dermatology,1
+"Palpitations,Dizziness,Excessive Sweating,Frequent Falls",77,M,mild,11,Geriatrics,1
+"Abdominal Pain,Nausea,Diarrhea",35,F,mild,2,Internal Medicine,1
+"Swelling,Memory Loss",83,M,mild,12,Geriatrics,1
+"Sweating (excessive),Joint Pain,Indigestion",4,M,mild,1,Pediatrics,1
+"Palpitations,Excessive Sweating,Dizziness",52,M,mild,5,Cardiology,1
+"Sore Throat,Headache,Cough",31,M,mild,1,ENT,1
+"Dry Mouth,Back Pain,Testicular Pain",91,F,mild,11,Orthopedics,1
+"Excessive Sweating,Dizziness",50,F,moderate,11,Neurology,5
+"Palpitations,Excessive Sweating",59,M,moderate,24,Cardiology,5
+Earache,22,M,mild,7,ENT,1
+Fatigue,48,F,mild,4,General Practice,1
+"Abdominal Pain,Urinary Problems,Fever",61,F,mild,11,Internal Medicine,1
+"Menstrual Pain,Heartburn,Nausea",19,F,moderate,12,Obstetrics & Gynecology,5
+Hoarseness,74,F,mild,13,ENT,1
+Nosebleed,56,M,mild,1,ENT,1
+"Itching,Swelling,Rash,Vaginal Discharge",33,F,moderate,13,Obstetrics & Gynecology,5
+Headache,59,M,moderate,10,Neurology,5
+"Rash,Itching,Swelling",32,M,mild,2,Dermatology,1
+"Diarrhea,Vomiting,Abdominal Pain,Erectile Dysfunction",70,M,mild,10,Urology,1
+Fainting,61,F,moderate,28,Neurology,5
+"Breathlessness,Memory Loss,Chest Pain",68,F,mild,12,Geriatrics,1
+"Diarrhea,Abdominal Pain,Vomiting,Frequent Falls",66,M,moderate,24,Geriatrics,5
+Vomiting,43,M,severe,14,Internal Medicine,10
+"Lumps,Vomiting",84,F,moderate,8,Internal Medicine,5
+Abdominal Pain,18,M,moderate,24,Internal Medicine,5
+"Blisters,Night Sweats",12,F,mild,1,Pediatric Dermatology,1
+"Dizziness,Excessive Sweating,Palpitations",22,F,moderate,19,Cardiology,5
+Urinary Incontinence,25,F,mild,12,General Practice,1
+"Abdominal Pain,Diarrhea,Vomiting",34,M,mild,3,Internal Medicine,1
+"Headache,Blurred Vision",16,F,mild,1,Pediatrics,1
+Frequent Falls,73,F,mild,4,Geriatrics,1
+"Muscle Cramps,Skin Redness,Growth Issues",4,F,severe,23,Pediatric Dermatology,10
+Palpitations,34,F,mild,12,Cardiology,1
+"Muscle Cramps,Itching,Loss of Taste or Smell",5,F,moderate,8,Pediatrics,5
+"Hoarseness,Loss of Appetite,Chills",76,M,mild,10,ENT,1
+"Testicular Pain,Loss of Appetite,Swelling",50,M,moderate,14,Urology,5
+Fever,58,M,moderate,16,General Practice,5
+"Muscle Cramps,Back Pain,Dry Mouth",57,M,mild,4,Orthopedics,1
+"Diarrhea,Abdominal Pain",49,M,severe,39,Gastroenterology,10
+Abdominal Pain,63,F,moderate,14,Internal Medicine,5
+Fever,83,F,mild,6,General Practice,1
+"Indigestion,Breathlessness,Itching",74,F,mild,9,Dermatology,1
+"Frequent Ear Infections,Loss of Taste or Smell,Blurred Vision",2,M,mild,12,Pediatrics,1
+Constipation,41,M,mild,3,Internal Medicine,1
+Fatigue,81,M,severe,30,General Practice,10
+"Urinary Incontinence,Indigestion,Weakness",18,F,mild,9,Neurology,1
+"Fatigue,Cough,Headache,Erectile Dysfunction",76,M,severe,40,Urology,10
+"Cough,Sore Throat",40,M,moderate,19,ENT,5
+"Rash,Swelling,Prostate Issues",55,M,moderate,9,Urology,5
+"Diarrhea,Vomiting,Nausea",53,F,mild,13,Internal Medicine,1
+"Nausea,Headache,Sensitivity to Light",19,F,mild,11,Internal Medicine,1
+"Fever,Fatigue,Vaginal Discharge,Urinary Incontinence",89,F,mild,2,Obstetrics & Gynecology,1
+"Earache,Skin Redness,Menstrual Pain",36,F,mild,13,Obstetrics & Gynecology,1
+"Fatigue,Fever",36,F,mild,13,General Practice,1
+"Vomiting,Memory Loss,Night Sweats",15,M,mild,1,Pediatrics,1
+"Diarrhea,Urinary Incontinence",81,M,mild,6,Internal Medicine,1
+"Blurred Vision,Headache,Sensitivity to Light",85,F,moderate,22,Neurology,5
+"Itching,Rash",1,M,mild,4,Pediatric Dermatology,1
+"Cough,Headache,Fever,Vaginal Discharge",27,F,mild,13,Obstetrics & Gynecology,1
+Developmental Delay,10,F,mild,11,Pediatrics,1
+"Vomiting,Diarrhea,Nausea",27,F,mild,9,Internal Medicine,1
+"Fever,Urinary Problems,Abdominal Pain",56,M,moderate,25,Internal Medicine,5
+"Itching,Rash,Swelling",86,M,severe,26,Dermatology,10
+"Abdominal Pain,Vomiting,Nausea,Developmental Delay",13,M,mild,5,Pediatrics,1
+"Neck Pain,Constipation,Heartburn",58,F,mild,3,Internal Medicine,1
+"Urinary Problems,Fever,Prostate Issues",28,M,moderate,10,Urology,5
+"Muscle Pain,Vaginal Discharge",17,M,mild,12,Pediatrics,1
+"Fever,Weakness",40,M,mild,9,Neurology,1
+"Headache,Blurred Vision,Sensitivity to Light",9,F,mild,9,Pediatrics,1
+Weakness,42,M,moderate,24,Neurology,5
+"Urinary Problems,Abdominal Pain,Fever",32,M,mild,12,Internal Medicine,1
+"Itching,Rash,Developmental Delay",9,F,moderate,7,Pediatric Dermatology,5
+Nausea,29,M,severe,74,Gastroenterology,10
+"Itching,Swelling,Rash",67,F,moderate,27,Dermatology,5
+Headache,76,F,moderate,7,Neurology,5
+Constipation,39,F,severe,9,Internal Medicine,10
+"Earache,Muscle Cramps",21,F,mild,11,ENT,1
+"Fatigue,Sore Throat,Fever",26,F,mild,8,ENT,1
+"Muscle Cramps,Itching,Bleeding",31,F,moderate,8,Dermatology,5
+Dizziness,77,M,moderate,11,Neurology,5
+"Abdominal Pain,Vomiting,Diarrhea",23,M,mild,1,Internal Medicine,1
+"Toothache,Loss of Taste or Smell",34,F,mild,13,General Practice,1
+"Blurred Vision,Nausea,Headache,Breast Pain",60,F,severe,37,Obstetrics & Gynecology,10
+Blurred Vision,39,M,moderate,7,Neurology,5
+"Sensitivity to Light,Blurred Vision",33,F,moderate,16,Neurology,5
+"Excessive Sweating,Dizziness",13,M,moderate,25,Pediatrics,5
+"Fever,Urinary Problems",28,M,mild,7,General Practice,1
+Nausea,34,M,mild,11,Internal Medicine,1
+"Abdominal Pain,Vomiting,Nausea",68,M,severe,55,Gastroenterology,10
+"Fever,Abdominal Pain",20,M,mild,10,Internal Medicine,1
+"Blurred Vision,Sensitivity to Light,Nausea",67,F,moderate,29,Internal Medicine,5
+Rash,42,M,mild,13,Dermatology,1
+"Lumps,Loss of Taste or Smell,Sweating (excessive)",38,M,mild,5,General Practice,1
+Fever,92,F,mild,5,General Practice,1
+"Excessive Sweating,Dizziness,Memory Loss",70,F,mild,1,Geriatrics,1
+"Blurred Vision,Sensitivity to Light",10,F,moderate,15,Pediatrics,5
+"Abdominal Pain,Fever,Urinary Problems,Testicular Pain",41,M,moderate,13,Urology,5
+Headache,56,F,mild,10,Neurology,1
+Excessive Sweating,25,F,moderate,7,General Practice,5
+Nausea,83,F,mild,3,Internal Medicine,1
+"Excessive Sweating,Dizziness,Palpitations",56,F,moderate,21,Cardiology,5
+"Abdominal Pain,Neck Pain,Cough",33,F,moderate,18,Internal Medicine,5
+"Dizziness,Testicular Pain",94,M,moderate,11,Urology,5
+"Swelling,Rash",30,F,mild,8,Dermatology,1
+Headache,72,M,mild,4,Neurology,1
+"Muscle Cramps,Joint Pain,Fever",27,F,moderate,25,Orthopedics,5
+"Breathlessness,Dizziness,Abdominal Pain",19,F,moderate,27,Internal Medicine,5
+"Palpitations,Excessive Sweating,Dizziness",23,F,mild,12,Cardiology,1
+"Bleeding,Nosebleed",1,M,mild,12,Pediatrics,1
+"Urinary Problems,Fever",21,F,moderate,21,General Practice,5
+"Dry Mouth,Menstrual Pain,Dizziness",30,M,mild,8,Neurology,1
+"Blurred Vision,Sensitivity to Light,Nausea",54,F,mild,1,Internal Medicine,1
+"Nausea,Sensitivity to Light,Headache,Erectile Dysfunction",32,M,moderate,16,Urology,5
+"Nausea,Sensitivity to Light,Headache,Testicular Pain",87,M,mild,11,Urology,1
+"Excessive Sweating,Palpitations,Dizziness",11,M,mild,1,Pediatrics,1
+"Swelling,Rash,Itching,Breast Pain",50,F,moderate,11,Obstetrics & Gynecology,5
+Sore Throat,32,F,mild,10,ENT,1
+"Dizziness,Palpitations,Excessive Sweating",19,F,mild,10,Cardiology,1
+"Swelling,Itching,Rash,Menstrual Pain",60,F,moderate,10,Obstetrics & Gynecology,5
+"Sensitivity to Light,Headache,Blurred Vision",36,F,mild,3,Neurology,1
+"Blurred Vision,Headache,Nausea",59,M,moderate,11,Internal Medicine,5
+"Weakness,Hair Loss,Sweating (excessive)",46,M,moderate,28,Dermatology,5
+"Urinary Problems,Abdominal Pain",76,F,mild,9,Internal Medicine,1
+Weakness,65,F,severe,26,Neurology,10
+Palpitations,33,F,mild,13,Cardiology,1
+"Diarrhea,Nausea,Breast Pain",93,F,mild,1,Obstetrics & Gynecology,1
+"Hair Loss,Growth Issues",90,M,moderate,22,Dermatology,5
+Sensitivity to Light,3,F,moderate,12,Pediatrics,5
+"Rash,Swelling",48,M,mild,13,Dermatology,1
+Cough,18,F,mild,11,General Practice,1
+"Swelling,Itching",34,M,mild,12,Dermatology,1
+"Excessive Sweating,Palpitations,Dizziness",33,F,moderate,22,Cardiology,5
+"Nausea,Vomiting,Diarrhea",63,M,mild,9,Internal Medicine,1
+Testicular Pain,37,F,mild,10,General Practice,1
+"Rash,Itching,Swelling",94,M,mild,12,Dermatology,1
+"Breathlessness,Night Sweats",31,M,mild,10,General Practice,1
+"Fatigue,Fever,Sore Throat,Testicular Pain",82,M,mild,7,Urology,1
+Hair Loss,47,M,moderate,22,Dermatology,5
+"Headache,Nausea,Sensitivity to Light",35,M,mild,2,Internal Medicine,1
+Loss of Appetite,40,F,moderate,28,General Practice,5
+"Excessive Sweating,Dizziness,Palpitations",62,M,mild,11,Cardiology,1
+"Cough,Fatigue",78,M,mild,8,General Practice,1
+"Headache,Frequent Ear Infections,Itching",88,M,mild,13,Dermatology,1
+"Sensitivity to Light,Blurred Vision,Headache",32,M,mild,10,Neurology,1
+Abdominal Pain,85,M,moderate,13,Internal Medicine,5
+"Cough,Fatigue,Sore Throat",38,M,mild,10,ENT,1
+"Fever,Abdominal Pain",81,M,moderate,16,Internal Medicine,5
+"Swelling,Rash,Itching,Urinary Incontinence",88,M,mild,4,Dermatology,1
+"Vomiting,Nausea,Diarrhea",38,M,mild,12,Internal Medicine,1
+"Abdominal Pain,Fever",9,M,moderate,26,Pediatrics,5
+"Dry Mouth,Loss of Taste or Smell",21,M,mild,3,General Practice,1
+Urinary Problems,55,F,moderate,21,General Practice,5
+"Headache,Sensitivity to Light",66,F,mild,12,Neurology,1
+"Blurred Vision,Nausea,Sensitivity to Light",20,M,mild,11,Internal Medicine,1
+"Urinary Problems,Abdominal Pain,Fever",54,F,mild,12,Internal Medicine,1
+"Abdominal Pain,Shortness of Breath",21,F,moderate,22,Cardiology,5
+"Cough,Frequent Falls,Skin Redness",92,F,mild,10,Geriatrics,1
+Bloating,83,F,mild,4,Internal Medicine,1
+"Rash,Itching,Menstrual Pain",5,F,mild,6,Pediatric Dermatology,1
+"Hair Loss,Rash",56,F,mild,8,Dermatology,1
+"Sore Throat,Fatigue,Headache,Developmental Delay",4,F,mild,10,Pediatric ENT,1
+"Headache,Blurred Vision",5,M,moderate,20,Pediatrics,5
+Shortness of Breath,92,M,moderate,24,Cardiology,5
+"Blurred Vision,Developmental Delay",12,M,moderate,18,Pediatrics,5
+"Palpitations,Dizziness,Menstrual Pain",11,F,mild,7,Pediatrics,1
+Nausea,53,F,mild,6,Internal Medicine,1
+"Rash,Itching,Swelling",34,M,mild,3,Dermatology,1
+Bleeding,49,M,mild,12,General Practice,1
+"Rash,Swelling",61,M,mild,10,Dermatology,1
+"Palpitations,Dizziness,Excessive Sweating",78,F,mild,1,Cardiology,1
+"Hoarseness,Night Sweats",45,F,mild,7,ENT,1
+"Headache,Blurred Vision,Nausea",46,F,mild,3,Internal Medicine,1
+Menstrual Pain,19,M,mild,1,General Practice,1
+Urinary Problems,46,F,moderate,17,General Practice,5
+"Blurred Vision,Nausea,Headache,Testicular Pain",11,M,mild,3,Pediatrics,1
+"Headache,Cough,Sore Throat,Vaginal Discharge",17,F,moderate,25,Pediatric ENT,5
+"Nausea,Vomiting,Abdominal Pain",76,F,severe,67,Gastroenterology,10
+"Dizziness,Urinary Incontinence",82,M,moderate,25,Neurology,5
+Palpitations,16,F,mild,3,Pediatrics,1
+"Blurred Vision,Erectile Dysfunction",36,M,mild,6,Urology,1
+Blurred Vision,60,F,mild,11,Neurology,1
+"Abdominal Pain,Fever,Breast Pain,Memory Loss",78,F,mild,13,Geriatrics,1
+"Itching,Swelling,Rash",37,F,mild,9,Dermatology,1
+"Nausea,Diarrhea",81,F,moderate,22,Internal Medicine,5
+"Swelling,Itching",58,F,mild,8,Dermatology,1
+"Diarrhea,Nausea,Vomiting",74,M,moderate,20,Internal Medicine,5
+Nosebleed,22,M,mild,3,ENT,1
+"Nausea,Blurred Vision,Headache",46,M,moderate,9,Internal Medicine,5
+"Fever,Abdominal Pain,Frequent Falls",90,F,moderate,7,Geriatrics,5
+"Swelling,Rash,Itching",36,M,mild,8,Dermatology,1
+"Urinary Problems,Fever,Abdominal Pain",45,F,moderate,16,Internal Medicine,5
+"Blurred Vision,Dry Mouth,Excessive Sweating",53,M,mild,11,Neurology,1
+"Back Pain,Fainting",38,F,mild,4,Neurology,1
+"Itching,Swelling",18,M,mild,10,Dermatology,1
+"Itching,Rash,Swelling",15,M,mild,4,Pediatric Dermatology,1
+"Urinary Problems,Fever,Abdominal Pain",55,F,mild,6,Internal Medicine,1
+Nausea,55,M,mild,2,Internal Medicine,1
+Nausea,17,M,mild,4,Pediatrics,1
+"Fever,Vaginal Discharge",43,F,mild,12,Obstetrics & Gynecology,1
+"Excessive Sweating,Dizziness,Palpitations,Testicular Pain,Frequent Ear Infections",3,M,mild,3,Pediatrics,1
+"Vomiting,Nausea",35,F,mild,7,Internal Medicine,1
+Diarrhea,19,M,moderate,16,Internal Medicine,5
+"Vomiting,Diarrhea",12,M,moderate,18,Pediatrics,5
+"Abdominal Pain,Diarrhea,Vomiting",1,M,moderate,28,Pediatrics,5
+"Weakness,Back Pain,Memory Loss",60,M,mild,10,Neurology,1
+Fainting,39,M,mild,13,Neurology,1
+Dizziness,36,F,moderate,19,Neurology,5
+Rash,48,M,moderate,10,Dermatology,5
+"Urinary Problems,Fever,Abdominal Pain",65,F,mild,3,Internal Medicine,1
+"Abdominal Pain,Urinary Problems,Fever",68,M,mild,8,Internal Medicine,1
+"Constipation,Hair Loss",41,M,mild,6,Dermatology,1
+Cough,76,M,mild,1,General Practice,1
+"Palpitations,Loss of Taste or Smell,Diarrhea",25,M,mild,5,Cardiology,1
+"Joint Pain,Back Pain,Abdominal Pain",35,F,mild,10,Internal Medicine,1
+Urinary Problems,43,F,moderate,11,General Practice,5
+"Abdominal Pain,Diarrhea,Vomiting",39,F,mild,7,Internal Medicine,1
+"Sore Throat,Loss of Taste or Smell,Palpitations",22,F,mild,13,ENT,1
+Dizziness,82,M,severe,87,Neurology,10
+"Urinary Problems,Fever",88,F,moderate,26,General Practice,5
+Vomiting,43,F,moderate,26,Internal Medicine,5
+Fever,23,F,mild,6,General Practice,1
+"Fever,Urinary Problems,Abdominal Pain",27,M,moderate,21,Internal Medicine,5
+"Fever,Cough,Fatigue",36,F,mild,7,General Practice,1
+Vomiting,67,F,severe,29,Internal Medicine,10
+"Headache,Sensitivity to Light",62,F,mild,1,Neurology,1
+Cough,3,M,moderate,10,Pediatrics,5
+Weakness,84,F,mild,9,Neurology,1
+Fever,48,F,mild,13,General Practice,1
+"Fever,Abdominal Pain",42,F,mild,2,Internal Medicine,1
+"Excessive Sweating,Palpitations,Dizziness",52,F,moderate,24,Cardiology,5
+"Fever,Urinary Problems",39,M,mild,3,General Practice,1
+"Abdominal Pain,Vomiting,Diarrhea",28,F,mild,2,Internal Medicine,1
+"Urinary Problems,Menstrual Pain",53,F,mild,9,Obstetrics & Gynecology,1
+"Dizziness,Nosebleed,Bloating",38,M,mild,3,ENT,1
+"Nausea,Sensitivity to Light",71,F,mild,12,Internal Medicine,1
+"Hoarseness,Frequent Ear Infections",82,M,mild,5,ENT,1
+"Headache,Nausea,Sensitivity to Light",53,M,mild,6,Internal Medicine,1
+"Itching,Swelling",35,M,mild,13,Dermatology,1
+"Headache,Sore Throat,Cough",8,M,mild,8,Pediatric ENT,1
+"Chills,Palpitations",65,F,mild,4,Cardiology,1
+"Itching,Rash,Swelling",45,M,severe,41,Dermatology,10
+"Night Sweats,Blisters",4,F,moderate,8,Pediatric Dermatology,5
+"Headache,Developmental Delay,Vomiting",58,F,moderate,26,Internal Medicine,5
+"Dizziness,Palpitations,Excessive Sweating",51,F,mild,8,Cardiology,1
+"Palpitations,Prostate Issues",36,M,moderate,29,Urology,5
+"Fever,Urinary Problems,Abdominal Pain",35,F,mild,1,Internal Medicine,1
+"Excessive Sweating,Testicular Pain",57,M,mild,1,Urology,1
+Palpitations,33,M,mild,7,Cardiology,1
+"Rash,Itching,Swelling",63,F,mild,7,Dermatology,1
+"Neck Pain,Diarrhea",37,F,severe,58,Gastroenterology,10
+"Palpitations,Excessive Sweating",30,F,mild,2,Cardiology,1
+Muscle Pain,44,M,mild,11,General Practice,1
+"Abdominal Pain,Diarrhea",15,F,mild,13,Pediatrics,1
+"Cough,Headache,Sore Throat",27,F,mild,6,ENT,1
+Sensitivity to Light,61,M,severe,70,General Practice,10
+"Weakness,Muscle Pain",62,F,mild,12,Neurology,1
+Blurred Vision,42,M,mild,8,Neurology,1
+"Itching,Swelling,Rash,Vaginal Discharge",8,F,mild,3,Pediatric Dermatology,1
+"Blurred Vision,Testicular Pain",33,M,moderate,27,Urology,5
+"Dizziness,Palpitations",36,F,moderate,7,Cardiology,5
+Urinary Problems,48,F,moderate,22,General Practice,5
+"Headache,Fatigue,Cough",28,M,moderate,16,Neurology,5
+"Palpitations,Excessive Sweating",57,M,moderate,16,Cardiology,5
+"Nausea,Vomiting,Diarrhea",6,F,mild,10,Pediatrics,1
+"Toothache,Joint Pain,Developmental Delay",42,M,mild,5,Orthopedics,1
+"Swelling,Testicular Pain,Developmental Delay",15,M,moderate,8,Pediatrics,5
+"Muscle Cramps,Back Pain",33,F,mild,1,Orthopedics,1
+"Swelling,Rash,Vaginal Discharge",14,F,mild,2,Pediatric Dermatology,1
+"Blurred Vision,Sensitivity to Light,Headache",48,F,mild,4,Neurology,1
+"Urinary Problems,Fever,Vaginal Discharge,Memory Loss",67,F,mild,13,Geriatrics,1
+"Hair Loss,Frequent Falls,Sore Throat",19,M,moderate,9,ENT,5
+"Bleeding,Night Sweats,Urinary Incontinence",72,M,mild,9,General Practice,1
+"Swelling,Itching,Rash",61,F,mild,6,Dermatology,1
+Constipation,54,M,moderate,14,Internal Medicine,5
+"Headache,Sensitivity to Light,Nausea,Erectile Dysfunction",24,M,moderate,20,Urology,5
+"Abdominal Pain,Urinary Problems,Fever,Vaginal Discharge",84,F,moderate,12,Obstetrics & Gynecology,5
+"Itching,Testicular Pain,Urinary Incontinence",68,M,mild,9,Urology,1
+"Diarrhea,Abdominal Pain",75,F,moderate,15,Internal Medicine,5
+"Diarrhea,Nausea,Abdominal Pain,Prostate Issues",37,M,mild,10,Urology,1
+"Growth Issues,Chest Pain,Bleeding",81,F,mild,3,Cardiology,1
+"Fever,Abdominal Pain,Urinary Problems",21,M,moderate,12,Internal Medicine,5
+"Fatigue,Growth Issues,Breathlessness",22,F,moderate,24,General Practice,5
+Blurred Vision,24,M,severe,1,Neurology,10
+Palpitations,47,M,mild,12,Cardiology,1
+Abdominal Pain,16,F,moderate,29,Pediatrics,5
+"Nausea,Abdominal Pain",83,F,severe,38,Gastroenterology,10
+Headache,57,M,moderate,29,Neurology,5
+"Cough,Fever,Headache",66,F,mild,4,Neurology,1
+Fatigue,32,M,mild,1,General Practice,1
+"Nausea,Headache",25,F,mild,10,Internal Medicine,1
+"Fever,Abdominal Pain",43,F,severe,38,Gastroenterology,10
+"Dizziness,Palpitations,Excessive Sweating",76,F,mild,1,Cardiology,1
+Urinary Problems,48,M,mild,5,General Practice,1
+"Chills,Vaginal Discharge,Lumps",3,M,mild,13,Pediatrics,1
+"Abdominal Pain,Vomiting,Nausea",37,F,moderate,28,Internal Medicine,5
+"Fever,Sore Throat,Cough",20,M,moderate,16,ENT,5
+Fatigue,30,M,mild,7,General Practice,1
+Urinary Problems,23,F,mild,4,General Practice,1
+"Fatigue,Fever,Cough,Frequent Ear Infections",13,M,moderate,12,Pediatrics,5
+"Fever,Cough",94,M,severe,53,General Practice,10
+"Prostate Issues,Menstrual Pain,Night Sweats",86,F,moderate,23,Obstetrics & Gynecology,5
+"Blurred Vision,Headache,Sensitivity to Light",12,M,mild,9,Pediatrics,1
+"Abdominal Pain,Erectile Dysfunction",26,M,mild,5,Urology,1
+"Fever,Urinary Problems",46,F,mild,12,General Practice,1
+"Urinary Problems,Fever",7,F,moderate,9,Pediatrics,5
+"Itching,Rash",71,M,moderate,24,Dermatology,5
+"Urinary Incontinence,Frequent Ear Infections,Heartburn",25,M,mild,4,Internal Medicine,1
+"Prostate Issues,Lumps,Urinary Incontinence",62,F,mild,8,General Practice,1
+Headache,90,M,mild,4,Neurology,1
+"Urinary Problems,Abdominal Pain,Fever",80,M,moderate,26,Internal Medicine,5
+Nausea,24,F,mild,7,Internal Medicine,1
+"Abdominal Pain,Menstrual Pain",34,F,moderate,22,Obstetrics & Gynecology,5
+"Itching,Swelling",43,F,moderate,9,Dermatology,5
+Fever,18,F,mild,7,General Practice,1
+"Dizziness,Excessive Sweating,Palpitations",46,M,moderate,25,Cardiology,5
+Abdominal Pain,7,F,moderate,23,Pediatrics,5
+Headache,23,F,mild,13,Neurology,1
+"Nausea,Abdominal Pain,Memory Loss",92,M,mild,1,Geriatrics,1
+Rash,30,M,severe,57,Dermatology,10
+"Constipation,Shortness of Breath,Fainting",36,M,mild,1,Cardiology,1
+Cough,63,F,mild,8,General Practice,1
+"Urinary Problems,Abdominal Pain",64,F,severe,52,Gastroenterology,10
+"Nausea,Joint Pain,Vomiting",19,F,mild,1,Internal Medicine,1
+"Vaginal Discharge,Cough,Loss of Taste or Smell",39,M,mild,12,General Practice,1
+Hair Loss,46,F,mild,12,Dermatology,1
+"Fatigue,Sore Throat",5,M,moderate,9,Pediatric ENT,5
+Headache,35,F,mild,11,Neurology,1
+"Nausea,Vomiting,Abdominal Pain",46,F,mild,3,Internal Medicine,1
+"Headache,Nausea,Blurred Vision",18,F,mild,11,Internal Medicine,1
+"Erectile Dysfunction,Chest Pain,Night Sweats",56,F,moderate,20,Cardiology,5
+"Fever,Abdominal Pain",2,M,mild,3,Pediatrics,1
+Diarrhea,52,F,moderate,11,Internal Medicine,5
+"Abdominal Pain,Diarrhea,Nausea,Developmental Delay",1,F,moderate,25,Pediatrics,5
+"Blurred Vision,Headache,Memory Loss",71,F,severe,45,Geriatrics,10
+Headache,41,F,severe,62,Neurology,10
+"Joint Pain,Lumps",65,M,moderate,16,Orthopedics,5
+"Back Pain,Nausea,Muscle Cramps",18,F,mild,5,Internal Medicine,1
+Testicular Pain,25,F,mild,1,General Practice,1
+"Constipation,Back Pain",15,F,moderate,28,Pediatrics,5
+"Vomiting,Erectile Dysfunction",32,M,mild,13,Urology,1
+"Fever,Abdominal Pain,Urinary Problems,Prostate Issues",47,M,mild,2,Urology,1
+"Blurred Vision,Nausea,Sensitivity to Light",45,M,mild,7,Internal Medicine,1
+"Headache,Cough",50,F,mild,5,Neurology,1
+"Abdominal Pain,Vomiting",19,M,mild,10,Internal Medicine,1
+Heartburn,8,F,mild,8,Pediatrics,1
+"Sweating (excessive),Memory Loss",56,M,mild,3,General Practice,1
+"Indigestion,Frequent Falls,Heartburn",32,F,mild,13,Internal Medicine,1
+Swelling,66,F,mild,7,Orthopedics,1
+Excessive Sweating,49,F,mild,5,General Practice,1
+"Nausea,Sensitivity to Light,Memory Loss",88,M,severe,43,Geriatrics,10
+"Blurred Vision,Headache",33,M,moderate,7,Neurology,5
+"Dizziness,Excessive Sweating",31,F,moderate,17,Neurology,5
+"Skin Redness,Fainting",84,M,mild,9,Dermatology,1
+"Sweating (excessive),Prostate Issues,Growth Issues",10,M,moderate,25,Pediatrics,5
+"Palpitations,Excessive Sweating",60,F,mild,11,Cardiology,1
+"Vomiting,Diarrhea,Abdominal Pain,Memory Loss",86,M,moderate,23,Geriatrics,5
+"Headache,Nausea,Sensitivity to Light",20,F,moderate,16,Internal Medicine,5
+"Headache,Sensitivity to Light,Nausea",19,M,mild,3,Internal Medicine,1
+Excessive Sweating,17,F,mild,8,Pediatrics,1
+"Toothache,Menstrual Pain",53,M,moderate,20,General Practice,5
+"Growth Issues,Loss of Appetite",42,M,mild,13,General Practice,1
+"Lumps,Menstrual Pain,Prostate Issues",80,F,mild,7,Obstetrics & Gynecology,1
+"Headache,Fever,Cough,Urinary Incontinence",70,F,mild,2,Neurology,1
+"Sore Throat,Cough",9,F,mild,9,Pediatric ENT,1
+"Fever,Abdominal Pain",48,M,mild,6,Internal Medicine,1
+Fever,63,M,mild,11,General Practice,1
+Swelling,61,F,mild,6,Orthopedics,1
+"Rash,Swelling",2,F,mild,8,Pediatric Dermatology,1
+"Urinary Problems,Erectile Dysfunction",59,M,mild,9,Urology,1
+Palpitations,63,M,moderate,23,Cardiology,5
+"Nausea,Vomiting,Diarrhea",18,M,mild,3,Internal Medicine,1
+"Headache,Sensitivity to Light,Breast Pain",87,F,moderate,21,Obstetrics & Gynecology,5
+"Nausea,Diarrhea,Vomiting,Vaginal Discharge",74,F,severe,58,Obstetrics & Gynecology,10
+"Bloating,Menstrual Pain",25,M,mild,5,Internal Medicine,1
+"Blurred Vision,Nausea,Sensitivity to Light",39,F,mild,12,Internal Medicine,1
+Itching,73,F,mild,6,Dermatology,1
+"Dizziness,Palpitations,Excessive Sweating",93,M,severe,2,Cardiology,10
+"Fatigue,Cough,Sore Throat",31,M,mild,12,ENT,1
+"Urinary Problems,Fever",2,M,mild,8,Pediatrics,1
+"Fever,Headache,Fatigue",55,M,moderate,19,Neurology,5
+"Abdominal Pain,Nausea,Diarrhea",31,F,moderate,29,Internal Medicine,5
+"Palpitations,Dizziness",79,F,mild,12,Cardiology,1
+Fever,62,M,moderate,19,General Practice,5
+"Nausea,Blurred Vision,Headache",51,F,mild,7,Internal Medicine,1
+"Sore Throat,Fatigue,Headache,Vaginal Discharge",74,F,mild,4,Obstetrics & Gynecology,1
+Blurred Vision,10,M,mild,7,Pediatrics,1
+"Vomiting,Menstrual Pain",22,F,mild,6,Obstetrics & Gynecology,1
+Swelling,64,F,moderate,15,Orthopedics,5
+"Itching,Rash",20,M,mild,7,Dermatology,1
+Blurred Vision,47,M,mild,13,Neurology,1
+"Memory Loss,Vomiting,Frequent Ear Infections",2,M,mild,3,Pediatrics,1
+"Palpitations,Excessive Sweating,Dizziness",55,F,mild,4,Cardiology,1
+"Dizziness,Growth Issues",67,M,mild,10,Neurology,1
+"Rash,Prostate Issues,Memory Loss",85,M,moderate,27,Geriatrics,5
+"Excessive Sweating,Palpitations,Dizziness",59,M,moderate,10,Cardiology,5
+Testicular Pain,62,M,moderate,16,Urology,5
+"Night Sweats,Chills,Frequent Falls",32,M,moderate,8,General Practice,5
+Frequent Falls,22,F,mild,5,General Practice,1
+"Diarrhea,Vomiting,Growth Issues",3,M,moderate,21,Pediatrics,5
+"Rash,Swelling",27,F,mild,5,Dermatology,1
+"Constipation,Prostate Issues,Joint Pain",82,F,mild,1,Geriatrics,1
+Loss of Taste or Smell,77,M,mild,12,General Practice,1
+"Urinary Problems,Fever,Abdominal Pain",20,F,severe,48,Gastroenterology,10
+"Palpitations,Dizziness,Excessive Sweating",37,F,severe,75,Cardiology,10
+"Excessive Sweating,Nausea",23,M,moderate,16,Internal Medicine,5
+Swelling,49,M,mild,13,Orthopedics,1
+"Nausea,Abdominal Pain",11,M,mild,13,Pediatrics,1
+"Urinary Incontinence,Breathlessness",31,M,mild,3,General Practice,1
+"Chest Pain,Bleeding,Blurred Vision",55,F,mild,11,Cardiology,1
+"Loss of Taste or Smell,Hoarseness",58,F,severe,6,ENT,10
+"Dizziness,Palpitations,Developmental Delay",8,F,mild,3,Pediatrics,1
+"Headache,Sensitivity to Light",33,F,mild,8,Neurology,1
+"Headache,Urinary Incontinence",92,M,severe,49,Neurology,10
+"Abdominal Pain,Fever,Urinary Problems,Erectile Dysfunction",24,M,moderate,11,Urology,5
+"Diarrhea,Growth Issues",58,M,mild,8,Internal Medicine,1
+"Diarrhea,Abdominal Pain,Vomiting,Breast Pain",43,F,mild,9,Obstetrics & Gynecology,1
+"Erectile Dysfunction,Nosebleed",17,M,mild,6,Pediatrics,1
+"Heartburn,Back Pain",59,F,mild,1,Internal Medicine,1
+Earache,8,F,mild,6,Pediatric ENT,1
+"Toothache,Fever",68,M,mild,1,General Practice,1
+"Diarrhea,Nausea,Vomiting",18,M,moderate,20,Internal Medicine,5
+"Sensitivity to Light,Blurred Vision,Nausea",3,F,moderate,20,Pediatrics,5
+Headache,93,F,mild,11,Neurology,1
+"Dizziness,Excessive Sweating,Frequent Falls",69,M,mild,1,Geriatrics,1
+"Swelling,Chest Pain",86,F,mild,6,Cardiology,1
+Palpitations,24,F,mild,7,Cardiology,1
+"Frequent Falls,Joint Pain,Night Sweats",20,F,mild,9,Orthopedics,1
+"Swelling,Rash,Itching",39,M,mild,7,Dermatology,1
+"Urinary Problems,Fever",81,F,severe,39,General Practice,10
+"Fatigue,Sore Throat,Headache",52,M,mild,7,ENT,1
+"Urinary Problems,Fever,Abdominal Pain",86,M,mild,2,Internal Medicine,1
+"Hoarseness,Joint Pain,Urinary Incontinence",35,F,moderate,29,ENT,5
+"Vomiting,Indigestion,Nausea",60,M,moderate,10,Internal Medicine,5
+"Fever,Abdominal Pain,Urinary Problems,Menstrual Pain,Memory Loss",71,F,moderate,18,Geriatrics,5
+"Abdominal Pain,Memory Loss",73,M,mild,13,Geriatrics,1
+"Sensitivity to Light,Headache,Nausea",56,F,mild,9,Internal Medicine,1
+"Headache,Diarrhea,Menstrual Pain",59,M,mild,3,Internal Medicine,1
+"Swelling,Rash",1,M,mild,8,Pediatric Dermatology,1
+"Abdominal Pain,Fever,Urinary Problems",53,F,moderate,13,Internal Medicine,5
+Fatigue,24,M,mild,1,General Practice,1
+Chills,65,M,mild,5,General Practice,1
+"Blurred Vision,Nausea,Sensitivity to Light",15,F,moderate,8,Pediatrics,5
+"Fatigue,Fever,Headache",64,F,mild,8,Neurology,1
+"Excessive Sweating,Dizziness,Menstrual Pain",7,F,severe,17,Pediatrics,10
+Blurred Vision,45,M,mild,8,Neurology,1
+"Excessive Sweating,Palpitations",16,M,mild,11,Pediatrics,1
+Excessive Sweating,62,M,mild,12,General Practice,1
+Fever,19,M,mild,9,General Practice,1
+"Abdominal Pain,Nausea",38,F,mild,13,Internal Medicine,1
+"Tingling,Muscle Pain",39,F,severe,21,Neurology,10
+Nausea,36,F,moderate,9,Internal Medicine,5
+"Dizziness,Palpitations",71,F,moderate,29,Cardiology,5
+"Frequent Ear Infections,Fever,Muscle Pain",91,F,severe,55,General Practice,10
+"Sore Throat,Headache",40,F,mild,4,ENT,1
+"Dizziness,Palpitations",13,M,mild,5,Pediatrics,1
+Swelling,45,F,mild,3,Orthopedics,1
+"Skin Redness,Muscle Cramps",43,F,moderate,11,Dermatology,5
+Cough,37,F,severe,12,General Practice,10
+"Urinary Problems,Vaginal Discharge",49,F,severe,32,Obstetrics & Gynecology,10
+Itching,41,F,mild,12,Dermatology,1
+"Nausea,Vomiting,Abdominal Pain",21,F,mild,4,Internal Medicine,1
+"Rash,Itching",85,M,mild,13,Dermatology,1
+Dizziness,78,F,mild,12,Neurology,1
+"Loss of Taste or Smell,Abdominal Pain,Bloating",4,M,moderate,22,Pediatrics,5
+Itching,85,F,severe,75,Dermatology,10
+"Developmental Delay,Sore Throat,Abdominal Pain",45,M,mild,1,ENT,1
+"Blurred Vision,Nausea,Testicular Pain",28,M,moderate,16,Urology,5
+Sensitivity to Light,28,M,mild,13,General Practice,1
+"Hoarseness,Vaginal Discharge",53,M,mild,3,ENT,1
+"Excessive Sweating,Palpitations,Dizziness",32,M,mild,5,Cardiology,1
+Swelling,13,F,moderate,8,Pediatrics,5
+Erectile Dysfunction,86,M,moderate,11,Urology,5
+"Palpitations,Earache",46,M,mild,8,ENT,1
+"Tingling,Dizziness,Nausea",20,M,mild,13,Internal Medicine,1
+Urinary Problems,33,M,mild,7,General Practice,1
+Itching,43,M,mild,5,Dermatology,1
+"Dizziness,Palpitations,Excessive Sweating",35,F,mild,1,Cardiology,1
+"Abdominal Pain,Testicular Pain",78,F,mild,12,Internal Medicine,1
+"Muscle Pain,Night Sweats",40,F,moderate,7,General Practice,5
+"Nausea,Headache,Breast Pain",1,F,moderate,17,Pediatrics,5
+"Abdominal Pain,Vomiting",32,F,mild,10,Internal Medicine,1
+"Swelling,Rash,Vaginal Discharge",12,F,mild,12,Pediatric Dermatology,1
+Shortness of Breath,34,F,moderate,25,Cardiology,5
+Sore Throat,30,M,mild,8,ENT,1
+"Fatigue,Fever,Sore Throat",8,M,mild,13,Pediatric ENT,1
+"Headache,Blurred Vision,Sensitivity to Light",13,M,moderate,21,Pediatrics,5
+Toothache,28,M,moderate,29,General Practice,5
+Fever,27,M,moderate,17,General Practice,5
+"Headache,Sensitivity to Light",65,F,moderate,8,Neurology,5
+"Dizziness,Hair Loss,Blisters",88,F,moderate,13,Dermatology,5
+"Bloating,Muscle Pain,Muscle Cramps",89,M,mild,1,Internal Medicine,1
+"Excessive Sweating,Dizziness,Palpitations,Memory Loss",75,F,mild,8,Geriatrics,1
+"Sensitivity to Light,Nausea,Headache",35,M,mild,6,Internal Medicine,1
+"Fever,Sore Throat",14,F,mild,8,Pediatric ENT,1
+"Fever,Sore Throat,Fatigue",63,M,moderate,13,ENT,5
+"Weakness,Hoarseness",32,M,mild,2,ENT,1
+"Vomiting,Abdominal Pain",53,F,mild,13,Internal Medicine,1
+"Growth Issues,Lumps",88,F,mild,1,General Practice,1
+"Abdominal Pain,Urinary Problems,Fever",13,F,mild,1,Pediatrics,1
+"Abdominal Pain,Fever,Urinary Problems,Breast Pain",37,F,severe,63,Obstetrics & Gynecology,10
+"Headache,Fever,Fatigue",90,M,mild,2,Neurology,1
+"Excessive Sweating,Palpitations",59,F,mild,1,Cardiology,1
+"Nausea,Diarrhea,Vomiting,Menstrual Pain",31,F,mild,6,Obstetrics & Gynecology,1
+Neck Pain,56,F,mild,4,Orthopedics,1
+"Fever,Cough,Sore Throat,Growth Issues",5,M,mild,10,Pediatric ENT,1
+"Loss of Appetite,Developmental Delay,Night Sweats",73,M,mild,9,General Practice,1
+Palpitations,30,F,mild,7,Cardiology,1
+Nausea,47,F,severe,23,Internal Medicine,10
+"Blurred Vision,Headache",66,F,mild,5,Neurology,1
+Muscle Pain,18,F,mild,9,General Practice,1
+Fever,49,M,moderate,16,General Practice,5
+Shortness of Breath,32,M,mild,2,Cardiology,1
+"Chest Pain,Frequent Ear Infections,Weakness",40,M,mild,12,Cardiology,1
+"Palpitations,Dizziness",10,M,moderate,8,Pediatrics,5
+"Chills,Cough",77,M,mild,7,General Practice,1
+"Fever,Headache",23,M,mild,8,Neurology,1
+"Headache,Dry Mouth,Breast Pain",21,M,mild,4,Neurology,1
+"Itching,Swelling,Rash,Growth Issues",5,M,moderate,20,Pediatric Dermatology,5
+"Diarrhea,Vomiting,Abdominal Pain",28,F,moderate,12,Internal Medicine,5
+Frequent Falls,60,M,moderate,25,General Practice,5
+Swelling,27,M,mild,1,Orthopedics,1
+"Lumps,Bleeding",50,M,mild,6,General Practice,1
+"Rash,Swelling",39,M,severe,37,Dermatology,10
+"Sensitivity to Light,Headache,Nausea,Growth Issues",13,M,moderate,12,Pediatrics,5
+"Nausea,Blurred Vision,Headache",10,M,moderate,16,Pediatrics,5
+"Breast Pain,Excessive Sweating",25,M,mild,3,General Practice,1
+"Bloating,Growth Issues",52,M,mild,6,Internal Medicine,1
+"Vaginal Discharge,Testicular Pain,Abdominal Pain",74,M,mild,1,Urology,1
+"Fatigue,Memory Loss",92,M,mild,8,Geriatrics,1
+"Rash,Swelling,Itching,Testicular Pain",42,M,moderate,29,Urology,5
+"Itching,Swelling,Erectile Dysfunction",76,M,mild,10,Urology,1
+"Cough,Sore Throat,Fever",45,M,mild,9,ENT,1
+"Abdominal Pain,Chest Pain",15,M,mild,5,Pediatrics,1
+"Cough,Fatigue,Sore Throat",2,M,moderate,7,Pediatric ENT,5
+"Bleeding,Swelling,Fever",27,F,mild,13,Orthopedics,1
+"Vomiting,Abdominal Pain,Nausea",62,F,mild,3,Internal Medicine,1
+"Excessive Sweating,Toothache",83,M,mild,6,General Practice,1
+Hoarseness,50,M,moderate,24,ENT,5
+Fever,42,F,mild,7,General Practice,1
+"Vomiting,Nausea,Abdominal Pain",66,F,mild,1,Internal Medicine,1
+Constipation,75,F,mild,4,Internal Medicine,1
+"Abdominal Pain,Diarrhea,Vomiting",28,F,moderate,17,Internal Medicine,5
+Blurred Vision,3,M,mild,3,Pediatrics,1
+"Bloating,Back Pain",66,M,moderate,11,Internal Medicine,5
+"Headache,Fatigue,Cough,Vaginal Discharge",92,F,mild,7,Obstetrics & Gynecology,1
+"Swelling,Rash,Itching",87,M,moderate,7,Dermatology,5
+"Palpitations,Excessive Sweating,Dizziness",50,M,mild,10,Cardiology,1
+Testicular Pain,70,F,mild,2,General Practice,1
+Itching,37,M,moderate,9,Dermatology,5
+Sore Throat,26,F,mild,13,ENT,1
+Urinary Problems,33,M,mild,7,General Practice,1
+"Itching,Swelling,Rash",44,F,severe,60,Dermatology,10
+"Blurred Vision,Sensitivity to Light,Nausea",86,M,mild,3,Internal Medicine,1
+"Vomiting,Nausea",37,F,mild,9,Internal Medicine,1
+"Abdominal Pain,Urinary Problems",60,M,mild,6,Internal Medicine,1
+"Palpitations,Excessive Sweating,Dizziness",19,M,moderate,26,Cardiology,5
+"Abdominal Pain,Diarrhea,Vomiting",41,F,moderate,10,Internal Medicine,5
+"Sensitivity to Light,Nausea",13,F,mild,13,Pediatrics,1
+"Skin Redness,Blurred Vision,Dry Mouth",78,M,mild,7,Dermatology,1
+"Headache,Fever",56,F,mild,11,Neurology,1
+"Palpitations,Excessive Sweating,Dizziness",40,M,mild,7,Cardiology,1
+"Abdominal Pain,Vaginal Discharge",78,F,mild,7,Obstetrics & Gynecology,1
+"Earache,Bloating",44,F,mild,8,ENT,1
+"Excessive Sweating,Dizziness,Palpitations,Frequent Falls",87,F,moderate,18,Geriatrics,5
+"Cough,Fatigue,Sore Throat",22,M,mild,12,ENT,1
+"Dizziness,Excessive Sweating",90,M,mild,3,Neurology,1
+"Blurred Vision,Nausea,Headache,Growth Issues",10,M,mild,5,Pediatrics,1
+"Chills,Nausea",65,M,mild,7,Internal Medicine,1
+"Blurred Vision,Sensitivity to Light,Nausea",16,F,mild,11,Pediatrics,1
+Loss of Taste or Smell,53,F,mild,2,General Practice,1
+Sensitivity to Light,26,F,mild,11,General Practice,1
+"Swelling,Rash,Itching",78,F,mild,9,Dermatology,1
+"Heartburn,Fever,Cough",32,F,mild,2,Internal Medicine,1
+"Sore Throat,Menstrual Pain",48,F,moderate,15,Obstetrics & Gynecology,5
+"Sensitivity to Light,Blurred Vision,Nausea,Memory Loss",69,F,moderate,22,Geriatrics,5
+"Fever,Abdominal Pain",24,F,mild,6,Internal Medicine,1
+"Fever,Headache",8,F,mild,4,Pediatrics,1
+Joint Pain,3,M,moderate,10,Pediatrics,5
+Blurred Vision,29,M,mild,11,Neurology,1
+Hair Loss,31,M,severe,48,Dermatology,10
+"Sensitivity to Light,Headache,Blurred Vision",70,F,mild,2,Neurology,1
+"Cough,Headache,Testicular Pain",17,M,mild,9,Pediatrics,1
+Urinary Problems,6,M,mild,10,Pediatrics,1
+"Palpitations,Dizziness,Excessive Sweating",57,F,mild,9,Cardiology,1
+"Vomiting,Abdominal Pain",41,M,mild,10,Internal Medicine,1
+"Headache,Fever,Sore Throat",15,F,moderate,19,Pediatric ENT,5
+Excessive Sweating,27,F,moderate,13,General Practice,5
+"Dizziness,Palpitations,Vaginal Discharge",20,F,mild,13,Obstetrics & Gynecology,1
+Nausea,11,M,severe,54,Pediatrics,10
+"Rash,Loss of Appetite",94,F,mild,5,Dermatology,1
+"Sore Throat,Fatigue,Fever",78,F,mild,7,ENT,1
+"Fever,Headache,Sore Throat,Frequent Falls",75,F,moderate,15,Geriatrics,5
+"Nausea,Sensitivity to Light,Blurred Vision,Menstrual Pain",14,F,mild,7,Pediatrics,1
+"Palpitations,Excessive Sweating,Dizziness",24,M,mild,10,Cardiology,1
+"Neck Pain,Cough,Headache",54,F,mild,8,Neurology,1
+"Diarrhea,Nausea",34,M,moderate,21,Internal Medicine,5
+"Night Sweats,Nosebleed",8,M,moderate,21,Pediatrics,5
+"Blisters,Sweating (excessive)",40,M,mild,1,Dermatology,1
+"Abdominal Pain,Urinary Problems,Fever",91,F,mild,3,Internal Medicine,1
+Loss of Taste or Smell,31,F,moderate,14,General Practice,5
+"Fever,Cough,Fatigue",17,M,mild,12,Pediatrics,1
+"Palpitations,Blisters,Indigestion",80,M,mild,8,Dermatology,1
+"Palpitations,Dizziness,Excessive Sweating",73,F,mild,8,Cardiology,1
+"Palpitations,Dizziness,Excessive Sweating",93,M,moderate,22,Cardiology,5
+Nausea,85,F,mild,1,Internal Medicine,1
+Dizziness,14,F,moderate,13,Pediatrics,5
+"Fever,Abdominal Pain,Urinary Problems,Menstrual Pain",82,F,mild,8,Obstetrics & Gynecology,1
+Vomiting,61,M,mild,11,Internal Medicine,1
+Fever,53,F,mild,1,General Practice,1
+"Constipation,Neck Pain",24,M,mild,1,Internal Medicine,1
+"Muscle Cramps,Night Sweats,Earache",6,M,mild,2,Pediatric ENT,1
+"Itching,Swelling",93,M,moderate,21,Dermatology,5
+"Urinary Incontinence,Nausea",44,M,severe,64,Gastroenterology,10
+"Sore Throat,Headache,Fever",65,M,mild,7,ENT,1
+Joint Pain,69,M,moderate,24,Geriatrics,5
+"Sore Throat,Fatigue,Cough",17,M,moderate,13,Pediatric ENT,5
+"Growth Issues,Urinary Incontinence,Night Sweats",2,F,severe,75,Pediatrics,10
+"Fatigue,Vomiting",93,F,mild,13,Internal Medicine,1
+Developmental Delay,88,M,moderate,7,General Practice,5
+"Fever,Urinary Problems,Abdominal Pain,Testicular Pain,Frequent Ear Infections",9,M,mild,13,Pediatrics,1
+"Rash,Itching,Swelling",8,M,mild,11,Pediatric Dermatology,1
+"Urinary Problems,Abdominal Pain,Menstrual Pain",93,F,moderate,18,Obstetrics & Gynecology,5
+"Nausea,Headache",24,M,severe,12,Internal Medicine,10
+Swelling,53,M,severe,86,Orthopedics,10
+"Abdominal Pain,Vomiting,Nausea",58,F,mild,6,Internal Medicine,1
+"Diarrhea,Abdominal Pain,Nausea",77,F,moderate,20,Internal Medicine,5
+"Dizziness,Vomiting",57,M,mild,1,Internal Medicine,1
+"Blurred Vision,Nausea",24,M,mild,4,Internal Medicine,1
+Urinary Problems,43,M,mild,7,General Practice,1
+"Nausea,Sensitivity to Light,Blurred Vision",2,M,mild,5,Pediatrics,1
+"Cough,Headache,Fatigue",25,M,moderate,25,Neurology,5
+"Toothache,Fatigue",4,M,moderate,26,Pediatrics,5
+"Headache,Sensitivity to Light,Frequent Falls",82,M,mild,9,Geriatrics,1
+"Swelling,Itching",44,F,moderate,27,Dermatology,5
+"Palpitations,Dizziness,Excessive Sweating",25,M,moderate,20,Cardiology,5
+"Rash,Itching,Breast Pain,Memory Loss",69,F,moderate,27,Geriatrics,5
+"Skin Redness,Back Pain",80,M,mild,4,Dermatology,1
+Muscle Pain,57,F,mild,4,General Practice,1
+"Dizziness,Excessive Sweating",21,M,mild,13,Neurology,1
+"Sensitivity to Light,Headache,Blurred Vision",44,F,moderate,14,Neurology,5
+"Headache,Cough,Fever,Memory Loss",75,F,moderate,24,Geriatrics,5
+"Headache,Testicular Pain",35,M,mild,2,Urology,1
+"Skin Redness,Hair Loss,Nausea",55,F,mild,11,Dermatology,1
+Swelling,33,M,moderate,14,Orthopedics,5
+"Itching,Swelling,Rash",10,M,mild,3,Pediatric Dermatology,1
+"Growth Issues,Joint Pain",40,M,mild,11,Orthopedics,1
+"Rash,Itching,Swelling",17,F,mild,5,Pediatric Dermatology,1
+"Dizziness,Excessive Sweating,Frequent Ear Infections",16,M,mild,11,Pediatrics,1
+"Abdominal Pain,Urinary Problems",44,M,mild,5,Internal Medicine,1
+"Cough,Headache,Prostate Issues",78,F,mild,1,Neurology,1
+"Itching,Swelling",1,F,moderate,29,Pediatrics,5
+"Earache,Blurred Vision",8,M,moderate,23,Pediatric ENT,5
+Headache,10,F,severe,4,Pediatrics,10
+"Headache,Bloating,Fatigue",2,F,mild,12,Pediatrics,1
+"Nausea,Vomiting,Diarrhea",33,F,mild,5,Internal Medicine,1
+"Sensitivity to Light,Headache",50,M,mild,12,Neurology,1
+"Sensitivity to Light,Blurred Vision,Headache",91,M,moderate,19,Neurology,5
+"Abdominal Pain,Prostate Issues",71,M,mild,7,Urology,1
+"Sweating (excessive),Heartburn",43,M,severe,42,Gastroenterology,10
+"Lumps,Skin Redness",2,M,mild,7,Pediatric Dermatology,1
+"Nausea,Sensitivity to Light,Vaginal Discharge",51,F,mild,13,Obstetrics & Gynecology,1
+Blurred Vision,37,M,moderate,18,Neurology,5
+"Cough,Fatigue,Headache,Prostate Issues",86,M,mild,10,Urology,1
+"Palpitations,Dizziness",93,M,mild,12,Cardiology,1
+"Sensitivity to Light,Blurred Vision,Memory Loss",91,F,mild,7,Geriatrics,1
+"Blisters,Growth Issues,Palpitations",90,F,mild,10,Dermatology,1
+"Abdominal Pain,Nausea,Diarrhea",78,M,moderate,13,Internal Medicine,5
+"Constipation,Fatigue",53,M,mild,13,Internal Medicine,1
+"Itching,Rash,Menstrual Pain",90,F,mild,9,Obstetrics & Gynecology,1
+"Diarrhea,Vomiting",37,F,moderate,20,Internal Medicine,5
+"Itching,Rash",6,F,mild,7,Pediatric Dermatology,1
+"Fatigue,Fever,Headache",14,M,mild,9,Pediatrics,1
+"Itching,Rash,Swelling,Testicular Pain",38,M,moderate,17,Urology,5
+Tingling,41,F,mild,2,Neurology,1
+"Swelling,Itching",46,F,mild,10,Dermatology,1
+"Urinary Problems,Abdominal Pain,Developmental Delay",14,F,moderate,24,Pediatrics,5
+Itching,65,F,moderate,7,Dermatology,5
+"Excessive Sweating,Palpitations,Dizziness",64,M,moderate,15,Cardiology,5
+"Cough,Headache,Fatigue",62,F,mild,7,Neurology,1
+"Cough,Headache,Sore Throat,Growth Issues",8,F,moderate,29,Pediatric ENT,5
+"Fever,Urinary Problems",29,F,mild,3,General Practice,1
+"Abdominal Pain,Urinary Problems",40,F,mild,7,Internal Medicine,1
+"Vomiting,Abdominal Pain,Nausea,Frequent Falls",93,M,moderate,8,Geriatrics,5
+"Sensitivity to Light,Nausea,Headache",81,F,mild,1,Internal Medicine,1
+Fever,52,M,mild,11,General Practice,1
+Fever,19,F,moderate,11,General Practice,5
+"Abdominal Pain,Fever",52,M,severe,6,Internal Medicine,10
+Palpitations,55,F,moderate,8,Cardiology,5
+"Headache,Nausea,Sensitivity to Light",28,M,mild,8,Internal Medicine,1
+"Sore Throat,Headache,Fever",54,F,mild,13,ENT,1
+"Urinary Problems,Abdominal Pain,Frequent Ear Infections",7,M,mild,1,Pediatrics,1
+Hoarseness,77,M,moderate,16,ENT,5
+"Excessive Sweating,Palpitations,Dizziness",41,F,mild,13,Cardiology,1
+"Vomiting,Diarrhea,Nausea",81,M,mild,13,Internal Medicine,1
+"Bleeding,Diarrhea",8,M,severe,80,Pediatrics,10
+"Developmental Delay,Loss of Appetite",25,M,mild,1,General Practice,1
+"Diarrhea,Abdominal Pain",70,F,mild,9,Internal Medicine,1
+"Dizziness,Palpitations,Developmental Delay",8,F,mild,11,Pediatrics,1
+"Urinary Problems,Fever,Frequent Falls",80,F,mild,4,Geriatrics,1
+"Itching,Rash",73,M,mild,7,Dermatology,1
+"Headache,Dizziness",22,F,moderate,27,Neurology,5
+"Palpitations,Dizziness",86,M,moderate,26,Cardiology,5
+Joint Pain,28,M,mild,8,Orthopedics,1
+"Sensitivity to Light,Nausea",36,F,moderate,18,Internal Medicine,5
+Abdominal Pain,62,M,mild,5,Internal Medicine,1
+"Headache,Sensitivity to Light",46,M,severe,74,Neurology,10
+"Blurred Vision,Tingling,Constipation",24,F,severe,2,Internal Medicine,10
+"Breast Pain,Constipation,Night Sweats",92,F,mild,1,Obstetrics & Gynecology,1
+"Blurred Vision,Headache,Nausea",33,M,mild,3,Internal Medicine,1
+Itching,93,M,moderate,15,Dermatology,5
+"Sensitivity to Light,Nausea,Headache",39,M,mild,12,Internal Medicine,1
+"Sore Throat,Fever,Fatigue",3,M,mild,10,Pediatric ENT,1
+"Fatigue,Sore Throat,Cough",15,F,moderate,23,Pediatric ENT,5
+"Headache,Nausea,Sensitivity to Light",73,F,mild,5,Internal Medicine,1
+"Abdominal Pain,Diarrhea,Nausea",44,F,mild,9,Internal Medicine,1
+"Diarrhea,Vomiting,Nausea",15,M,mild,3,Pediatrics,1
+"Sensitivity to Light,Breast Pain",44,F,mild,13,Obstetrics & Gynecology,1
+Blurred Vision,55,F,mild,3,Neurology,1
+"Swelling,Rash,Itching",53,F,mild,6,Dermatology,1
+"Headache,Blurred Vision",7,F,moderate,17,Pediatrics,5
+"Dry Mouth,Weakness",80,F,moderate,18,Neurology,5
+"Fever,Vaginal Discharge",25,F,moderate,24,Obstetrics & Gynecology,5
+"Dizziness,Palpitations",48,M,moderate,25,Cardiology,5
+"Diarrhea,Vomiting",37,F,mild,5,Internal Medicine,1
+"Headache,Sensitivity to Light,Blurred Vision",4,F,moderate,23,Pediatrics,5
+"Swelling,Itching,Urinary Incontinence",80,F,mild,12,Dermatology,1
+Fever,14,M,moderate,13,Pediatrics,5
+Diarrhea,83,M,mild,2,Internal Medicine,1
+"Fever,Cough,Headache,Breast Pain",33,F,mild,2,Obstetrics & Gynecology,1
+Excessive Sweating,88,M,severe,30,General Practice,10
+"Palpitations,Prostate Issues",6,M,mild,12,Pediatrics,1
+"Dizziness,Excessive Sweating",16,F,moderate,25,Pediatrics,5
+"Developmental Delay,Vomiting,Skin Redness",84,M,moderate,20,Dermatology,5
+"Nausea,Blurred Vision,Headache",34,M,severe,9,Internal Medicine,10
+"Fainting,Rash",5,M,mild,6,Pediatric Dermatology,1
+"Cough,Fever,Headache",40,M,mild,10,Neurology,1
+"Blurred Vision,Nausea,Headache",45,F,mild,1,Internal Medicine,1
+Nausea,89,F,mild,4,Internal Medicine,1
+"Neck Pain,Excessive Sweating,Earache",4,F,moderate,26,Pediatric ENT,5
