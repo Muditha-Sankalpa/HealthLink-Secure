@@ -82,7 +82,7 @@ const getHistory = async (req, res) => {
 // GET /api/patients/:id (internal)
 const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id).select('_id userId name email contactNumber status');
+    const patient = await Patient.findById(req.params.id).select('_id userId name email contactNumber notificationPreference status');
     if (!patient) return res.status(404).json({ message: 'Patient not found' });
     res.json(patient);
   } catch (err) {
