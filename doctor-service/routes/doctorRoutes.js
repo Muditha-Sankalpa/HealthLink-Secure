@@ -5,11 +5,12 @@ const {
   createProfile,  getProfile,  updateProfile,    setAvailability,
   getAppointments,  updateAppointmentStatus,  issuePrescription, 
   getPrescriptionHistory,  viewPatientReports,  startTelemedicineSession,
-  acceptConsultation,  getAllDoctors,  getAllDoctorsAdmin,  verifyDoctor
+  acceptConsultation,  getAllDoctors,  getAllDoctorsAdmin,  verifyDoctor,  getDoctorById
 } = require('../controllers/doctorController');
 
 // Public routes
 router.get('/all', getAllDoctors);
+router.get('/:id', getDoctorById);
 
 // Doctor routes (Protected - Doctor role only)
 router.post('/profile', verifyToken, authorizeRole('Doctor'), createProfile);
