@@ -277,6 +277,31 @@ const verifyDoctor = async (req, res) => {
   }
 };
 
+// GET /api/doctors/:id - Get doctor by ID (public/internal use)
+const getDoctorById = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id)
+      .select('-userId') // Exclude internal userId field
+      .lean(); // Return plain JS object (faster for read-only)
+    
+    if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+    
+    // Return only necessary fields for notifications/external use
+    res.json({
+      _id: doctor._id,
+      name: doctor.name,
+      specialty: doctor.specialty,
+      contactNumber: doctor.contactNumber,
+      email: doctor.email,
+      notificationPreference: doctor.notificationPreference,
+      status: doctor.status,
+      verified: doctor.verified
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   createProfile,
   getProfile,
@@ -291,5 +316,6 @@ module.exports = {
   acceptConsultation,
   getAllDoctors,
   getAllDoctorsAdmin,
-  verifyDoctor
+  verifyDoctor,
+  getDoctorById
 };
