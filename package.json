@@ -1,5 +1,18 @@
 {
   "dependencies": {
     "uuid": "^13.0.0"
-  }
+  },
+  "scripts": {
+    "start:all": "concurrently \"node auth-service/index.js\" \"node api-gateway/server.js\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "name": "smart-healthcare-platform",
+  "version": "1.0.0",
+  "description": "\"# Smart-Healthcare-Platform\"",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
