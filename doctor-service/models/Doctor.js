@@ -10,6 +10,7 @@ const doctorSchema = new mongoose.Schema({
   consultationFee: { type: Number, required: true },
   contactNumber: { type: String },
   email: { type: String },
+  notificationPreference: { type: [String], enum: ['email', 'sms'], default: ['email', 'sms'] },
   availability: [{
     day: { type: String },
     startTime: { type: String },
