@@ -1,3 +1,4 @@
+const axios = require('axios');
 const Patient = require('../models/Patient');
 const MedicalReport = require('../models/MedicalReport');
 
@@ -69,9 +70,31 @@ const getHistory = async (req, res) => {
 
     const reports = await MedicalReport.find({ patientId: patient._id });
 
-    // Mocked until other services are ready
-    const prescriptions = [{ id: 'mock1', medication: 'Paracetamol', date: '2026-01-01' }];
-    const consultations = [{ id: 'mock1', sessionDate: '2026-01-10', duration: '20mins' }];
+    //API call to doctor-service to get prescriptions
+    let prescriptions = [];
+
+    try {
+      const doctorRes = await axios.get(`http://localhost:5002/api/doctors/prescriptions/${patient._id}`);
+      prescriptions = doctorRes.data;
+    } catch {
+      prescriptions = [];
+    }
+
+    //API call to Telemedince service to get consultation history
+    let consultations = [];
+
+    try {
+      const teleRes = await axios.get(
+
+          `http://localhost:5004/api/telemedicine?patientId=${patient._id}&status=COMPLETED`,
+          { headers: { Authorization: req.headers.authorization } }
+
+);
+      consultations = teleRes.data;
+    } catch(err) {
+      console.log('Telemedicine error:', err.message);
+      consultations = [];
+    }
 
     res.json({ reports, prescriptions, consultations });
   } catch (err) {
@@ -82,7 +105,7 @@ const getHistory = async (req, res) => {
 // GET /api/patients/:id (internal)
 const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id).select('_id userId status');
+    const patient = await Patient.findById(req.params.id).select('_id userId name email contactNumber notificationPreference status');
     if (!patient) return res.status(404).json({ message: 'Patient not found' });
     res.json(patient);
   } catch (err) {
