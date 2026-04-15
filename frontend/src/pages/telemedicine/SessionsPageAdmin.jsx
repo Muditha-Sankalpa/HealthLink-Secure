@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import API from '../api/axiosClient'
+import API from '../../api/axiosClient'
 import { 
   Video, 
   Calendar, 
@@ -13,8 +13,8 @@ import {
   AlertCircle,
   Loader2
 } from 'lucide-react';
-import StatusBadge from '../components/telemedicine/StatusBadge';
-import CreateSessionModal from '../components/telemedicine/CreateSessionModal'
+import StatusBadge from '../../components/telemedicine/StatusBadge';
+import CreateSessionModal from '../../components/telemedicine/CreateSessionModal'
 import { useNavigate } from 'react-router-dom';
 
 const SessionsPageAdmin = () => {
@@ -32,7 +32,7 @@ const fetchSessions = async () => {
     setLoading(true);
     
     // We add '/api' so the Gateway (port 5000) can route it to port 5004
-    const response = await API.get('/api/telemedicine'); 
+    const response = await API.get('/telemedicine'); 
     
     // In many MERN setups, the actual data is in response.data
     // but check if your backend wraps it in another object (like response.data.sessions)

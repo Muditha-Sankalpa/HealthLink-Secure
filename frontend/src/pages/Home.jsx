@@ -27,10 +27,8 @@ function Home() {
             This is just a sample button. Do not use it ;) <br />
             Add your buttons below
           </p>
-
-          {/* Login/Register */}
-          <button
-            onClick={() => navigate("/auth")}
+          <button 
+            onClick={() => navigate("/login")}
             className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
           >
             Login / Register
@@ -43,11 +41,13 @@ function Home() {
           </p>
 
           {/* Telemedicine */}
-          <Link to="/allSessions">
-            <button className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition">
-              Telemedicine Sessions
-            </button>
-          </Link>
+          <button 
+            onClick={() => navigate("/allSessions")}
+            className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
+          >
+            Telemedicine
+          </button>
+          
 
         </div>
       </div>
