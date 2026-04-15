@@ -17,7 +17,7 @@ function App() {
         <Route path="/patient/history" element={<MedicalHistory />} />
         <Route path="/patient/upload-report" element={<UploadReport />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/login" element={<AuthPage />} />
       </Routes>
     </BrowserRouter>
   );
