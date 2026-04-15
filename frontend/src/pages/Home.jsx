@@ -1,6 +1,11 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
+
 
 function Home() {
+  
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center">
       <div className="bg-[var(--color-surface)] shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
@@ -21,8 +26,13 @@ function Home() {
           </button>
           <p className="text-[var(--color-text-secondary)] mb-6">
               This is just a sample button. Do not use it ;) <br/> Add your buttons below
-        </p>
-        
+          </p>
+          <button 
+            onClick={() => navigate("/auth")}
+            className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
+          >
+            Login / Register
+          </button>
 
           
 
