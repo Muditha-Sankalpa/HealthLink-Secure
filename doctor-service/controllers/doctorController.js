@@ -144,24 +144,40 @@ const getPrescriptionHistory = async (req, res) => {
   }
 };
 
+// // GET /api/doctors/prescriptions/patient/:patientId
+// // Returns all prescriptions issued for a specific patient
+// const getPrescriptionsByPatientId = async (req, res) => {
+//   try {
+//     const { patientId } = req.params;
+    
+//     // Verify requesting user is a doctor
+//     const doctor = await Doctor.findOne({ userId: req.user.id });
+//     if (!doctor) return res.status(404).json({ message: 'Doctor profile not found' });
+
+//     // Fetch prescriptions for this patient, sorted newest first
+//     const prescriptions = await Prescription.find({ patientId }).sort({ createdAt: -1 });
+    
+//     res.json({
+//       message: 'Prescriptions retrieved successfully',
+//       count: prescriptions.length,
+//       prescriptions
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
 // GET /api/doctors/prescriptions/patient/:patientId
-// Returns all prescriptions issued for a specific patient
+// Returns raw array of prescriptions for a specific patient (simpler version)
 const getPrescriptionsByPatientId = async (req, res) => {
   try {
     const { patientId } = req.params;
     
-    // Verify requesting user is a doctor
-    const doctor = await Doctor.findOne({ userId: req.user.id });
-    if (!doctor) return res.status(404).json({ message: 'Doctor profile not found' });
-
     // Fetch prescriptions for this patient, sorted newest first
     const prescriptions = await Prescription.find({ patientId }).sort({ createdAt: -1 });
     
-    res.json({
-      message: 'Prescriptions retrieved successfully',
-      count: prescriptions.length,
-      prescriptions
-    });
+    // Return raw array (simpler response)
+    res.json(prescriptions);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
