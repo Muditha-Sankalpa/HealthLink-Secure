@@ -7,7 +7,6 @@ const { generateNextSlot } = appointmentController;
 // ==========================================
 // USER ROUTES
 // ==========================================
-router.get('/doctors/search', appointmentController.searchDoctors);
 router.post('/book', verifyToken, appointmentController.bookAppointment);
 router.get('/my-appointments', verifyToken, appointmentController.getMyAppointments);
 router.put('/:id', verifyToken, appointmentController.updateAppointment);
