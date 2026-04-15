@@ -1,9 +1,7 @@
-import React from 'react';
-import { useNavigate } from "react-router-dom";
-
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
-  
   const navigate = useNavigate();
 
   return (
@@ -13,19 +11,21 @@ function Home() {
         <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
           Welcome!
         </h1>
-        
+
         <p className="text-[var(--color-text-secondary)] mb-6">
           This is your healthcare dashboard.
         </p>
 
         <div className="flex flex-col gap-3">
-          
-          
+
+          {/* Sample button */}
           <button className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition">
             Primary Button
           </button>
+
           <p className="text-[var(--color-text-secondary)] mb-6">
-              This is just a sample button. Do not use it ;) <br/> Add your buttons below
+            This is just a sample button. Do not use it ;) <br />
+            Add your buttons below
           </p>
           <button 
             onClick={() => navigate("/login")}
@@ -34,10 +34,22 @@ function Home() {
             Login / Register
           </button>
 
+          {/* Keeping duplicated text (but properly wrapped) */}
+          <p className="text-[var(--color-text-secondary)] mb-6">
+            This is just a sample button. Do not use it ;) <br />
+            Add your buttons below
+          </p>
+
+          {/* Telemedicine */}
+          <button 
+            onClick={() => navigate("/allSessions")}
+            className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
+          >
+            Telemedicine
+          </button>
           
 
         </div>
-
       </div>
     </div>
   );

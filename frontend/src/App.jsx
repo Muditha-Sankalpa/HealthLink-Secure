@@ -6,6 +6,7 @@ import MedicalHistory from './pages/patient/MedicalHistory';
 import UploadReport from './pages/patient/UploadReport';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AuthPage from "./pages/auth/AuthPage";
+import SessionsPage from './pages/telemedicine/SessionsPageAdmin';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/patient/upload-report" element={<UploadReport />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/allSessions" element={<SessionsPage />} />
       </Routes>
     </BrowserRouter>
   );
