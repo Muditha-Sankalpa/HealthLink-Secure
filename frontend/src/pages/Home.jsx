@@ -28,7 +28,7 @@ function Home() {
               This is just a sample button. Do not use it ;) <br/> Add your buttons below
           </p>
           <button 
-            onClick={() => navigate("/auth")}
+            onClick={() => navigate("/login")}
             className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
           >
             Login / Register
