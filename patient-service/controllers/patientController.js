@@ -74,7 +74,9 @@ const getHistory = async (req, res) => {
     let prescriptions = [];
 
     try {
-      const doctorRes = await axios.get(`http://localhost:5002/api/doctors/prescriptions/${patient._id}`);
+      const doctorRes = await axios.get(`http://localhost:5002/api/doctors/prescriptions/patient/${patient._id}`,
+        { headers: { Authorization: req.headers.authorization } }
+      );
       prescriptions = doctorRes.data;
     } catch {
       prescriptions = [];
