@@ -5,18 +5,19 @@ import UpdateProfile from './pages/patient/UpdateProfile';
 import MedicalHistory from './pages/patient/MedicalHistory';
 import UploadReport from './pages/patient/UploadReport';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AuthPage from "./pages/auth/AuthPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Navigate to="/login" />} />
         <Route path="/patient/profile" element={<PatientProfile />} />
         <Route path="/patient/update" element={<UpdateProfile />} />
         <Route path="/patient/history" element={<MedicalHistory />} />
         <Route path="/patient/upload-report" element={<UploadReport />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/auth" element={<AuthPage />} />
       </Routes>
     </BrowserRouter>
   );
