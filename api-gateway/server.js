@@ -41,6 +41,7 @@ app.use("/api/payment", createProxyMiddleware({
 app.use("/api/auth", createProxyMiddleware({
   target: "http://localhost:5006",
   changeOrigin: true,
+  pathRewrite: { '^/api/auth': '' }
 }));
 
 // AI Symptom Checker Service

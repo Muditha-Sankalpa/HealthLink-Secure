@@ -14,12 +14,16 @@ import {
   Loader2
 } from 'lucide-react';
 import StatusBadge from '../components/telemedicine/StatusBadge';
+import CreateSessionModal from '../components/telemedicine/CreateSessionModal'
+import { useNavigate } from 'react-router-dom';
 
 const SessionsPageAdmin = () => {
+  const navigate = useNavigate();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const API_URL = 'http://localhost:5004/api/telemedicine';
 
@@ -77,7 +81,9 @@ const fetchSessions = async () => {
           <h1 className="text-2xl font-bold text-primary italic font-serif">Telemedicine Sessions</h1>
           <p className="text-text-secondary">Manage and monitor all virtual consultations</p>
         </div>
-        <button className="bg-accent hover:brightness-110 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-md">
+        <button 
+        onClick={() => setIsModalOpen(true)}
+        className="bg-accent hover:brightness-110 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-md">
           <Video size={18} />
           <span>New Session</span>
         </button>
@@ -102,6 +108,8 @@ const fetchSessions = async () => {
           </p>
         </div>
       </div>
+
+      
 
       {/* Filter Bar */}
       <div className="bg-surface p-4 rounded-t-xl border-x border-t border-secondary flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -218,6 +226,12 @@ const fetchSessions = async () => {
           </div>
         )}
       </div>
+
+      <CreateSessionModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onRefresh={fetchSessions} 
+      />
     </div>
   );
 };
