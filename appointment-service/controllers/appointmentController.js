@@ -263,4 +263,99 @@ exports.cancelAppointment = async (req, res) => {
     }
 };
 
+// --- ADMIN CONTROLLER FUNCTIONS ---
+
+// 1. Get ALL Appointments (with optional filtering by doctor, date, or status)
+exports.getAllAppointments = async (req, res) => {
+    try {
+        const { doctorId, date, status } = req.query;
+        
+        // Build query based on provided filters
+        let query = {};
+        if (doctorId) query.doctorId = doctorId;
+        if (date) query.date = date;
+        if (status) query.status = status;
+
+        const appointments = await Appointment.find(query)
+            .sort({ date: 1, queueNumber: 1 })
+            .lean();
+
+        res.status(200).json(appointments);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// 2. Admin Cancel ANY Appointment
+exports.adminCancelAppointment = async (req, res) => {
+    try {
+        // Notice we DO NOT filter by req.user.id here, because it's the admin doing it
+        const appointment = await Appointment.findById(req.params.id);
+
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        // Free up the time slot
+        if (appointment.timeSlotId) {
+            await TimeSlot.findOneAndUpdate(
+                { slotId: appointment.timeSlotId },
+                { isBooked: false }
+            );
+        }
+
+        appointment.status = 'Cancelled';
+        // Optional: Add a note saying it was cancelled by admin
+        appointment.notes = appointment.notes 
+            ? appointment.notes + ' (Cancelled by Admin)' 
+            : 'Cancelled by Admin';
+
+        await appointment.save();
+
+        res.status(200).json({
+            message: 'Appointment cancelled successfully by Admin',
+            appointment
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// 3. Get All TimeSlots (To see doctor schedules/gaps)
+exports.getAllTimeSlots = async (req, res) => {
+    try {
+        const { doctorId, date, isBooked } = req.query;
+        
+        let query = {};
+        if (doctorId) query.doctorId = doctorId;
+        if (date) query.date = date;
+        if (isBooked !== undefined) query.isBooked = isBooked === 'true';
+
+        const slots = await TimeSlot.find(query).sort({ date: 1, queueNumber: 1 });
+        
+        res.status(200).json(slots);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// 4. Admin View System Statistics (Useful for dashboards)
+exports.getAdminStats = async (req, res) => {
+    try {
+        const totalAppointments = await Appointment.countDocuments();
+        const activeAppointments = await Appointment.countDocuments({ status: { $ne: 'Cancelled' } });
+        const cancelledAppointments = await Appointment.countDocuments({ status: 'Cancelled' });
+        
+        res.status(200).json({
+            totalAppointments,
+            activeAppointments,
+            cancelledAppointments,
+            totalDoctors: DUMMY_DOCTORS.length
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 exports.generateNextSlot = generateNextSlot;
