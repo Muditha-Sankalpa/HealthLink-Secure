@@ -116,7 +116,12 @@ const getPatientById = async (req, res) => {
 // GET /api/patients/all (Admin)
 const getAllPatients = async (req, res) => {
   try {
-    const patients = await Patient.find().select('name status createdAt');
+
+    const query = req.query.search
+      ? { name: { $regex: req.query.search, $options: 'i' } }
+      : {};
+
+    const patients = await Patient.find(query).select('name status createdAt');
     res.json(patients);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -144,7 +149,11 @@ const getStats = async (req, res) => {
     const total = await Patient.countDocuments();
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const newRegistrations = await Patient.countDocuments({ createdAt: { $gte: thirtyDaysAgo } });
-    res.json({ total, newRegistrations });
+    const active = await Patient.countDocuments({ status: 'active' });
+    const deactivated = await Patient.countDocuments({ status: 'deactivated' });
+
+    res.json({ total, newRegistrations, active, deactivated });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
