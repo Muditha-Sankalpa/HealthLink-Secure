@@ -49,6 +49,41 @@ const generateNextSlot = async (doctorId, date) => {
     return newSlot;
 };
 
+// Add this new function to check the estimated time slot BEFORE booking
+exports.checkNextAvailableSlot = async (req, res) => {
+    try {
+        const { doctorId, date } = req.query;
+        if (!doctorId || !date) return res.status(400).json({ message: "Missing doctorId or date" });
+
+        // 1. Check if there's an existing unbooked slot
+        let slot = await TimeSlot.findOne({ doctorId, date, isBooked: false }).sort({ queueNumber: 1 });
+
+        // 2. If no slot exists, calculate what the NEXT one will be (without saving it to DB)
+        if (!slot) {
+            const lastSlot = await TimeSlot.find({ doctorId, date }).sort({ queueNumber: -1 }).limit(1);
+            let startHour = 9, startMinute = 0;
+            
+            if (lastSlot.length > 0) {
+                const [hour, minute] = lastSlot[0].endTime.split(':').map(Number);
+                startHour = hour; startMinute = minute;
+            }
+            
+            let endHour = startHour, endMinute = startMinute + 30;
+            if (endMinute >= 60) { endMinute -= 60; endHour += 1; }
+
+            slot = {
+                startTime: `${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}`,
+                endTime: `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`,
+                queueNumber: lastSlot.length > 0 ? lastSlot[0].queueNumber + 1 : 1
+            };
+        }
+
+        res.status(200).json(slot);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 // 1. Book an Appointment
 exports.bookAppointment = async (req, res) => {
     try {

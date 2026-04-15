@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((err) => console.error('❌ DB connection error:', err));
 
 // Use Routes
-app.use('/', appointmentRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => console.log(`📅 Appointment Service running on port ${PORT}`));

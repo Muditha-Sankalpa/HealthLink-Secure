@@ -47,6 +47,13 @@ function Home() {
           >
             Telemedicine
           </button>
+
+          <button 
+            onClick={() => navigate("/book-appointment")}
+            className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
+          >
+            Appointment
+          </button>
           
 
         </div>
