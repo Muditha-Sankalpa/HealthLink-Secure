@@ -3,8 +3,8 @@
     "uuid": "^13.0.0"
   },
   "scripts": {
-    "start:all": "concurrently \"node auth-service/index.js\" \"node api-gateway/server.js\""
-  },
+  "start:all": "concurrently --names \"AUTH,API_GATEWAY\" -c \"bgBlue,bgMagenta\" \"npm run start --workspace=auth-service\" \"npm run start --workspace=api-gateway\""
+},
   "devDependencies": {
     "concurrently": "^9.2.1"
   },
