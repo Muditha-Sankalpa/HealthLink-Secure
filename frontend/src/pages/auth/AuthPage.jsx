@@ -181,7 +181,7 @@ const LoginPanel = ({ onSwitch }) => {
       // Redirect based on role
       if (data.user.role === "Admin") navigate("/admin/dashboard");
       else if (data.user.role === "Doctor") navigate("/doctor");
-      else navigate("/");
+      else navigate("/patient");
 
     } catch (err) {
         const status = err?.response?.status;
