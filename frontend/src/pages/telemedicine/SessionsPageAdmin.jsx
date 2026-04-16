@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import StatusBadge from "../../components/telemedicine/StatusBadge";
 import CreateSessionModal from "../../components/telemedicine/CreateSessionModal";
+import { AdminNavBar } from "../../components/shared";
 import { useNavigate } from "react-router-dom";
 
 const SessionsPageAdmin = () => {
@@ -129,7 +130,10 @@ const SessionsPageAdmin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f4f6fb' }}>
+      <AdminNavBar />
+
+      <div style={{ flex: 1, padding: 28, overflowY: 'auto' }}>
       {/* Header Section */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -371,6 +375,7 @@ const SessionsPageAdmin = () => {
         onClose={() => setIsModalOpen(false)}
         onRefresh={fetchSessions}
       />
+      </div>
     </div>
   );
 };
