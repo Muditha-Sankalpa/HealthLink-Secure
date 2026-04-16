@@ -1,4 +1,5 @@
 const axios = require('axios');
+const cloudinary = require('../config/cloudinary'); 
 const Patient = require('../models/Patient');
 const MedicalReport = require('../models/MedicalReport');
 
@@ -46,6 +47,24 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const updateAvatar = async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ userId: req.user.id });
+    if (!patient) return res.status(404).json({ message: 'Profile not found' });
+    if (patient.status === 'deactivated') return res.status(403).json({ message: 'Account is deactivated' });
+
+    const updatedPatient = await Patient.findOneAndUpdate(
+      { userId: req.user.id },
+      { avatarUrl: req.file.path },
+      { new: true }
+    );
+
+    res.json(updatedPatient);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // POST /api/patients/upload-report
 const uploadReport = async (req, res) => {
   try {
@@ -65,6 +84,39 @@ const uploadReport = async (req, res) => {
     await report.save();
     res.status(201).json(report);
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const deleteReport = async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ userId: req.user.id });
+    if (!patient) return res.status(404).json({ message: 'Profile not found' });
+    if (patient.status === 'deactivated') return res.status(403).json({ message: 'Account is deactivated' });
+
+    const report = await MedicalReport.findOne({
+      _id: req.params.reportId,
+      patientId: patient._id
+    });
+    if (!report) return res.status(404).json({ message: 'Report not found' });
+
+    if (report.fileUrl && report.fileUrl.includes('cloudinary.com')) {
+      const urlAfterUpload = report.fileUrl.split('/upload/')[1];
+      const withoutVersion = urlAfterUpload.replace(/^v\d+\//, '');
+      const publicId = withoutVersion.replace(/\.[^/.]+$/, '');
+      const resourceType = report.fileType?.startsWith('image/') ? 'image' : 'raw';
+
+      const cloudinaryResult = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+
+      if (cloudinaryResult.result !== 'ok' && cloudinaryResult.result !== 'not found') {
+        return res.status(500).json({ message: 'Failed to delete file from storage' });
+      }
+    }
+
+    await MedicalReport.findByIdAndDelete(req.params.reportId);
+    res.json({ message: 'Report deleted successfully' });
+  } catch (err) {
+    console.error('=== DELETE REPORT ERROR ===', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -108,6 +160,23 @@ const getHistory = async (req, res) => {
 
     res.json({ reports, prescriptions, consultations });
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getScheduledSessions = async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ userId: req.user.id });
+    if (!patient) return res.status(404).json({ message: 'Profile not found' });
+
+    const teleRes = await axios.get(
+      `http://localhost:5004/api/telemedicine?patientId=${patient._id}&status=SCHEDULED`,
+      { headers: { Authorization: req.headers.authorization } }
+    );
+    console.log('Tele response:', teleRes.data);
+    res.json(teleRes.data);
+  } catch (err) {
+    console.log('Error:', err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -170,7 +239,7 @@ const getStats = async (req, res) => {
 };
 
 module.exports = {
-  createProfile, getProfile, updateProfile,
-  uploadReport, getHistory, getPatientById,
+  createProfile, getProfile, updateAvatar, updateProfile,
+  uploadReport, deleteReport, getHistory,getScheduledSessions, getPatientById,
   getAllPatients, updateStatus, getStats
 };
