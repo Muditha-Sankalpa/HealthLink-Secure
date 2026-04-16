@@ -68,11 +68,7 @@ const CreateSessionModal = ({ isOpen, onClose, onRefresh }) => {
                 value={formData.doctorId} onChange={(e) => setFormData({...formData, doctorId: e.target.value})} />
             </div>
 
-            {/* <div>
-              <label className="text-[10px] font-bold text-primary uppercase mb-1 block ml-1">Patient ID</label>
-              <input name="patientId" placeholder="Patient MongoDB ID" className="w-full px-4 py-2.5 bg-background border border-secondary rounded-xl font-mono text-xs outline-none focus:ring-2 focus:ring-accent/20" 
-                value={formData.patientId} onChange={(e) => setFormData({...formData, patientId: e.target.value})} />
-            </div> */}
+            
           </div>
 
           <div className="pt-4 flex gap-3">
