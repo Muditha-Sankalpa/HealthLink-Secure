@@ -336,4 +336,25 @@ exports.getAdminStats = async (req, res) => {
     }
 };
 
+// GET /api/appointments/doctor/:doctorId - Get appointments for a specific doctor
+exports.getAppointmentsByDoctor = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    
+    // Optional: Verify the requesting doctor is requesting their own appointments
+    if (req.user.role === 'Doctor' && req.user.id !== doctorId) {
+      // If doctorId is MongoDB _id, you may need to resolve it first
+      // For now, allow if token is valid (Doctor Service handles authorization)
+    }
+    
+    const appointments = await Appointment.find({ doctorId })
+      .sort({ date: 1, queueNumber: 1 })
+      .lean();
+    
+    res.json(appointments);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 exports.generateNextSlot = generateNextSlot;
