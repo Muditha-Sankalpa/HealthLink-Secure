@@ -330,7 +330,7 @@ export default function Home() {
             <button
               onClick={handleLogout}
               className="hero-btn-outline"
-              style={{ height: 38, padding: "0 20px", fontSize: 13, marginLeft: 8 }}
+              style={{ height: 38, padding: "0 20px", fontSize: 13, marginLeft: 8, color: "red", borderColor: "rgba(255,255,255,0.5)" }}
             >
               Logout
             </button>
@@ -574,7 +574,7 @@ export default function Home() {
             cta="Manage records"
           />
           <FeatureCard
-            icon="📋"
+            icon="🤖"
             title="AI Symptom Checker"
             desc="Get instant insights into your health concerns and recommendations to doctor specialties with our AI-powered symptom analysis."
             delay={0.3}
