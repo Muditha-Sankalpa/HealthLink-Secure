@@ -37,43 +37,51 @@ const PaymentFormInner = ({ appointmentData, onSuccess }) => {
     },
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
+  // Inside PaymentFormInner in PaymentForm.jsx
 
-    setIsProcessing(true);
-    setErrorMessage('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!stripe || !elements) return;
 
-    try {
-      // 1. Create Payment Intent on your Backend
-      const { data: { clientSecret } } = await API.post('/payment/create-intent', {
-        amount: appointmentData.amount,
-        appointmentId: appointmentData.appointmentId,
-        patientId: appointmentData.patientId,
-        currency: 'usd'
+  setIsProcessing(true);
+  setErrorMessage('');
+
+  try {
+    // 1. Create Intent
+    const { data: { clientSecret } } = await API.post('/payment/create-intent', {
+      amount: appointmentData.amount,
+      appointmentId: appointmentData.appointmentId,
+      patientId: appointmentData.patientId,
+      currency: 'usd'
+    });
+
+    // 2. Stripe Confirmation
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardNumberElement),
+        billing_details: { name: cardholderName },
+      },
+    });
+
+    if (result.error) {
+      setErrorMessage(result.error.message);
+    } else if (result.paymentIntent.status === 'succeeded') {
+      
+      // --- ADD THIS NEW PART ---
+      // 3. Call your Backend Confirm API to update MongoDB to "SUCCESS"
+      await API.post("/payment/confirm", { 
+        paymentIntentId: result.paymentIntent.id 
       });
+      // -------------------------
 
-      // 2. Confirm Payment with Stripe
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardNumberElement),
-          billing_details: { name: cardholderName },
-        },
-      });
-
-      if (result.error) {
-        setErrorMessage(result.error.message);
-      } else {
-        if (result.paymentIntent.status === 'succeeded') {
-          onSuccess(result.paymentIntent);
-        }
-      }
-    } catch (err) {
-      setErrorMessage(err.response?.data?.message || "Payment failed. Please try again.");
-    } finally {
-      setIsProcessing(false);
+      onSuccess(result.paymentIntent);
     }
-  };
+  } catch (err) {
+    setErrorMessage(err.response?.data?.message || "Payment failed.");
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <div className="fade-up w-full max-w-md mx-auto">
