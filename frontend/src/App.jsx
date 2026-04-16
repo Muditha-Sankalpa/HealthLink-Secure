@@ -12,6 +12,8 @@ import Prescriptions from './pages/doctor/Prescriptions';
 import Availability from './pages/doctor/Availability';
 import DoctorTelemedicine from './pages/doctor/Telemedicine';
 import PatientAppointments from './pages/patient/Patientappointments';
+import MeetingRoom from './pages/telemedicine/MeetingRoom';
+import SymptomChecker from './pages/patient/SymptomChecker';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="/allSessions" element={<SessionsPage />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/patient/appointments" element={<PatientAppointments />} />
+        <Route path="/admin/telemedicine/join/:sessionId" element={<MeetingRoom />} />
+        <Route path="/patient/symptom-checker" element={<SymptomChecker />} />
       </Routes>
     </BrowserRouter>
   );
