@@ -1,17 +1,20 @@
-const { sendEmail } = require('../services/emailService');
+const { sendEmail, 
+        buildAppointmentConfirmedEmail,
+        buildCancellationEmail,
+        buildRescheduleEmail,
+        buildDoctorVerificationEmail,
+        buildSessionLinkEmail } = require('../services/emailService');
 const { sendSMS } = require('../services/smsService');
 
-// Core send function — respects notificationPreference channels
-const notify = async ({ email, phone, channels, subject, emailBody, smsMessage }) => {
+const notify = async ({ email, phone, channels, subject, htmlEmail, smsMessage }) => {
   const tasks = [];
-  if (channels.includes('email') && email) tasks.push(sendEmail({ to: email, subject, body: emailBody }));
-  if (channels.includes('sms') && phone) tasks.push(sendSMS({ to: phone, message: smsMessage }));
+  if (channels.includes('email') && email) {
+    tasks.push(sendEmail({ to: email, subject, html: htmlEmail, text: smsMessage }));
+  }
+  if (channels.includes('sms') && phone) {
+    tasks.push(sendSMS({ to: phone, message: smsMessage }));
+  }
   await Promise.all(tasks);
-};
-
-// Email-only send — used for system notifications
-const notifyEmailOnly = async ({ email, subject, emailBody }) => {
-  await sendEmail({ to: email, subject, body: emailBody });
 };
 
 const appointmentNotification = async (req, res) => {
@@ -19,16 +22,38 @@ const appointmentNotification = async (req, res) => {
     const {
       patientName, patientEmail, patientPhone, patientNotificationPreference,
       doctorName, doctorEmail, doctorPhone, doctorNotificationPreference,
-      appointmentDate, appointmentTime
+      appointmentDate, appointmentTime, appointmentType, queueNumber, specialty
     } = req.body;
 
-    const subject = 'Appointment Confirmation — Smart Healthcare';
-    const patientMsg = `Hi ${patientName}, your appointment with Dr. ${doctorName} is confirmed on ${appointmentDate} at ${appointmentTime}.`;
-    const doctorMsg = `Hi Dr. ${doctorName}, you have an appointment with ${patientName} on ${appointmentDate} at ${appointmentTime}.`;
+    const subject = 'Appointment Confirmed — HealthLink';
+    const plainPatient = `Hi ${patientName}, your appointment with Dr. ${doctorName} is confirmed on ${appointmentDate} at ${appointmentTime}.`;
+    const plainDoctor  = `Hi Dr. ${doctorName}, you have an appointment with ${patientName} on ${appointmentDate} at ${appointmentTime}.`;
 
     await Promise.all([
-      notify({ email: patientEmail, phone: patientPhone, channels: patientNotificationPreference, subject, emailBody: patientMsg, smsMessage: patientMsg }),
-      notify({ email: doctorEmail, phone: doctorPhone, channels: doctorNotificationPreference, subject, emailBody: doctorMsg, smsMessage: doctorMsg })
+      notify({
+        email: patientEmail, phone: patientPhone,
+        channels: patientNotificationPreference,
+        subject,
+        htmlEmail: buildAppointmentConfirmedEmail({
+          recipientName: patientName, isDoctor: false,
+          doctorName, patientName, specialty,
+          date: appointmentDate, time: appointmentTime,
+          appointmentType, queueNumber
+        }),
+        smsMessage: plainPatient
+      }),
+      notify({
+        email: doctorEmail, phone: doctorPhone,
+        channels: doctorNotificationPreference,
+        subject,
+        htmlEmail: buildAppointmentConfirmedEmail({
+          recipientName: `Dr. ${doctorName}`, isDoctor: true,
+          doctorName, patientName, specialty,
+          date: appointmentDate, time: appointmentTime,
+          appointmentType, queueNumber
+        }),
+        smsMessage: plainDoctor
+      })
     ]);
 
     res.json({ message: 'Appointment notifications sent' });
@@ -45,13 +70,22 @@ const cancellationNotification = async (req, res) => {
       appointmentDate, appointmentTime
     } = req.body;
 
-    const subject = 'Appointment Cancelled — Smart Healthcare';
-    const patientMsg = `Hi ${patientName}, your appointment with Dr. ${doctorName} on ${appointmentDate} at ${appointmentTime} has been cancelled.`;
-    const doctorMsg = `Hi Dr. ${doctorName}, your appointment with ${patientName} on ${appointmentDate} at ${appointmentTime} has been cancelled.`;
+    const subject = 'Appointment Cancelled — HealthLink';
+    const args = { doctorName, patientName, date: appointmentDate, time: appointmentTime };
 
     await Promise.all([
-      notify({ email: patientEmail, phone: patientPhone, channels: patientNotificationPreference, subject, emailBody: patientMsg, smsMessage: patientMsg }),
-      notify({ email: doctorEmail, phone: doctorPhone, channels: doctorNotificationPreference, subject, emailBody: doctorMsg, smsMessage: doctorMsg })
+      notify({
+        email: patientEmail, phone: patientPhone,
+        channels: patientNotificationPreference, subject,
+        htmlEmail: buildCancellationEmail({ recipientName: patientName, isDoctor: false, ...args }),
+        smsMessage: `Hi ${patientName}, your appointment with Dr. ${doctorName} on ${appointmentDate} at ${appointmentTime} has been cancelled.`
+      }),
+      notify({
+        email: doctorEmail, phone: doctorPhone,
+        channels: doctorNotificationPreference, subject,
+        htmlEmail: buildCancellationEmail({ recipientName: `Dr. ${doctorName}`, isDoctor: true, ...args }),
+        smsMessage: `Hi Dr. ${doctorName}, your appointment with ${patientName} on ${appointmentDate} at ${appointmentTime} has been cancelled.`
+      })
     ]);
 
     res.json({ message: 'Cancellation notifications sent' });
@@ -68,13 +102,22 @@ const rescheduleNotification = async (req, res) => {
       newDate, newTime
     } = req.body;
 
-    const subject = 'Appointment Rescheduled — Smart Healthcare';
-    const patientMsg = `Hi ${patientName}, your appointment with Dr. ${doctorName} has been rescheduled to ${newDate} at ${newTime}.`;
-    const doctorMsg = `Hi Dr. ${doctorName}, your appointment with ${patientName} has been rescheduled to ${newDate} at ${newTime}.`;
+    const subject = 'Appointment Rescheduled — HealthLink';
+    const args = { doctorName, patientName, newDate, newTime };
 
     await Promise.all([
-      notify({ email: patientEmail, phone: patientPhone, channels: patientNotificationPreference, subject, emailBody: patientMsg, smsMessage: patientMsg }),
-      notify({ email: doctorEmail, phone: doctorPhone, channels: doctorNotificationPreference, subject, emailBody: doctorMsg, smsMessage: doctorMsg })
+      notify({
+        email: patientEmail, phone: patientPhone,
+        channels: patientNotificationPreference, subject,
+        htmlEmail: buildRescheduleEmail({ recipientName: patientName, isDoctor: false, ...args }),
+        smsMessage: `Hi ${patientName}, your appointment with Dr. ${doctorName} has been rescheduled to ${newDate} at ${newTime}.`
+      }),
+      notify({
+        email: doctorEmail, phone: doctorPhone,
+        channels: doctorNotificationPreference, subject,
+        htmlEmail: buildRescheduleEmail({ recipientName: `Dr. ${doctorName}`, isDoctor: true, ...args }),
+        smsMessage: `Hi Dr. ${doctorName}, your appointment with ${patientName} has been rescheduled to ${newDate} at ${newTime}.`
+      })
     ]);
 
     res.json({ message: 'Reschedule notifications sent' });
@@ -83,39 +126,19 @@ const rescheduleNotification = async (req, res) => {
   }
 };
 
-const telemedicineNotification = async (req, res) => {
-  try {
-    const {
-      patientName, patientEmail, patientPhone, patientNotificationPreference,
-      doctorName, doctorEmail, doctorPhone, doctorNotificationPreference,
-      sessionDate, duration, prescriptionLink
-    } = req.body;
-
-    const subject = 'Telemedicine Session Completed — Smart Healthcare';
-    const patientMsg = `Hi ${patientName}, your telemedicine session with Dr. ${doctorName} on ${sessionDate} (${duration}) is complete. View prescription: ${prescriptionLink || 'N/A'}`;
-    const doctorMsg = `Hi Dr. ${doctorName}, your telemedicine session with ${patientName} on ${sessionDate} (${duration}) is now complete.`;
-
-    await Promise.all([
-      notify({ email: patientEmail, phone: patientPhone, channels: patientNotificationPreference, subject, emailBody: patientMsg, smsMessage: patientMsg }),
-      notify({ email: doctorEmail, phone: doctorPhone, channels: doctorNotificationPreference, subject, emailBody: doctorMsg, smsMessage: doctorMsg })
-    ]);
-
-    res.json({ message: 'Telemedicine notifications sent' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 const doctorVerificationNotification = async (req, res) => {
   try {
     const { doctorName, doctorEmail, status } = req.body;
+    const approved = status === 'approved';
 
-    const subject = `Doctor Verification ${status === 'approved' ? 'Approved' : 'Rejected'} — Smart Healthcare`;
-    const emailBody = status === 'approved'
-      ? `Hi Dr. ${doctorName}, your account has been verified. You can now log in and start accepting appointments.`
-      : `Hi Dr. ${doctorName}, unfortunately your verification request has been rejected. Please contact support for more information.`;
-
-    await notifyEmailOnly({ email: doctorEmail, subject, emailBody });
+    await sendEmail({
+      to: doctorEmail,
+      subject: `Verification ${approved ? 'Approved' : 'Rejected'} — HealthLink`,
+      html: buildDoctorVerificationEmail({ doctorName, approved }),
+      text: approved
+        ? `Hi Dr. ${doctorName}, your account has been verified.`
+        : `Hi Dr. ${doctorName}, your verification was rejected. Please contact support.`
+    });
 
     res.json({ message: 'Doctor verification notification sent' });
   } catch (err) {
@@ -125,19 +148,20 @@ const doctorVerificationNotification = async (req, res) => {
 
 const sessionLinkNotification = async (req, res) => {
   try {
-    const {
-      patientName, patientEmail,
-      doctorName, doctorEmail,
-      sessionLink, sessionDate, sessionTime
-    } = req.body;
+    const { patientName, patientEmail, doctorName, doctorEmail, sessionLink, sessionDate, sessionTime } = req.body;
 
-    const subject = 'Your Telemedicine Session Link — Smart Healthcare';
-    const patientBody = `Hi ${patientName}, your telemedicine session with Dr. ${doctorName} is scheduled on ${sessionDate} at ${sessionTime}. Join here: ${sessionLink}`;
-    const doctorBody = `Hi Dr. ${doctorName}, your telemedicine session with ${patientName} is scheduled on ${sessionDate} at ${sessionTime}. Join here: ${sessionLink}`;
+    const subject = 'Your Telemedicine Session — HealthLink';
+    const args = { doctorName, patientName, sessionDate, sessionTime, sessionLink };
 
     await Promise.all([
-      notifyEmailOnly({ email: patientEmail, subject, emailBody: patientBody }),
-      notifyEmailOnly({ email: doctorEmail, subject, emailBody: doctorBody })
+      sendEmail({ to: patientEmail, subject,
+        html: buildSessionLinkEmail({ recipientName: patientName, isDoctor: false, ...args }),
+        text: `Hi ${patientName}, join your session with Dr. ${doctorName} at: ${sessionLink}`
+      }),
+      sendEmail({ to: doctorEmail, subject,
+        html: buildSessionLinkEmail({ recipientName: `Dr. ${doctorName}`, isDoctor: true, ...args }),
+        text: `Hi Dr. ${doctorName}, join your session with ${patientName} at: ${sessionLink}`
+      })
     ]);
 
     res.json({ message: 'Session link notifications sent' });
@@ -146,11 +170,30 @@ const sessionLinkNotification = async (req, res) => {
   }
 };
 
+const telemedicineNotification = async (req, res) => {
+  try {
+    const { patientName, patientEmail, patientPhone, patientNotificationPreference,
+            doctorName, doctorEmail, doctorPhone, doctorNotificationPreference,
+            sessionDate, duration, prescriptionLink } = req.body;
+
+    const subject = 'Telemedicine Session Complete — HealthLink';
+    const plainPatient = `Hi ${patientName}, your session with Dr. ${doctorName} on ${sessionDate} is complete. Prescription: ${prescriptionLink || 'N/A'}`;
+    const plainDoctor  = `Hi Dr. ${doctorName}, your session with ${patientName} on ${sessionDate} is now complete.`;
+
+    await Promise.all([
+      notify({ email: patientEmail, phone: patientPhone, channels: patientNotificationPreference,
+               subject, htmlEmail: plainPatient, smsMessage: plainPatient }),
+      notify({ email: doctorEmail, phone: doctorPhone, channels: doctorNotificationPreference,
+               subject, htmlEmail: plainDoctor, smsMessage: plainDoctor })
+    ]);
+
+    res.json({ message: 'Telemedicine notifications sent' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
-  appointmentNotification,
-  cancellationNotification,
-  rescheduleNotification,
-  telemedicineNotification,
-  doctorVerificationNotification,
-  sessionLinkNotification
+  appointmentNotification, cancellationNotification, rescheduleNotification,
+  telemedicineNotification, doctorVerificationNotification, sessionLinkNotification
 };

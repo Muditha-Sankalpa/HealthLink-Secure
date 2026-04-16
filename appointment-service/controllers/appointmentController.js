@@ -147,24 +147,26 @@ exports.bookAppointment = async (req, res) => {
             ? doctor.notificationPreference
             : ['email']; // fallback to email if preference missing
 
+        // In bookAppointment, update the axios.post payload — just add these 3 fields:
         axios.post(`${NOTIFICATION_SERVICE_URL}/appointment`, {
-            // Patient — always email
             patientName:                   patient.name,
             patientEmail:                  patient.email,
             patientPhone:                  patient.contactNumber || null,
             patientNotificationPreference: ['email'],
 
-            // Doctor — use their saved preference, email always included
             doctorName:                   doctor.name,
             doctorEmail:                  doctor.email,
             doctorPhone:                  doctor.contactNumber || null,
             doctorNotificationPreference: doctorChannels.includes('email')
-                ? doctorChannels                    // already has email
-                : ['email', ...doctorChannels],     // force-prepend email
+                ? doctorChannels
+                : ['email', ...doctorChannels],
 
-            appointmentDate: date,
-            appointmentTime
-        }).catch(err => console.error('[Notification] Appointment notify failed:', err.message));
+            appointmentDate:  date,
+            appointmentTime:  `${slot.startTime} – ${slot.endTime}`,
+            appointmentType,                        // ← add
+            queueNumber:      slot.queueNumber,     // ← add
+            specialty:        doctor.specialty      // ← add
+        }).catch(err => console.error('[Notification] failed:', err.message));
 
         res.status(201).json({
             message: 'Appointment booked successfully',
