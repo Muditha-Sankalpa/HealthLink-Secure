@@ -24,7 +24,7 @@ except Exception as e:
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """Predict medical specialty based on symptoms, age, gender, severity, and duration"""
     try:
