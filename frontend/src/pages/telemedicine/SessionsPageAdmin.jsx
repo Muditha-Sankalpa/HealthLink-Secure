@@ -9,6 +9,7 @@ import {
   Search,
   MoreVertical,
   AlertCircle,
+  CreditCard,
   Loader2,
 } from "lucide-react";
 import StatusBadge from "../../components/telemedicine/StatusBadge";
@@ -101,6 +102,8 @@ const SessionsPageAdmin = () => {
       alert("Failed to complete session");
     }
   };
+
+  
 
   const filteredSessions = sessions.filter(
     (session) =>
