@@ -68,13 +68,15 @@ const getAppointments = async (req, res) => {
     
     // Call Appointment Service to get appointments for this doctor
     const response = await axios.get(
-      `http://localhost:5003/api/appointments/doctor/${doctor._id}`,
+      `http://localhost:5003/api/appointments/admin/appoinments?doctorId=${doctor._id}`,
       { headers: { Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}` } }
     );
     
     res.json(response.data);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch appointments', details: err.message });
+    console.error('Fetch appointments error:', err);
+    res.status(500).json({ error: 'Failed to fetch appointments', 
+      details: err.response?.data?.message || err.message });
   }
 };
 
@@ -89,14 +91,15 @@ const updateAppointmentStatus = async (req, res) => {
 
     // Call Appointment Service to update status
     const response = await axios.put(
-      `http://localhost:5003/api/appointments/${id}/status`,
+      `http://localhost:5003/api/appointments/${id}/cancel`,// Reuse cancel endpoint or add new one
       { status },
       { headers: { Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}` } }
     );
     
     res.json({ message: `Appointment ${status}`, appointment: response.data.appointment });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to update appointment', details: err.message });
+    res.status(500).json({ error: 'Failed to update appointment', 
+      details: err.response?.data?.message || err.message  });
   }
 };
 

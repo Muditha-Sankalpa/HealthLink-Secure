@@ -38,4 +38,7 @@ router.get('/admin/timeslots', verifyToken, verifyAdmin, appointmentController.g
 // Get general statistics for an admin dashboard
 router.get('/admin/stats', verifyToken, verifyAdmin, appointmentController.getAdminStats);
 
+// new route for doctors to fetch their appointments
+router.get('/doctor/:doctorId', verifyToken, appointmentController.getAppointmentsByDoctor);
+
 module.exports = router;
