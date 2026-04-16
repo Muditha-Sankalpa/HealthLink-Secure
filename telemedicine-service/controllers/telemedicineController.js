@@ -26,30 +26,28 @@ const { v4: uuidv4 } = require('uuid');
 exports.getAllSessions = async (req, res) => {
   try {
     const { doctorId, patientId, status } = req.query;
-
     let filter = {};
 
     // 🔥 ROLE-BASED FILTERING
     if (req.user.role === 'Patient') {
-      filter.patientId = req.user.id; // only their sessions
+      filter.patientId = req.user.id;
     }
-
     if (req.user.role === 'Doctor') {
       filter.doctorId = req.user.id;
     }
 
-    // Admin can see everything (no restriction)
-
-    // Optional filters (only apply if admin or needed)
-    if (doctorId) filter.doctorId = doctorId; //=========================
-    if (patientId) filter.patientId = patientId; //==========================
+    // Admin filters
+    if (doctorId) filter.doctorId = doctorId;
+    if (patientId) filter.patientId = patientId;
     if (status) filter.status = status;
 
+    // ✨ ADD .populate() HERE
     const sessions = await TelemedicineSession.find(filter)
+      .populate('doctorId', 'name specialty consultationFee') // Fetches name/specialty from Doctor model
+      .populate('patientId', 'name email')                    // Fetches name from User model
       .sort({ scheduledTime: -1 });
 
     res.json(sessions);
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -57,35 +55,26 @@ exports.getAllSessions = async (req, res) => {
 
 
 // Create Session - POST
+// controllers/telemedicineController.js
 exports.createSession = async (req, res) => {
   try {
-    // const { appointmentId, doctorId, patientId, scheduledTime } = req.body;
-
-    const { appointmentId, doctorId, scheduledTime } = req.body;
-
-//  get patient from logged-in user
-const patientId = req.user.id;
-
-    const sessionId = uuidv4();
-    const roomId = `room-${sessionId}`;
-
-    // Jitsi meeting link
-    const meetingLink = `https://meet.jit.si/${roomId}`;
+    // Add doctorName and patientName to the destructuring
+    const { appointmentId, doctorId, scheduledTime, doctorName, patientName } = req.body;
 
     const session = new TelemedicineSession({
-      sessionId,
+      sessionId: uuidv4(),
       appointmentId,
       doctorId,
-      patientId,
+      patientId: req.user.id,
+      doctorName,    // Save the name here
+      patientName,   // Save the name here
       scheduledTime,
-      roomId,
-      meetingLink
+      roomId: `room-${uuidv4()}`,
+      meetingLink: `https://meet.jit.si/room-${uuidv4()}`
     });
 
     await session.save();
-
     res.status(201).json(session);
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -154,17 +143,32 @@ exports.endSession = async (req, res) => {
 // Delete Session by sessionId
 exports.deleteSession = async (req, res) => {
   try {
-    const session = await TelemedicineSession.findOneAndDelete({
-      sessionId: req.params.id
-    });
+    // Log this to your terminal to see what the ID is
+    console.log("Deleting session with ID:", req.params.id);
+
+    const query = { sessionId: req.params.id };
+    
+    // Safety check: req.user must exist (from your auth middleware)
+    if (req.user && req.user.role === 'Patient') {
+      query.patientId = req.user.id;
+    }
+
+    const session = await TelemedicineSession.findOne(query);
 
     if (!session) {
       return res.status(404).json({ message: 'Session not found' });
     }
 
-    res.json({ message: 'Session deleted successfully', session });
+    if (req.user && req.user.role === 'Patient') {
+      session.status = 'CANCELLED';
+      await session.save();
+      return res.json({ message: 'Cancelled' });
+    }
 
+    await TelemedicineSession.deleteOne({ sessionId: req.params.id });
+    res.json({ message: 'Deleted' });
   } catch (error) {
+    console.error(error); // This will show you the real error in your backend console
     res.status(500).json({ message: error.message });
   }
 };
