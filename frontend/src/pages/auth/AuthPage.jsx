@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginUser, registerUser  } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { Button, ErrorMessage } from "../../components/shared";
+import { getProfile as getPatientProfile } from "../../api/patientApi";
 
 const COLORS = {
   primary: "#122056",
@@ -158,14 +159,45 @@ const LoginPanel = ({ onSwitch }) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      // Prevent deactivated patients from briefly redirecting to dashboard
+      if (data?.user?.role === "Patient") {
+        try {
+          await getPatientProfile();
+        } catch (err) {
+          const status = err?.response?.status;
+          const apiMessage = err?.response?.data?.message;
+          const isDeactivated =
+            status === 403 ||
+            String(apiMessage || err?.message || "").toLowerCase().includes("deactivated");
+
+          if (isDeactivated) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setError("Your account has been deactivated. Please contact support.");
+            return;
+          }
+        }
+      }
+
       // Redirect based on role
-      if (data.user.role === "Admin") navigate("/admin");
+      if (data.user.role === "Admin") navigate("/admin/dashboard");
       else if (data.user.role === "Doctor") navigate("/doctor");
       else navigate("/patient");
 
     } catch (err) {
+        const status = err?.response?.status;
+        const apiMessage = err?.response?.data?.message;
+        const isDeactivated =
+          status === 403 ||
+          String(apiMessage || err?.message || "").toLowerCase().includes("deactivated");
+
+        if (isDeactivated) {
+          setError("Your account has been deactivated. Please contact support.");
+          return;
+        }
+
         setError(
-          err?.response?.data?.message ||
+          apiMessage ||
           err?.message ||
           "Login failed. Please try again."
         );

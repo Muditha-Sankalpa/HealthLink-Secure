@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
-import { AdminNavBar, StatCard } from '../../components/shared';
+import { useNavigate } from 'react-router-dom';
+import { Button, Card, StatCard, AdminNavBar } from '../../components/shared';
 import { getAllPatients, getStats, updatePatientStatus } from '../../api/adminApi';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({});
   const [patients, setPatients] = useState([]);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    getStats().then((res) => setStats(res.data));
+    getStats().then((res) => setStats(res.data)).catch(() => navigate('/auth'));
     fetchPatients();
   }, []);
 
   const fetchPatients = (q = '') => {
-    getAllPatients(q).then((res) => setPatients(res.data));
+    getAllPatients(q).then((res) => setPatients(res.data)).catch(() => {});
   };
 
   const handleSearch = (e) => {
@@ -25,73 +28,100 @@ const AdminDashboard = () => {
     const newStatus = current === 'active' ? 'deactivated' : 'active';
     await updatePatientStatus(id, newStatus);
     fetchPatients(search);
+    getStats().then((res) => setStats(res.data));
   };
 
+  const filtered = statusFilter === 'all'
+    ? patients
+    : patients.filter((p) => p.status === statusFilter);
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminNavBar requireAuth={false} />
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-[#122056] mb-6">Patient Management</h1>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f4f6fb' }}>
+      <AdminNavBar />
 
-        {/* Stats */}
-        <div className="flex gap-4 mb-8 flex-wrap">
-          <StatCard label="Total" value={stats.total || 0} />
-          <StatCard label="Active" value={stats.active || 0} color="text-green-600" />
-          <StatCard label="Deactivated" value={stats.deactivated || 0} color="text-red-500" />
-          <StatCard label="New (30d)" value={stats.newRegistrations || 0} color="text-blue-500" />
+      <div style={{ flex: 1, padding: 28, overflowY: 'auto' }}>
+
+        {/* Stats row */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
+          <StatCard label="Total" value={stats.total ?? 0} />
+          <StatCard label="Active" value={stats.active ?? 0} color="text-green-600" />
+          <StatCard label="Deactivated" value={stats.deactivated ?? 0} color="text-red-500" />
+          <StatCard label="New (30d)" value={stats.newRegistrations ?? 0} color="text-blue-500" />
         </div>
 
-        {/* Search */}
-        <input
-          placeholder="Search by name..."
-          value={search}
-          onChange={handleSearch}
-          className="w-full max-w-md border border-gray-300 rounded-xl px-4 py-2 mb-4 focus:outline-none focus:border-[#122056]"
-        />
-
-        {/* Table */}
-        <div className="bg-white rounded-2xl shadow overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-[#122056] text-white">
-              <tr>
-                <th className="text-left px-6 py-3">Name</th>
-                <th className="text-left px-6 py-3">Status</th>
-                <th className="text-left px-6 py-3">Registered</th>
-                <th className="text-left px-6 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((p, i) => (
-                <tr key={p._id} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="px-6 py-3 font-medium">{p.name}</td>
-                  <td className="px-6 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      p.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'
-                    }`}>
-                      {p.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3 text-gray-500">
-                    {new Date(p.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-3">
-                    <button
-                      onClick={() => handleToggleStatus(p._id, p.status)}
-                      className={`px-3 py-1 rounded-lg text-xs font-semibold ${
-                        p.status === 'active'
-                          ? 'bg-red-100 text-red-600 hover:bg-red-200'
-                          : 'bg-green-100 text-green-700 hover:bg-green-200'
-                      }`}
-                    >
-                      {p.status === 'active' ? 'Deactivate' : 'Activate'}
-                    </button>
-                  </td>
-                </tr>
+        {/* Status filter tabs + search */}
+        <Card className="rounded-2xl">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {['all', 'active', 'deactivated'].map((s) => (
+                <Button
+                  key={s}
+                  onClick={() => setStatusFilter(s)}
+                  variant={statusFilter === s ? 'primary' : 'secondary'}
+                  className="rounded-full capitalize"
+                >
+                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                </Button>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </main>
+            </div>
+            <input
+              placeholder="Search by name..."
+              value={search}
+              onChange={handleSearch}
+              style={{
+                border: '1px solid #d1d5db', borderRadius: 10,
+                padding: '8px 14px', fontSize: 13, minWidth: 220
+              }}
+            />
+          </div>
+
+          {/* Table */}
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#122056', color: '#fff' }}>
+                  {['Name', 'Status', 'Registered', 'Actions'].map((h) => (
+                    <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontWeight: 500 }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} style={{ textAlign: 'center', padding: '32px 0', color: '#9ca3af' }}>No patients found.</td>
+                  </tr>
+                ) : (
+                  filtered.map((p, i) => (
+                    <tr key={p._id} style={{ background: i % 2 === 0 ? '#f9fafb' : '#fff', borderBottom: '0.5px solid #e5e7eb' }}>
+                      <td style={{ padding: '12px 16px', fontWeight: 500, color: '#111827' }}>{p.name}</td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <span style={{
+                          padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
+                          background: p.status === 'active' ? '#d1fae5' : '#fee2e2',
+                          color: p.status === 'active' ? '#065f46' : '#991b1b'
+                        }}>
+                          {p.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: '#6b7280' }}>
+                        {new Date(p.createdAt).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Button
+                          onClick={() => handleToggleStatus(p._id, p.status)}
+                          variant={p.status === 'active' ? 'danger' : 'primary'}
+                        >
+                          {p.status === 'active' ? 'Deactivate' : 'Activate'}
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
