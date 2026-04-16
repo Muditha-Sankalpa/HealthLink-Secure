@@ -46,8 +46,11 @@ app.use("/api/auth", createProxyMiddleware({
 
 // AI Symptom Checker Service
 app.use("/api/symptom-checker", createProxyMiddleware({
-  target: "http://localhost:5007",
+  target: "http://localhost:5008",
   changeOrigin: true,
+  pathRewrite: {
+  "^/api/symptom-checker": ""
+}
 }));
 
 // Default Gateway Route

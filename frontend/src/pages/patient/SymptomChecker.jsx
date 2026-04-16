@@ -302,7 +302,7 @@ export default function SymptomChecker() {
     setStep("loading");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/symptom-checker/predict`, {
+      const res = await fetch(`${import.meta.env.VITE_ML_API_URL || "http://localhost:5000/api/symptom-checker/predict"}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
