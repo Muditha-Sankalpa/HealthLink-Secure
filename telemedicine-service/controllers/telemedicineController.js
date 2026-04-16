@@ -3,18 +3,50 @@ const TelemedicineSession = require('../models/TelemedicineSession');
 const { v4: uuidv4 } = require('uuid');
 
 // Get All Sessions (with optional filters)
+// exports.getAllSessions = async (req, res) => {
+//   try {
+//     const { doctorId, patientId, status } = req.query;
+
+//     let filter = {};
+
+//     if (doctorId) filter.doctorId = doctorId;
+//     if (patientId) filter.patientId = patientId;
+//     if (status) filter.status = status;
+
+//     const sessions = await TelemedicineSession.find(filter)
+//       .sort({ scheduledTime: -1 }); // latest first
+
+//     res.json(sessions);
+
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 exports.getAllSessions = async (req, res) => {
   try {
     const { doctorId, patientId, status } = req.query;
 
     let filter = {};
 
-    if (doctorId) filter.doctorId = doctorId;
-    if (patientId) filter.patientId = patientId;
+    // 🔥 ROLE-BASED FILTERING
+    if (req.user.role === 'Patient') {
+      filter.patientId = req.user.id; // only their sessions
+    }
+
+    if (req.user.role === 'Doctor') {
+      filter.doctorId = req.user.id;
+    }
+
+    // Admin can see everything (no restriction)
+
+    // Optional filters (only apply if admin or needed)
+    if (doctorId) filter.doctorId = doctorId; //=========================
+    if (patientId) filter.patientId = patientId; //==========================
     if (status) filter.status = status;
 
     const sessions = await TelemedicineSession.find(filter)
-      .sort({ scheduledTime: -1 }); // latest first
+      .sort({ scheduledTime: -1 });
 
     res.json(sessions);
 
@@ -27,7 +59,12 @@ exports.getAllSessions = async (req, res) => {
 // Create Session - POST
 exports.createSession = async (req, res) => {
   try {
-    const { appointmentId, doctorId, patientId, scheduledTime } = req.body;
+    // const { appointmentId, doctorId, patientId, scheduledTime } = req.body;
+
+    const { appointmentId, doctorId, scheduledTime } = req.body;
+
+//  get patient from logged-in user
+const patientId = req.user.id;
 
     const sessionId = uuidv4();
     const roomId = `room-${sessionId}`;
@@ -108,6 +145,24 @@ exports.endSession = async (req, res) => {
     await session.save();
 
     res.json(session);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Session by sessionId
+exports.deleteSession = async (req, res) => {
+  try {
+    const session = await TelemedicineSession.findOneAndDelete({
+      sessionId: req.params.id
+    });
+
+    if (!session) {
+      return res.status(404).json({ message: 'Session not found' });
+    }
+
+    res.json({ message: 'Session deleted successfully', session });
 
   } catch (error) {
     res.status(500).json({ message: error.message });
