@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken, authorizeRole } = require('../middleware/authMiddleware');
+const upload = require('../middleware/upload');
 const {
   createProfile, getProfile, updateProfile,
   uploadReport, getHistory, getPatientById,
@@ -11,7 +12,7 @@ const {
 router.post('/profile', verifyToken, authorizeRole('Patient'), createProfile);
 router.get('/profile', verifyToken, authorizeRole('Patient'), getProfile);
 router.put('/profile', verifyToken, authorizeRole('Patient'), updateProfile);
-router.post('/upload-report', verifyToken, authorizeRole('Patient'), uploadReport);
+router.post('/upload-report', verifyToken, authorizeRole('Patient'), upload.single('file'),uploadReport);
 router.get('/history', verifyToken, authorizeRole('Patient'), getHistory);
 
 // Admin routes

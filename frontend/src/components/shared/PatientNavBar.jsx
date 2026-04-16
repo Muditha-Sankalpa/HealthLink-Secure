@@ -89,10 +89,9 @@ const PatientNavbar = ({ requireAuth = true, demoUser }) => {
   return (
     <aside className="w-56 min-h-screen bg-primary border-r border-secondary flex flex-col px-4 py-6 gap-2 rounded-r-2xl">
       <div className="text-surface font-semibold text-lg mb-6 px-2">Patient Portal</div>
-      <Link to="/patient/profile" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Profile</Link>
+      <Link to="/patient" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Dashboard</Link>
       <Link to="/patient/appointments" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Appointments</Link>
       <Link to="/patient/upload-report" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Consultations</Link>
-      <Link to="/patient/history" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Medical History</Link>
       <div className="mt-auto flex flex-col gap-2 px-1">
         <div className="text-xs text-surface/90">
           <span className="font-semibold text-white">{userInfo.firstName || 'User'}</span> ({userInfo.role})

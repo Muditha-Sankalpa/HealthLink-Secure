@@ -24,8 +24,7 @@ router.put('/appointments/:id/status', verifyToken, authorizeRole('Doctor'), upd
 
 router.post('/prescription', verifyToken, authorizeRole('Doctor'), issuePrescription);
 router.get('/prescriptions/history', verifyToken, authorizeRole('Doctor'), getPrescriptionHistory);
-router.get('/prescriptions/patient/:patientId', verifyToken, authorizeRole('Doctor'), getPrescriptionsByPatientId);
-
+router.get('/prescriptions/patient/:patientId', verifyToken, /*authorizeRole('Doctor'),*/getPrescriptionsByPatientId);
 router.get('/patient/:id/reports', verifyToken, authorizeRole('Doctor'), viewPatientReports);
 
 router.post('/telemedicine/start', verifyToken, authorizeRole('Doctor'), startTelemedicineSession);
