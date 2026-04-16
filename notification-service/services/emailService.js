@@ -115,7 +115,7 @@ const badge = (text, color = '#16A34A', bg = '#F0FDF4', border = '#BBF7D0') => `
                color:${color};font-size:11px;font-weight:600;letter-spacing:0.5px;
                text-transform:uppercase;padding:4px 12px;border-radius:100px;">
     ${text}
-  </span>
+  </span> 
 `;
 
 // ── Named template builders ─────────────────────────────────────────────────
