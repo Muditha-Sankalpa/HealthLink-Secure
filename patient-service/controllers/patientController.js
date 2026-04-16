@@ -53,7 +53,15 @@ const uploadReport = async (req, res) => {
     if (!patient) return res.status(404).json({ message: 'Profile not found' });
     if (patient.status === 'deactivated') return res.status(403).json({ message: 'Account is deactivated' });
 
-    const report = new MedicalReport({ patientId: patient._id, ...req.body });
+    const report = new MedicalReport({ 
+      
+      patientId: patient._id,
+      fileName: req.file.originalname,
+      fileUrl: req.file.path,
+      fileType: req.file.mimetype,
+
+    });
+
     await report.save();
     res.status(201).json(report);
   } catch (err) {
