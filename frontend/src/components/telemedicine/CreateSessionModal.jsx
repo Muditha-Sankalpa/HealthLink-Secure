@@ -18,7 +18,7 @@ const CreateSessionModal = ({ isOpen, onClose, onRefresh }) => {
     e.preventDefault();
     setIsCreating(true);
     try {
-      await API.post('/api/telemedicine/create', formData);
+      await API.post('/telemedicine/create', formData);
       onRefresh(); // Refresh the list in the parent
       onClose();   // Close the modal
       setFormData({ appointmentId: '', doctorId: '', patientId: '', scheduledTime: '' });
