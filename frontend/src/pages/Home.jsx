@@ -564,7 +564,7 @@ export default function Home() {
             cta="Manage records"
           />
           <FeatureCard
-            icon="📋"
+            icon="🤖"
             title="AI Symptom Checker"
             desc="Get instant insights into your health concerns and recommendations to doctor specialties with our AI-powered symptom analysis."
             delay={0.3}
