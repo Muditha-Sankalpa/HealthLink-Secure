@@ -267,7 +267,7 @@ export default function Home() {
 
       <Particles />
 
-      {/* ── Navbar ── */}
+      {/* Navbar */}
       <nav
         style={{
           position: "fixed",
@@ -286,7 +286,6 @@ export default function Home() {
           transition: "all 0.3s ease",
         }}
       >
-        {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
@@ -314,27 +313,26 @@ export default function Home() {
           </span>
         </div>
 
-        {/* Nav links */}
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <a href="#features" className="nav-link">Features</a>
           <a href="#services" className="nav-link">Services</a>
           {isLoggedIn ? (
             <>
-            <button
-              onClick={() => navigate("/patient")}
-              className="hero-btn-primary"
-              style={{ height: 38, padding: "0 20px", fontSize: 13, marginLeft: 8 }}
-            >
-              My Dashboard →
-            </button>
-            <button
-              onClick={handleLogout}
-              className="hero-btn-outline"
-              style={{ height: 38, padding: "0 20px", fontSize: 13, marginLeft: 8, color: "red", borderColor: "rgba(255,255,255,0.5)" }}
-            >
-              Logout
-            </button>
-          </>
+              <button
+                onClick={() => navigate("/patient")}
+                className="hero-btn-primary"
+                style={{ height: 38, padding: "0 20px", fontSize: 13, marginLeft: 8 }}
+              >
+                My Dashboard →
+              </button>
+              <button
+                onClick={handleLogout}
+                className="hero-btn-outline"
+                style={{ height: 38, padding: "0 20px", fontSize: 13, marginLeft: 8 }}
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <button
               onClick={() => navigate("/login")}
@@ -347,7 +345,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section
         style={{
           background: "linear-gradient(135deg, #0D1B4B 0%, #122056 40%, #1a2d6b 70%, #1e3575 100%)",
@@ -361,7 +359,6 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Background grid pattern */}
         <div
           style={{
             position: "absolute",
@@ -374,8 +371,6 @@ export default function Home() {
             pointerEvents: "none",
           }}
         />
-
-        {/* Glow blobs */}
         <div
           style={{
             position: "absolute",
@@ -401,7 +396,6 @@ export default function Home() {
           }}
         />
 
-        {/* Badge */}
         <div
           style={{
             display: "inline-flex",
@@ -429,7 +423,6 @@ export default function Home() {
           </span>
         </div>
 
-        {/* Headline */}
         <h1
           style={{
             fontFamily: "'DM Serif Display', serif",
@@ -473,7 +466,6 @@ export default function Home() {
           all in one beautifully simple platform.
         </p>
 
-        {/* CTAs */}
         <div
           style={{
             display: "flex",
@@ -485,14 +477,13 @@ export default function Home() {
           }}
         >
           <button className="hero-btn-primary" onClick={() => navigate(isLoggedIn ? "/patient/appointments" : "/login")}>
-            {isLoggedIn ? "📅 Book Appointment" : "Get Started Free"}
+            {isLoggedIn ? "📅 Book Appointment" : "Get Started for Free"}
           </button>
           <button className="hero-btn-outline" onClick={() => navigate(isLoggedIn ? "/patient" : "/allSessions")}>
             {isLoggedIn ? "View Dashboard" : "Explore Telemedicine"}
           </button>
         </div>
 
-        {/* Stats row */}
         <div
           style={{
             display: "grid",
@@ -509,7 +500,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Features ── */}
+      {/* Features */}
       <section
         id="features"
         style={{ padding: "96px 24px", maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}
@@ -562,7 +553,6 @@ export default function Home() {
             title="Telemedicine Consultations"
             desc="Connect with specialists via HD video from anywhere in Sri Lanka. Secure, private, and reliable."
             delay={0.2}
-            onClick={() => navigate("/allSessions")}
             cta="Join a session"
           />
           <FeatureCard
@@ -604,7 +594,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Services CTA Banner ── */}
+      {/* Services CTA Banner */}
       <section
         id="services"
         style={{
@@ -621,7 +611,6 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Decorative circle */}
         <div
           style={{
             position: "absolute",
@@ -680,7 +669,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {/* Footer */}
       <footer
         style={{
           background: "#0D1B4B",
@@ -707,7 +696,6 @@ export default function Home() {
           >
             <BrandLogo />
           </div>
-                        
           <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: 16, color: "#fff" }}>
             HealthLink
           </span>
