@@ -92,7 +92,7 @@ const PatientNavbar = ({ requireAuth = true, demoUser }) => {
       <Link to="/" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Home</Link>
       <Link to="/patient" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Dashboard</Link>
       <Link to="/patient/appointments" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Appointments</Link>
-      <Link to="/patient/upload-report" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Consultations</Link>
+      <Link to="/allSessions" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Consultations</Link>
       <div className="mt-auto flex flex-col gap-2 px-1">
         <div className="text-xs text-surface/90">
           <span className="font-semibold text-white">{userInfo.firstName || 'User'}</span> ({userInfo.role})
