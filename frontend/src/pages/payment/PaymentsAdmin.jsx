@@ -8,7 +8,8 @@ import {
   CheckCircle, 
   Clock, 
   Filter,
-  PlusCircle  
+  PlusCircle,
+  RefreshCcw 
 } from "lucide-react";
 import { AdminNavBar } from "../../components/shared";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ const PaymentsAdmin = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [confirmingId, setConfirmingId] = useState(null);
 
   const fetchPayments = async () => {
     try {
@@ -28,6 +30,22 @@ const PaymentsAdmin = () => {
       console.error("Error fetching payments:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmPayment = async (paymentIntentId) => {
+    try {
+      setConfirmingId(paymentIntentId);
+      // Calling your backend API: POST http://localhost:5005/api/payment/confirm
+      await API.post("/payment/confirm", { paymentIntentId });
+      
+      alert("Payment confirmed successfully!");
+      fetchPayments(); // Refresh list to show SUCCESS status
+    } catch (err) {
+      console.error("Confirmation error:", err);
+      alert(err.response?.data?.message || "Failed to confirm payment");
+    } finally {
+      setConfirmingId(null);
     }
   };
 
@@ -150,6 +168,7 @@ const PaymentsAdmin = () => {
                     <th className="px-6 py-4 text-xs font-bold uppercase text-primary">Amount</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase text-primary">Status</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase text-primary">Date</th>
+                    <th className="px-6 py-4 text-right text-xs font-bold uppercase text-primary">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-secondary">
@@ -178,6 +197,27 @@ const PaymentsAdmin = () => {
                       </td>
                       <td className="px-6 py-4 text-xs text-text-primary">
                         {formatDate(p.createdAt)}
+                      </td>
+
+                      <td className="px-6 py-4 text-right">
+                        {p.status === 'PENDING' ? (
+                          <button
+                            onClick={() => handleConfirmPayment(p.paymentIntentId)}
+                            disabled={confirmingId === p.paymentIntentId}
+                            className="bg-accent text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 ml-auto hover:brightness-110 transition-all disabled:opacity-50"
+                          >
+                            {confirmingId === p.paymentIntentId ? (
+                              <Loader2 size={14} className="animate-spin" />
+                            ) : (
+                              <RefreshCcw size={14} />
+                            )}
+                            Confirm
+                          </button>
+                        ) : (
+                          <div className="text-success flex items-center justify-end gap-1 text-xs font-bold">
+                            <CheckCircle size={14} /> Verified
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
