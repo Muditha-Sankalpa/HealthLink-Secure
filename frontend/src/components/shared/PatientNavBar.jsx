@@ -1,115 +1,181 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const parseJwtPayload = (token) => {
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+    return JSON.parse(atob(padded));
+  } catch {
+    return null;
+  }
+};
+
+const getStoredUserName = () => {
+  const keys = ['user', 'currentUser', 'authUser', 'profile'];
+  for (const key of keys) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || '');
+      if (parsed?.name) return parsed.name;
+      if (parsed?.firstName) return parsed.firstName;
+      if (parsed?.email) return parsed.email;
+    } catch {
+      // ignore
+    }
+  }
+  return '';
+};
+
+const extractDisplayInfo = (token) => {
+  const payload = parseJwtPayload(token);
+  if (!payload) return { firstName: 'User', role: 'User' };
+
+  const rawName =
+    payload.name ||
+    payload.firstName ||
+    payload.given_name ||
+    payload.username ||
+    payload.email ||
+    getStoredUserName() ||
+    payload.sub ||
+    '';
+
+  const nameBase = rawName.includes('@') ? rawName.split('@')[0] : rawName;
+  const firstName = (nameBase.trim().split(/\s+/)[0]) || 'User';
+
+  const roleCandidate =
+    payload.role ||
+    payload.userRole ||
+    payload.user_type ||
+    payload.userType ||
+    payload.roles ||
+    payload.authority ||
+    payload.userGroup ||
+    '';
+
+  const role = (Array.isArray(roleCandidate) ? roleCandidate[0] : roleCandidate) || 'User';
+  return { firstName, role };
+};
+
+const resolveAuthInfo = (requireAuth, demoUser) => {
+  if (!requireAuth) {
+    return { isAuthenticated: true, ...(demoUser || { firstName: 'Patient', role: 'Patient' }) };
+  }
+  const token = localStorage.getItem('token');
+  if (!token) return { isAuthenticated: false, firstName: '', role: '' };
+  const { firstName, role } = extractDisplayInfo(token);
+  return { isAuthenticated: true, firstName, role };
+};
+
+// ---------------------------------------------------------------------------
+// Nav links config
+// ---------------------------------------------------------------------------
+
+const NAV_LINKS = [
+  { label: 'Home',          to: '/' },
+  { label: 'Dashboard',     to: '/patient' },
+  { label: 'Appointments',  to: '/patient/appointments' },
+  { label: 'Consultations', to: '/patient/upload-report' },
+];
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 const PatientNavbar = ({ requireAuth = true, demoUser }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [userInfo] = useState(() => resolveAuthInfo(requireAuth, demoUser));
 
-  const parseJwtPayload = (token) => {
-    try {
-      const tokenParts = token.split('.');
-      if (tokenParts.length < 2) return null;
-
-      const base64Url = tokenParts[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
-      return JSON.parse(atob(padded));
-    } catch {
-      return null;
+  useEffect(() => {
+    if (requireAuth && !userInfo.isAuthenticated) {
+      navigate('/login');
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const getUserDisplayInfo = () => {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-
-    try {
-      const payload = parseJwtPayload(token);
-      if (!payload) return null;
-
-      const getStoredUserName = () => {
-        const keys = ['user', 'currentUser', 'authUser', 'profile'];
-        for (const key of keys) {
-          const raw = localStorage.getItem(key);
-          if (!raw) continue;
-          try {
-            const parsed = JSON.parse(raw);
-            if (parsed?.name) return parsed.name;
-            if (parsed?.firstName) return parsed.firstName;
-            if (parsed?.email) return parsed.email;
-          } catch {
-            // Ignore malformed localStorage values
-          }
-        }
-        return '';
-      };
-
-      const rawName =
-        payload.name ||
-        payload.firstName ||
-        payload.given_name ||
-        payload.username ||
-        payload.email ||
-        getStoredUserName() ||
-        payload.sub ||
-        '';
-      const firstNameFromEmail = rawName.includes('@') ? rawName.split('@')[0] : rawName;
-      const firstName = (firstNameFromEmail || '').trim().split(/\s+/)[0];
-      const roleCandidate =
-        payload.role ||
-        payload.userRole ||
-        payload.user_type ||
-        payload.userType ||
-        payload.roles;
-      const role = Array.isArray(roleCandidate) ? roleCandidate[0] : roleCandidate || '';
-
-      if (!role) return null;
-      return { firstName, role };
-    } catch {
-      return null;
-    }
-  };
+  if (requireAuth && !userInfo.isAuthenticated) return null;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/');
   };
-  const userInfo = requireAuth
-    ? getUserDisplayInfo()
-    : (demoUser || { firstName: 'Patient', role: 'Patient' });
-
-  useEffect(() => {
-    if (requireAuth && !userInfo) {
-      localStorage.removeItem('token');
-      navigate('/login');
-    }
-  }, [navigate, requireAuth, userInfo]);
-
-  if (requireAuth && !userInfo) return null;
 
   return (
     <aside className="w-56 min-h-screen bg-primary border-r border-secondary flex flex-col px-4 py-6 gap-2 rounded-r-2xl">
-      <div className="text-surface font-semibold text-lg mb-6 px-2">Patient Portal</div>
-      <Link to="/" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Home</Link>
-      <Link to="/patient" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Dashboard</Link>
-      <Link to="/patient/appointments" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Appointments</Link>
-      <Link to="/allSessions" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Consultations</Link>
-      <Link to="/allPayments" className="text-sm text-surface/90 px-2 py-2 rounded-lg hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105 transition-transform transition-colors duration-150 origin-left">Payments</Link>
-      <div className="mt-auto flex flex-col gap-2 px-1">
-        <div className="text-xs text-surface/90">
-          <span className="font-semibold text-white">{userInfo.firstName || 'User'}</span> ({userInfo.role})
+
+      {/* Brand heading */}
+      <div className="px-2 mb-6">
+        <div className="text-white font-bold text-xl" style={{ fontFamily: "'DM Serif Display', serif", letterSpacing: '-0.3px' }}>
+          HealthLink
+        </div>
+        <div className="text-surface/60 text-xs mt-0.5" style={{ letterSpacing: '0.3px' }}>
+          Patient Dashboard
+        </div>
+      </div>
+
+      {/* Nav links */}
+      {NAV_LINKS.map(({ label, to }) => {
+        const isActive = location.pathname === to;
+        return (
+          <Link
+            key={to}
+            to={to}
+            style={isActive ? {
+              backgroundColor: 'rgba(0,168,150,0.18)',
+              color: '#00c9b1',
+              fontWeight: 700,
+              borderLeft: '3px solid #00c9b1',
+              paddingLeft: '5px',
+            } : {}}
+            className={`text-sm px-2 py-2 rounded-lg transition-transform transition-colors duration-150 origin-left
+              ${isActive
+                ? ''
+                : 'text-surface/90 hover:bg-secondary/20 hover:text-white hover:font-bold hover:scale-105'
+              }`}
+          >
+            {label}
+          </Link>
+        );
+      })}
+
+      {/* Footer: user info + logout */}
+      <div className="mt-auto flex flex-col gap-3 px-1">
+        <div className="text-xs text-surface/70 text-center">
+          <span className="font-semibold text-white">{userInfo.firstName}</span>
         </div>
         <button
           onClick={handleLogout}
-          className="inline-flex items-center gap-2 self-start rounded-full border-2 border-danger bg-surface px-3 py-1.5 text-danger font-bold hover:scale-105 transition-transform duration-150"
+          style={{
+            width: '100%',
+            padding: '10px 0',
+            borderRadius: 12,
+            border: '2px solid rgba(255,255,255,0.35)',
+            background: 'transparent',
+            color: '#fff',
+            fontSize: 14,
+            fontWeight: 600,
+            cursor: 'pointer',
+            fontFamily: "'DM Sans', sans-serif",
+            letterSpacing: '0.2px',
+            transition: 'border-color 0.2s, background 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.7)';
+            e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)';
+            e.currentTarget.style.background = 'transparent';
+          }}
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-danger">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M10 17l5-5-5-5" />
-              <path d="M15 12H3" />
-              <path d="M21 4v16a1 1 0 0 1-1 1h-8" />
-            </svg>
-          </span>
-          <span>Logout</span>
+          Logout
         </button>
       </div>
     </aside>
