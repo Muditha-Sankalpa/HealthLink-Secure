@@ -75,5 +75,16 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// GET /users/:id — internal service-to-service lookup
+app.get('/users/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('name email');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 const PORT = process.env.PORT || 5006;
 app.listen(PORT, () => console.log(`🔐 Auth Service running on port ${PORT}`));
