@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PatientNavbar from "../../components/shared/PatientNavbar";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import API from '../../api/axiosClient';
+import { PaymentFormInner } from "../payments/PaymentForm";
 
 // ── Step indicator ────────────────────────────────────────────────────────────
 const steps = ["Details", "Review", "Payment", "Confirmed"];
@@ -113,9 +117,14 @@ const ReviewRow = ({ label, value }) => (
   </div>
 );
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function BookAppointment() {
   const [doctors, setDoctors] = useState([]);
+
+  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = loggedInUser.id || loggedInUser._id; 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -135,6 +144,7 @@ export default function BookAppointment() {
   });
 
   const [estimatedSlot, setEstimatedSlot] = useState(null);
+  const [bookingResponse, setBookingResponse] = useState(null);
 
   useEffect(() => {
     if (form.doctorId && form.date) {
@@ -256,6 +266,7 @@ export default function BookAppointment() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Booking failed");
 
+      setBookingResponse(data); 
       setStep(2);
     } catch (err) {
       setError(err.message);
@@ -615,7 +626,7 @@ export default function BookAppointment() {
               )}
 
               {/* ── STEP 2: Dummy Payment ── */}
-              {step === 2 && (
+              {/* {step === 2 && (
                 <div className="fade-up">
                   <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 20, color: "#122056", marginBottom: 4 }}>
                     Payment
@@ -681,7 +692,24 @@ export default function BookAppointment() {
                     Pay LKR {selectedDoctor?.consultationFee?.toLocaleString() || "2,500"}.00
                   </button>
                 </div>
-              )}
+              )} */}
+
+              {step === 2 && (
+  <div className="fade-up">
+    <Elements stripe={stripePromise}>
+      <PaymentFormInner 
+        appointmentData={{
+          appointmentId: bookingResponse?.appointment?._id || bookingResponse?._id,
+          amount: selectedDoctor?.consultationFee || 2500,
+          doctorName: selectedDoctor?.name,
+          type: form.appointmentType,
+          patientId: userId
+        }} 
+        onSuccess={() => setStep(3)} // Move to success step on payment
+      />
+    </Elements>
+  </div>
+)}
 
               {/* ── STEP 3: Confirmed ── */}
               {step === 3 && (

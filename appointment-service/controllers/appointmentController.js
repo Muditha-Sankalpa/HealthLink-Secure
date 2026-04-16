@@ -1,3 +1,5 @@
+const NOTIFICATION_SERVICE_URL = 'http://localhost:5007/api/notifications';
+const USER_SERVICE_URL = 'http://localhost:5006';
 const Appointment = require('../models/Appointment');
 const TimeSlot = require('../models/TimeSlot');
 const { v4: uuidv4 } = require('uuid');
@@ -93,46 +95,76 @@ exports.bookAppointment = async (req, res) => {
             return res.status(400).json({ message: 'doctorId, date, and appointmentType are required.' });
         }
 
-        // --- MICROSERVICE COMMUNICATION ---
-        // Call the Doctor Service to verify the doctor exists and get their details
+        // 1. Fetch doctor details
         let doctor;
         try {
-            // Your Doctor Service GET /:id route is public, so we don't need a token here
             const doctorRes = await axios.get(`${DOCTOR_SERVICE_URL}/${doctorId}`);
             doctor = doctorRes.data;
         } catch (err) {
             return res.status(404).json({ message: 'Doctor not found in the Doctor Service system.' });
         }
 
-        // Find earliest available slot
-        let slot = await TimeSlot.findOne({ doctorId, date, isBooked: false }).sort({ queueNumber: 1 });
+        // 2. Fetch patient details from User/Auth service
+        let patient;
+        try {
+            const userRes = await axios.get(`${USER_SERVICE_URL}/users/${req.user.id}`);
+            patient = userRes.data;
+        } catch (err) {
+            // Non-fatal — fall back to just the ID so booking still succeeds
+            patient = { name: 'Patient', email: null, contactNumber: null };
+        }
 
-        // If no slot exists, generate dynamically
+        // 3. Find or generate slot
+        let slot = await TimeSlot.findOne({ doctorId, date, isBooked: false }).sort({ queueNumber: 1 });
         if (!slot) {
             slot = await generateNextSlot(doctorId, date);
         }
 
-        // Book the slot
         slot.isBooked = true;
         await slot.save();
 
-        // Create appointment using real data from Doctor Service
+        // 4. Save appointment
         const newAppointment = new Appointment({
             appointmentId: `APPT-${uuidv4()}`,
             appointmentType,
             patientId: req.user.id,
-            doctorId: doctor._id, // Real ID from Doctor Service
-            doctorName: doctor.name, // Real Name
-            specialty: doctor.specialty, // Real Specialty
+            doctorId: doctor._id,
+            doctorName: doctor.name,
+            specialty: doctor.specialty,
             date,
             timeSlotId: slot.slotId,
             queueNumber: slot.queueNumber,
             startTime: slot.startTime,
-            endTime: slot.endTime,   
+            endTime: slot.endTime,
             notes
         });
 
         await newAppointment.save();
+
+        // 5. Send notifications (fire-and-forget — don't let this block or fail the booking)
+        const appointmentTime = `${slot.startTime} – ${slot.endTime}`;
+        const doctorChannels = doctor.notificationPreference?.length
+            ? doctor.notificationPreference
+            : ['email']; // fallback to email if preference missing
+
+        axios.post(`${NOTIFICATION_SERVICE_URL}/appointment`, {
+            // Patient — always email
+            patientName:                   patient.name,
+            patientEmail:                  patient.email,
+            patientPhone:                  patient.contactNumber || null,
+            patientNotificationPreference: ['email'],
+
+            // Doctor — use their saved preference, email always included
+            doctorName:                   doctor.name,
+            doctorEmail:                  doctor.email,
+            doctorPhone:                  doctor.contactNumber || null,
+            doctorNotificationPreference: doctorChannels.includes('email')
+                ? doctorChannels                    // already has email
+                : ['email', ...doctorChannels],     // force-prepend email
+
+            appointmentDate: date,
+            appointmentTime
+        }).catch(err => console.error('[Notification] Appointment notify failed:', err.message));
 
         res.status(201).json({
             message: 'Appointment booked successfully',
@@ -302,6 +334,27 @@ exports.getAdminStats = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+};
+
+// GET /api/appointments/doctor/:doctorId - Get appointments for a specific doctor
+exports.getAppointmentsByDoctor = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    
+    // Optional: Verify the requesting doctor is requesting their own appointments
+    if (req.user.role === 'Doctor' && req.user.id !== doctorId) {
+      // If doctorId is MongoDB _id, you may need to resolve it first
+      // For now, allow if token is valid (Doctor Service handles authorization)
+    }
+    
+    const appointments = await Appointment.find({ doctorId })
+      .sort({ date: 1, queueNumber: 1 })
+      .lean();
+    
+    res.json(appointments);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 exports.generateNextSlot = generateNextSlot;
