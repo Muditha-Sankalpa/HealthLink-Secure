@@ -81,7 +81,7 @@ const NAV_LINKS = [
   { label: 'Home',          to: '/' },
   { label: 'Dashboard',     to: '/patient' },
   { label: 'Appointments',  to: '/patient/appointments' },
-  { label: 'Consultations', to: '/patient/upload-report' },
+  { label: 'Consultations', to: '/allSessions' },
   { label: 'Payments',      to: '/allPayments' },
 ];
 
