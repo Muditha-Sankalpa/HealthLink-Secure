@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { loginUser, registerUser  } from "../../services/authService";
-import { useNavigate } from "react-router-dom";
+import { loginUser, registerUser } from "../../services/authService";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button, ErrorMessage } from "../../components/shared";
 import { getProfile as getPatientProfile } from "../../api/patientApi";
 
@@ -23,13 +23,11 @@ const COLORS = {
 const inputStyle = {
   width: "100%",
   height: 44,
-  border: `1.5px solid ${COLORS.border}`,
+  border: "1.5px solid " + COLORS.border,
   borderRadius: 10,
   background: COLORS.surface,
   padding: "0 14px 0 40px",
 };
-
-// ── SVG Icons ────────────────────────────────────────────────────────────────
 
 const IconEmail = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -50,12 +48,6 @@ const IconUser = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
     <circle cx="8" cy="5" r="3" stroke={COLORS.primary} strokeWidth="1.3" />
     <path d="M1 14c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke={COLORS.primary} strokeWidth="1.3" strokeLinecap="round" />
-  </svg>
-);
-
-const IconShield = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M8 1L3 4v4c0 3 2.2 5.8 5 6.7 2.8-.9 5-3.7 5-6.7V4L8 1z" stroke={COLORS.primary} strokeWidth="1.3" strokeLinejoin="round" />
   </svg>
 );
 
@@ -88,380 +80,45 @@ const IconGitHub = () => (
 );
 
 const BrandLogo = () => (
-  <img
-    src="/LOGO.png"
-    alt="HealthLink Logo"
-    style={{
-      width: 60,
-      height: 60,
-      borderRadius: 10,
-      objectFit: "cover",
-    }}
-  />
+  <img src="/LOGO.png" alt="HealthLink Logo" style={{ width: 60, height: 60, borderRadius: 10, objectFit: "cover" }} />
 );
 
-// ── Reusable Field Component ─────────────────────────────────────────────────
-
-const Field = ({ label, icon: Icon, type = "text", placeholder, children }) => (
+const Field = ({ label, icon: Icon, children }) => (
   <div style={{ marginBottom: 16 }}>
-    <label style={{
-      display: "block", fontSize: 12, fontWeight: 600,
-      color: COLORS.labelColor, marginBottom: 6,
-      letterSpacing: "0.4px", textTransform: "uppercase",
-    }}>
+    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: COLORS.labelColor, marginBottom: 6, letterSpacing: "0.4px", textTransform: "uppercase" }}>
       {label}
     </label>
     <div style={{ position: "relative" }}>
-      <span style={{
-        position: "absolute", left: 13, top: "50%",
-        transform: "translateY(-50%)", opacity: 0.4,
-        display: "flex", alignItems: "center",
-      }}>
+      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", opacity: 0.4, display: "flex", alignItems: "center" }}>
         {Icon && <Icon />}
       </span>
-      {children || (
-        <input
-          type={type}
-          placeholder={placeholder}
-          style={{
-            width: "100%", height: 44,
-            border: `1.5px solid ${COLORS.border}`,
-            borderRadius: 10, background: COLORS.surface,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 14,
-            color: COLORS.inputText, padding: "0 14px 0 40px",
-            outline: "none", boxSizing: "border-box",
-          }}
-          onFocus={e => (e.target.style.borderColor = COLORS.accent)}
-          onBlur={e => (e.target.style.borderColor = COLORS.border)}
-        />
-      )}
+      {children}
     </div>
   </div>
 );
 
-// ── Login Panel ───────────────────────────────────────────────────────────────
-
-const LoginPanel = ({ onSwitch }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    try {
-      setError("");
-
-      const data = await loginUser({ email, password });
-
-      // Save token
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Prevent deactivated patients from briefly redirecting to dashboard
-      if (data?.user?.role === "Patient") {
-        try {
-          await getPatientProfile();
-        } catch (err) {
-          const status = err?.response?.status;
-          const apiMessage = err?.response?.data?.message;
-          const isDeactivated =
-            status === 403 ||
-            String(apiMessage || err?.message || "").toLowerCase().includes("deactivated");
-
-          if (isDeactivated) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            setError("Your account has been deactivated. Please contact support.");
-            return;
-          }
-        }
-      }
-
-      // Redirect based on role
-      if (data.user.role === "Admin") navigate("/admin/dashboard");
-      else if (data.user.role === "Doctor") navigate("/doctor/profile");
-      else navigate("/patient");
-
-    } catch (err) {
-        const status = err?.response?.status;
-        const apiMessage = err?.response?.data?.message;
-        const isDeactivated =
-          status === 403 ||
-          String(apiMessage || err?.message || "").toLowerCase().includes("deactivated");
-
-        if (isDeactivated) {
-          setError("Your account has been deactivated. Please contact support.");
-          return;
-        }
-
-        setError(
-          apiMessage ||
-          err?.message ||
-          "Login failed. Please try again."
-        );
-      }
-  };
-
-  const handleRegister = async () => {
-    try {
-      setError("");
-
-      if (!name || !email || !password) {
-        setError("All fields are required");
-        return;
-      }
-
-      if (password !== confirm) {
-        setError("Passwords do not match");
-        return;
-      }
-
-      setLoading(true);
-
-      const res = await registerUser({
-        name,
-        email,
-        password
-      });
-
-      setSuccess("Account created successfully!");      
-      setTab("login");
-
-    } catch (err) {
-      setError(
-        err?.response?.data?.message ||
-        err?.message ||
-        "Registration failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div>
-      <h2 style={{ fontSize: 26, color: COLORS.primary }}>Welcome back</h2>
-
-      {/* ✅ ERROR MESSAGE */}
-      {error && <ErrorMessage message={error} />}
-
-      {/* ✅ EMAIL */}
-      <Field label="Email address" icon={IconEmail}>
-        <input
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={inputStyle}
-        />
-      </Field>
-
-      {/* ✅ PASSWORD */}
-      <Field label="Password" icon={IconLock}>
-        <input
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={inputStyle}
-        />
-      </Field>
-
-      {/* ✅ BUTTON (Shared) */}
-      <PrimaryButton
-          color={COLORS.accent}
-          icon={<IconArrowRight />}
-          onClick={handleLogin}>
-      Sign In
-    </PrimaryButton>
-
-      <Divider />
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <SocialButton icon={<IconGoogle />}>
-          Continue with Google
-        </SocialButton>
-
-        <SocialButton icon={<IconGitHub />}>
-          Continue with GitHub
-        </SocialButton>
-      </div> <br/>
-
-      <p style={{ fontSize: 12, textAlign: "center", color: COLORS.mutedText }}>
-        Don't have an account?{" "}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            onSwitch();
-          }}
-          style={{
-            color: COLORS.accent,
-            textDecoration: "none",
-            fontWeight: 500,
-            cursor: "pointer",
-          }}
-        >
-          Create one
-        </a>
-      </p>
-    </div>
-  );
-};
-
-// ── Register Panel ────────────────────────────────────────────────────────────
-
-const RegisterPanel = ({ onSwitch }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleRegister = async () => {
-    try {
-      setError("");
-
-      if (!name || !email || !password || !confirm) {
-        setError("All fields are required");
-        return;
-      }
-
-      if (password !== confirm) {
-        setError("Passwords do not match");
-        return;
-      }
-
-      setLoading(true);
-
-      await registerUser({
-        name,
-        email,
-        password,
-        role: "Patient",
-      });
-
-      alert("Account created successfully!");
-      onSwitch(); // switch to login
-
-    } catch (err) {
-      setError(
-        err?.response?.data?.message ||
-        err?.message ||
-        "Registration failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div>
-      <h2 style={{ fontSize: 26, color: COLORS.primary, marginBottom: 6 }}>
-        Create account
-      </h2>
-
-      <p style={{ fontSize: 13, color: COLORS.mutedText, marginBottom: 28 }}>
-        Join HealthLink — it takes under a minute
-      </p>
-
-      {error && <ErrorMessage message={error} />}
-
-      <Field
-        label="Full name"
-        icon={IconUser}
-        placeholder="Dr. Jane Smith"
-      >
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={inputStyle}
-        />
-      </Field>
-
-      <Field
-        label="Email address"
-        icon={IconEmail}
-        placeholder="you@example.com"
-      >
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={inputStyle}
-        />
-      </Field>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <Field label="Password" icon={IconLock}>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
-
-        <Field label="Confirm" icon={IconLock}>
-          <input
-            type="password"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
-      </div>
-
-      <PrimaryButton
-        color={COLORS.accent}
-        icon={<IconPlus />}
-        onClick={handleRegister}
-      >
-        {loading ? "Creating..." : "Create Account"}
-      </PrimaryButton>
-
-      <p style={{ fontSize: 11, color: "#a0a8cc", textAlign: "center", marginTop: 12 }}>
-        By registering, you agree to our{" "}
-        <a href="#" style={{ color: COLORS.accent }}>Terms</a>{" "}
-        and{" "}
-        <a href="#" style={{ color: COLORS.accent }}>Privacy Policy</a>
-      </p>
-
-      <p style={{ fontSize: 12, color: "#a0a8cc", textAlign: "center", marginTop: 16 }}>
-        Already have an account?{" "}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            onSwitch();
-          }}
-          style={{ color: COLORS.accent, fontWeight: 500 }}
-        >
-          Sign in
-        </a>
-      </p>
-    </div>
-  );
-};
-
-// ── Shared Sub-components ─────────────────────────────────────────────────────
-
-const PrimaryButton = ({ children, color, icon , onClick}) => {
+const PrimaryButton = ({ children, color, icon, onClick }) => {
   const [hovered, setHovered] = useState(false);
   return (
     <button
       onClick={onClick}
       style={{
-        width: "100%", height: 48,
-        background: hovered ? (color === COLORS.primary ? "#1a2d6e" : "#4a54c8") : color,
-        border: "none", borderRadius: 12,
-        fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600,
-        color: "#fff", cursor: "pointer",
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-        marginBottom: 20, transition: "background 0.2s",
+        width: "100%",
+        height: 48,
+        background: hovered ? "#4a54c8" : color,
+        border: "none",
+        borderRadius: 12,
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 15,
+        fontWeight: 600,
+        color: "#fff",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        marginBottom: 20,
+        transition: "background 0.2s",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -478,12 +135,18 @@ const SocialButton = ({ children, icon }) => {
     <button
       style={{
         height: 40,
-        border: `1.5px solid ${hovered ? COLORS.accent : COLORS.border}`,
+        border: "1.5px solid " + (hovered ? COLORS.accent : COLORS.border),
         borderRadius: 10,
         background: hovered ? "#f0f1fb" : COLORS.surface,
-        fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-        color: COLORS.labelColor, cursor: "pointer",
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 13,
+        fontWeight: 500,
+        color: COLORS.labelColor,
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
         transition: "border-color 0.2s, background 0.2s",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -503,130 +166,243 @@ const Divider = () => (
   </div>
 );
 
-// ── Main AuthPage Component ───────────────────────────────────────────────────
+const LoginPanel = ({ onSwitch }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogin = async () => {
+    try {
+      setError("");
+      const data = await loginUser({ email, password });
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      if (data?.user?.role === "Patient") {
+        try {
+          await getPatientProfile();
+        } catch (err) {
+          const status = err?.response?.status;
+          const apiMessage = err?.response?.data?.message;
+          const isDeactivated = status === 403 || String(apiMessage || err?.message || "").toLowerCase().includes("deactivated");
+          if (isDeactivated) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setError("Your account has been deactivated. Please contact support.");
+            return;
+          }
+        }
+      }
+
+      const from = location.state?.from?.pathname;
+      if (from) {
+        navigate(from, { replace: true });
+      } else if (data.user.role === "Admin") {
+        navigate("/admin/dashboard");
+      } else if (data.user.role === "Doctor") {
+        navigate("/doctor/profile");
+      } else {
+        navigate("/patient");
+      }
+    } catch (err) {
+      const apiMessage = err?.response?.data?.message;
+      setError(apiMessage || err?.message || "Login failed. Please try again.");
+    }
+  };
+
+  return (
+    <div>
+      <h2 style={{ fontSize: 26, color: COLORS.primary }}>Welcome back</h2>
+      {error && <ErrorMessage message={error} />}
+      <Field label="Email address" icon={IconEmail}>
+        <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
+      </Field>
+      <Field label="Password" icon={IconLock}>
+        <input type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
+      </Field>
+      <PrimaryButton color={COLORS.accent} icon={<IconArrowRight />} onClick={handleLogin}>
+        Sign In
+      </PrimaryButton>
+      <Divider />
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <SocialButton icon={<IconGoogle />}>Continue with Google</SocialButton>
+        <SocialButton icon={<IconGitHub />}>Continue with GitHub</SocialButton>
+      </div>
+      <br />
+      <p style={{ fontSize: 12, textAlign: "center", color: COLORS.mutedText }}>
+        Don't have an account?{" "}
+        <a href="#" onClick={(e) => { e.preventDefault(); onSwitch(); }} style={{ color: COLORS.accent, textDecoration: "none", fontWeight: 500, cursor: "pointer" }}>
+          Create one
+        </a>
+      </p>
+    </div>
+  );
+};
+
+const RegisterPanel = ({ onSwitch }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    try {
+      setError("");
+      if (!name || !email || !password || !confirm) {
+        setError("All fields are required");
+        return;
+      }
+      if (password !== confirm) {
+        setError("Passwords do not match");
+        return;
+      }
+      setLoading(true);
+      await registerUser({ name, email, password, role: "Patient" });
+      alert("Account created successfully!");
+      onSwitch();
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <h2 style={{ fontSize: 26, color: COLORS.primary, marginBottom: 6 }}>Create account</h2>
+      <p style={{ fontSize: 13, color: COLORS.mutedText, marginBottom: 28 }}>Join HealthLink, it takes under a minute</p>
+      {error && <ErrorMessage message={error} />}
+      <Field label="Full name" icon={IconUser}>
+        <input type="text" placeholder="Dr. Jane Smith" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
+      </Field>
+      <Field label="Email address" icon={IconEmail}>
+        <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
+      </Field>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <Field label="Password" icon={IconLock}>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
+        </Field>
+        <Field label="Confirm" icon={IconLock}>
+          <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} style={inputStyle} />
+        </Field>
+      </div>
+      <PrimaryButton color={COLORS.accent} icon={<IconPlus />} onClick={handleRegister}>
+        {loading ? "Creating..." : "Create Account"}
+      </PrimaryButton>
+      <p style={{ fontSize: 11, color: "#a0a8cc", textAlign: "center", marginTop: 12 }}>
+        By registering, you agree to our{" "}
+        <a href="#" style={{ color: COLORS.accent }}>Terms</a>{" "}
+        and{" "}
+        <a href="#" style={{ color: COLORS.accent }}>Privacy Policy</a>
+      </p>
+      <p style={{ fontSize: 12, color: "#a0a8cc", textAlign: "center", marginTop: 16 }}>
+        Already have an account?{" "}
+        <a href="#" onClick={(e) => { e.preventDefault(); onSwitch(); }} style={{ color: COLORS.accent, fontWeight: 500 }}>
+          Sign in
+        </a>
+      </p>
+    </div>
+  );
+};
 
 export default function AuthPage() {
   const [tab, setTab] = useState("login");
-
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'DM Sans', sans-serif; }
-      `}</style>
+      <style>{"@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap'); * { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: 'DM Sans', sans-serif; }"}</style>
+      <div style={{ minHeight: "100vh", display: "flex", fontFamily: "'DM Sans', sans-serif", background: "#0b1a44", position: "relative", overflow: "hidden" }}>
+        <span style={{ position: "absolute", borderRadius: "50%", width: 420, height: 420, top: -80, left: -100, opacity: 0.06, background: COLORS.accent, pointerEvents: "none" }} />
+        <span style={{ position: "absolute", borderRadius: "50%", width: 260, height: 260, bottom: 60, left: 160, opacity: 0.04, background: COLORS.accent, pointerEvents: "none" }} />
+        <span style={{ position: "absolute", borderRadius: "50%", width: 140, height: 140, top: "50%", right: 40, opacity: 0.08, background: COLORS.teal, pointerEvents: "none" }} />
 
-      <div style={{
-        minHeight: "100vh", display: "flex",
-        fontFamily: "'DM Sans', sans-serif",
-        background: "#0b1a44", position: "relative", overflow: "hidden",
-      }}>
-        {/* Decorative circles */}
-        {[
-          { w: 420, h: 420, top: -80, left: -100, opacity: 0.06 },
-          { w: 260, h: 260, bottom: 60, left: 160, opacity: 0.04 },
-          { w: 140, h: 140, top: "50%", right: 40, opacity: 0.08, bg: COLORS.teal },
-        ].map((c, i) => (
-          <span key={i} style={{
-            position: "absolute", borderRadius: "50%",
-            width: c.w, height: c.h, top: c.top, bottom: c.bottom,
-            left: c.left, right: c.right, opacity: c.opacity,
-            background: c.bg || COLORS.accent, pointerEvents: "none",
-          }} />
-        ))}
-
-        {/* ── Left Branding Panel ── */}
-        <div style={{
-          flex: 1, display: "flex", flexDirection: "column",
-          justifyContent: "center", padding: "60px 56px",
-          position: "relative", zIndex: 2,
-        }}>
-          {/* Brand */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 56px", position: "relative", zIndex: 2 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 56 }}>
             <BrandLogo />
             <div>
-              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 32, color: "#fff", letterSpacing: "-0.3px" }}>
-                HealthLink
-              </div>
-              <div style={{ fontSize: 15, color: COLORS.mutedBlue, letterSpacing: "2px", textTransform: "uppercase", marginTop: 1, fontWeight: 500 }}>
-                Medical System
-              </div>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 32, color: "#fff", letterSpacing: "-0.3px" }}>HealthLink</div>
+              <div style={{ fontSize: 15, color: COLORS.mutedBlue, letterSpacing: "2px", textTransform: "uppercase", marginTop: 1, fontWeight: 500 }}>Medical System</div>
             </div>
           </div>
 
-          {/* Badge */}
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 5,
-            background: "rgba(91,101,220,0.12)", color: COLORS.accent,
-            fontSize: 11, fontWeight: 600, padding: "4px 10px",
-            borderRadius: 20, marginBottom: 20, letterSpacing: "0.5px", width: "fit-content",
-          }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(91,101,220,0.12)", color: COLORS.accent, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 20, marginBottom: 20, letterSpacing: "0.5px", width: "fit-content" }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: COLORS.teal, display: "inline-block" }} />
             System Online
           </div>
 
-          {/* Tagline */}
-          <h1 style={{
-            fontFamily: "'DM Serif Display', serif", fontSize: 42,
-            lineHeight: 1.15, color: "#fff", marginBottom: 20, maxWidth: 340,
-          }}>
+          <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 42, lineHeight: 1.15, color: "#fff", marginBottom: 20, maxWidth: 340 }}>
             Your health,{" "}
             <em style={{ fontStyle: "italic", color: "#7ecbb5" }}>connected</em>
-            <br />& secured.
+            <br />and secured.
           </h1>
 
           <p style={{ fontSize: 14, color: "#8a9bcc", lineHeight: 1.7, maxWidth: 300, marginBottom: 48 }}>
-            A unified platform for patients, doctors, and administrators — bringing care closer through intelligent, seamless healthcare management.
+            A unified platform for patients, doctors, and administrators, bringing care closer through intelligent, seamless healthcare management.
           </p>
 
-          {/* Stats */}
           <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-            {[["24/7", "Availability"], ["3", "User Roles"], ["SSL", "Encrypted"]].map(([val, lbl], i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 32 }}>
-                {i > 0 && <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />}
-                <div>
-                  <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#fff" }}>{val}</div>
-                  <div style={{ fontSize: 11, color: COLORS.mutedBlue, letterSpacing: "1px", textTransform: "uppercase", marginTop: 2 }}>{lbl}</div>
-                </div>
-              </div>
-            ))}
+            <div>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#fff" }}>24/7</div>
+              <div style={{ fontSize: 11, color: COLORS.mutedBlue, letterSpacing: "1px", textTransform: "uppercase", marginTop: 2 }}>Availability</div>
+            </div>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
+            <div>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#fff" }}>3</div>
+              <div style={{ fontSize: 11, color: COLORS.mutedBlue, letterSpacing: "1px", textTransform: "uppercase", marginTop: 2 }}>User Roles</div>
+            </div>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
+            <div>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#fff" }}>SSL</div>
+              <div style={{ fontSize: 11, color: COLORS.mutedBlue, letterSpacing: "1px", textTransform: "uppercase", marginTop: 2 }}>Encrypted</div>
+            </div>
           </div>
         </div>
 
-        {/* ── Right Form Panel ── */}
-        <div style={{
-          width: 460, flexShrink: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          padding: "40px 48px", background: COLORS.lightBg,
-          position: "relative", zIndex: 2,
-        }}>
+        <div style={{ width: 460, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 48px", background: COLORS.lightBg, position: "relative", zIndex: 2 }}>
           <div style={{ width: "100%", maxWidth: 360 }}>
-
-            {/* Tabs */}
-            <div style={{
-              display: "flex", background: "#e8eaf4",
-              borderRadius: 12, padding: 4, marginBottom: 32,
-            }}>
-              {["login", "register"].map(t => (
-                <button
-                  key={t}
-                  onClick={() => setTab(t)}
-                  style={{
-                    flex: 1, padding: "9px", border: "none",
-                    borderRadius: 9,
-                    background: tab === t ? "#fff" : "transparent",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-                    color: tab === t ? COLORS.primary : "#7a84b8",
-                    cursor: "pointer",
-                    boxShadow: tab === t ? "0 1px 4px rgba(18,32,86,0.12)" : "none",
-                    transition: "all 0.2s",
-                  }}
-                >
-                  {t === "login" ? "Sign In" : "Register"}
-                </button>
-              ))}
+            <div style={{ display: "flex", background: "#e8eaf4", borderRadius: 12, padding: 4, marginBottom: 32 }}>
+              <button
+                onClick={() => setTab("login")}
+                style={{
+                  flex: 1,
+                  padding: "9px",
+                  border: "none",
+                  borderRadius: 9,
+                  background: tab === "login" ? "#fff" : "transparent",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: tab === "login" ? COLORS.primary : "#7a84b8",
+                  cursor: "pointer",
+                  boxShadow: tab === "login" ? "0 1px 4px rgba(18,32,86,0.12)" : "none",
+                  transition: "all 0.2s",
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => setTab("register")}
+                style={{
+                  flex: 1,
+                  padding: "9px",
+                  border: "none",
+                  borderRadius: 9,
+                  background: tab === "register" ? "#fff" : "transparent",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: tab === "register" ? COLORS.primary : "#7a84b8",
+                  cursor: "pointer",
+                  boxShadow: tab === "register" ? "0 1px 4px rgba(18,32,86,0.12)" : "none",
+                  transition: "all 0.2s",
+                }}
+              >
+                Register
+              </button>
             </div>
-
             {tab === "login"
               ? <LoginPanel onSwitch={() => setTab("register")} />
               : <RegisterPanel onSwitch={() => setTab("login")} />

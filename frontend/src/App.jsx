@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import Home from './pages/Home';
 import AdminDashboard from './pages/admin/AdminDashboard';
-import AuthPage from "./pages/auth/AuthPage";
+import AuthPage from './pages/auth/AuthPage';
 import PatientDashboard from './pages/patient/PatientDashboard';
 import SessionsPage from './pages/telemedicine/SessionsPageAdmin';
 import BookAppointment from './components/appointments/BookAppointment';
-// Doctor Imports
 import DoctorProfile from './pages/doctor/DoctorProfile';
 import DoctorAppointments from './pages/doctor/DoctorAppointments';
 import Prescriptions from './pages/doctor/Prescriptions';
@@ -22,25 +22,62 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/patient" element={<PatientDashboard />} />
-       
-        {/* Doctor Routes */}
-        <Route path="/doctor/profile" element={<DoctorProfile />} />
-        <Route path="/doctor/appointments" element={<DoctorAppointments />} />
-        <Route path="/doctor/prescriptions" element={<Prescriptions />} />
-        <Route path="/doctor/availability" element={<Availability />} />
-        <Route path="/doctor/telemedicine" element={<DoctorTelemedicine />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/login" element={<AuthPage />} />
-        <Route path="/allSessions" element={<SessionsPage />} />
-        <Route path="/book-appointment" element={<BookAppointment />} />
-        <Route path="/patient/appointments" element={<PatientAppointments />} />
-        <Route path="/admin/telemedicine/join/:sessionId" element={<MeetingRoom />} />
-        <Route path="/patient/symptom-checker" element={<SymptomChecker />} />
-        <Route path="/admin/appointments" element={<AdminAppointments />} />
-        <Route path="/payment" element={<PaymentComponent />} />
-        <Route path="/allPayments" element={<PaymentsAdmin />} />
+
+        {/* Patient-only routes */}
+        <Route path="/patient" element={
+          <ProtectedRoute allowedRoles={['Patient']}><PatientDashboard /></ProtectedRoute>
+        } />
+        <Route path="/patient/appointments" element={
+          <ProtectedRoute allowedRoles={['Patient']}><PatientAppointments /></ProtectedRoute>
+        } />
+        <Route path="/patient/symptom-checker" element={
+          <ProtectedRoute allowedRoles={['Patient']}><SymptomChecker /></ProtectedRoute>
+        } />
+        <Route path="/book-appointment" element={
+          <ProtectedRoute allowedRoles={['Patient']}><BookAppointment /></ProtectedRoute>
+        } />
+        <Route path="/payment" element={
+          <ProtectedRoute allowedRoles={['Patient']}><PaymentComponent /></ProtectedRoute>
+        } />
+
+        {/* Doctor-only routes */}
+        <Route path="/doctor/profile" element={
+          <ProtectedRoute allowedRoles={['Doctor']}><DoctorProfile /></ProtectedRoute>
+        } />
+        <Route path="/doctor/appointments" element={
+          <ProtectedRoute allowedRoles={['Doctor']}><DoctorAppointments /></ProtectedRoute>
+        } />
+        <Route path="/doctor/prescriptions" element={
+          <ProtectedRoute allowedRoles={['Doctor']}><Prescriptions /></ProtectedRoute>
+        } />
+        <Route path="/doctor/availability" element={
+          <ProtectedRoute allowedRoles={['Doctor']}><Availability /></ProtectedRoute>
+        } />
+        <Route path="/doctor/telemedicine" element={
+          <ProtectedRoute allowedRoles={['Doctor']}><DoctorTelemedicine /></ProtectedRoute>
+        } />
+
+        {/* Admin-only routes */}
+        <Route path="/admin/dashboard" element={
+          <ProtectedRoute allowedRoles={['Admin']}><AdminDashboard /></ProtectedRoute>
+        } />
+        <Route path="/admin/appointments" element={
+          <ProtectedRoute allowedRoles={['Admin']}><AdminAppointments /></ProtectedRoute>
+        } />
+        <Route path="/allSessions" element={
+          <ProtectedRoute allowedRoles={['Admin']}><SessionsPage /></ProtectedRoute>
+        } />
+        <Route path="/allPayments" element={
+          <ProtectedRoute allowedRoles={['Admin']}><PaymentsAdmin /></ProtectedRoute>
+        } />
+
+        {/* Shared across authenticated roles */}
+        <Route path="/admin/telemedicine/join/:sessionId" element={
+          <ProtectedRoute allowedRoles={['Admin', 'Doctor', 'Patient']}><MeetingRoom /></ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );
