@@ -10,7 +10,8 @@ const patientSchema = new mongoose.Schema({
   address: { type: String },
   bloodGroup: { type: String },
   notificationPreference: { type: [String], enum: ['email', 'sms'], default: ['email', 'sms'] },
-  status: { type: String, enum: ['active', 'deactivated'], default: 'active' }
+  status: { type: String, enum: ['active', 'deactivated'], default: 'active' },
+  avatarUrl: { type: String, default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Patient', patientSchema);
