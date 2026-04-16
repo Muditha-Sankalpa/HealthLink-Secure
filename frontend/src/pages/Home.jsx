@@ -40,6 +40,14 @@ function Home() {
             Add your buttons below
           </p>
 
+          {/* Patient Dashboard */}
+          <button 
+            onClick={() => navigate("/patient")}
+            className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
+          >
+            Patient Dashboard
+          </button>
+
           {/* Telemedicine */}
           <button 
             onClick={() => navigate("/allSessions")}
