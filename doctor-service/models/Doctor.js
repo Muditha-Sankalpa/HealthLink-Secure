@@ -22,7 +22,8 @@ const doctorSchema = new mongoose.Schema({
     enum: ['active', 'inactive', 'suspended'], 
     default: 'active' 
   },
-  verified: { type: Boolean, default: false }
+  verified: { type: Boolean, default: false },
+  isVirtualConsultationAvailable: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Doctor', doctorSchema);
