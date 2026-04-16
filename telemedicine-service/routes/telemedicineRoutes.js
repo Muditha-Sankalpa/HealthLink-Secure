@@ -8,7 +8,8 @@ getAllSessions,
   createSession,
   getSessionById,
   startSession,
-  endSession
+  endSession,
+  deleteSession
 } = require('../controllers/telemedicineController');
 
 // Get all sessions (with optional filters)
@@ -29,12 +30,14 @@ getAllSessions,
 
 router.get('/', verifyToken, authorizeRole('Patient', 'Admin'), getAllSessions);
 
-router.post('/create', verifyToken, authorizeRole('Admin'), createSession);
+router.post('/create', verifyToken, authorizeRole('Admin', 'Patient'), createSession);
 
 router.get('/:id', verifyToken, authorizeRole('Patient', 'Admin'), getSessionById);
 
 router.put('/start/:id', verifyToken, authorizeRole('Admin'), startSession);
 
 router.put('/end/:id', verifyToken, authorizeRole('Admin'), endSession);
+
+router.delete('/:id', deleteSession);
 
 module.exports = router;
