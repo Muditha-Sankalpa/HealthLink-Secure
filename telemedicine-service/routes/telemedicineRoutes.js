@@ -28,15 +28,15 @@ getAllSessions,
 // // End session
 // router.put('/end/:id', endSession);
 
-router.get('/', verifyToken, authorizeRole('Patient', 'Admin'), getAllSessions);
+router.get('/', verifyToken, authorizeRole('Patient', 'Admin', 'Doctor'), getAllSessions);
 
-router.post('/create', verifyToken, authorizeRole('Admin', 'Patient'), createSession);
+router.post('/create', verifyToken, authorizeRole('Admin', 'Patient', 'Doctor'), createSession);
 
-router.get('/:id', verifyToken, authorizeRole('Patient', 'Admin'), getSessionById);
+router.get('/:id', verifyToken, authorizeRole('Patient', 'Admin', 'Doctor'), getSessionById);
 
-router.put('/start/:id', verifyToken, authorizeRole('Admin'), startSession);
+router.put('/start/:id', verifyToken, authorizeRole('Admin', 'Doctor'), startSession);
 
-router.put('/end/:id', verifyToken, authorizeRole('Admin'), endSession);
+router.put('/end/:id', verifyToken, authorizeRole('Admin', 'Doctor'), endSession);
 
 router.delete('/:id', deleteSession);
 

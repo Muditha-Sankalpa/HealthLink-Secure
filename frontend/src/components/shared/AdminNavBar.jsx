@@ -82,6 +82,7 @@ const NAV_LINKS = [
   { label: 'Doctors',       to: '/admin/doctors' },
   { label: 'Appointments',  to: '/admin/appointments' },
   { label: 'Consultations', to: '/allSessions' },
+  { label: 'Payments',      to: '/allPayments' },
 ];
 
 // ---------------------------------------------------------------------------
