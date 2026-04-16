@@ -5,6 +5,7 @@ import AuthPage from "./pages/auth/AuthPage";
 import PatientDashboard from './pages/patient/PatientDashboard';
 import SessionsPage from './pages/telemedicine/SessionsPageAdmin';
 import BookAppointment from './components/appointments/BookAppointment';
+import MeetingRoom from './pages/telemedicine/MeetingRoom';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<AuthPage />} />
         <Route path="/allSessions" element={<SessionsPage />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
+        <Route path="/admin/telemedicine/join/:sessionId" element={<MeetingRoom />} />
       </Routes>
     </BrowserRouter>
   );
