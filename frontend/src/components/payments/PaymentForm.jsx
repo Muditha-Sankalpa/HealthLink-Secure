@@ -196,7 +196,7 @@ const PaymentComponent = () => {
   const handleSuccess = (paymentIntent) => {
     console.log("Payment Successful:", paymentIntent);
     alert("Payment Successful! (Demo Mode)");
-    navigate('/allSessions');
+    navigate('/allPayments');
   };
 
   return (
