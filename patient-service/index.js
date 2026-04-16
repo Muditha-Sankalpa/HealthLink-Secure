@@ -2,13 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-
 const patientRoutes = require('./routes/patientRoutes');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
+
+app.use(express.json());
 app.use('/api/patients', patientRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
