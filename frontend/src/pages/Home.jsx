@@ -7,7 +7,6 @@ function Home() {
   return (
     <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center">
       <div className="bg-[var(--color-surface)] shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
-        
         <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
           Welcome!
         </h1>
@@ -49,7 +48,7 @@ function Home() {
           </button>
 
           <button 
-            onClick={() => navigate("/book-appointment")}
+            onClick={() => navigate("/patient/appointments")}
             className="bg-[var(--color-primary)] text-white py-2 rounded-lg hover:opacity-90 transition"
           >
             Appointment

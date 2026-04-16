@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import PatientNavbar from "../../components/shared/PatientNavbar";
 
 // ── Step indicator ────────────────────────────────────────────────────────────
 const steps = ["Details", "Review", "Payment", "Confirmed"];
@@ -275,11 +276,14 @@ useEffect(() => {
         .spin { animation: spin 0.8s linear infinite; }
       `}</style>
 
-      <div style={{
-        minHeight: "100vh", background: "#FAFAFD",
-        display: "flex", alignItems: "flex-start", justifyContent: "center",
-        padding: "48px 16px",
-      }}>
+      <div style={{ display: "flex", minHeight: "100vh", background: "#FAFAFD" }}>
+        <PatientNavbar />
+
+        <main style={{
+          flex: 1, overflowY: "auto",
+          display: "flex", alignItems: "flex-start", justifyContent: "center",
+          padding: "48px 16px 32px",
+        }}>
         <div style={{ width: "100%", maxWidth: 560 }}>
 
           {/* Header */}
@@ -642,7 +646,7 @@ useEffect(() => {
                     New Booking
                   </button>
                   <button
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/patient/appointments")}
                     style={{
                       height: 44, background: "#122056",
                       border: "none", borderRadius: 12,
@@ -656,6 +660,7 @@ useEffect(() => {
             )}
           </div>
         </div>
+        </main>
       </div>
     </>
   );
