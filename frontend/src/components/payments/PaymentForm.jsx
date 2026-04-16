@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Initialize Stripe outside of the component to avoid re-initializing on every render
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const PaymentFormInner = ({ appointmentData, onSuccess }) => {
+export const PaymentFormInner = ({ appointmentData, onSuccess }) => {
     if (!appointmentData) {
     return <div className="p-8 text-center">No appointment data found. Please go back and try again.</div>;
   }
@@ -74,7 +74,8 @@ const handleSubmit = async (e) => {
       });
       // -------------------------
 
-      onSuccess(result.paymentIntent);
+    //   onSuccess(result.paymentIntent);
+    onSuccess();
     }
   } catch (err) {
     setErrorMessage(err.response?.data?.message || "Payment failed.");

@@ -138,7 +138,7 @@ const PaymentsAdmin = () => {
         doctorName: "Dr. Admin Test",
         type: "Internal",
         appointmentId: `TEST-${Date.now()}`,
-        patientId: userId // <--- CHANGE THIS from "ADMIN-MOCK-USER" to userId
+        patientId: userId 
       }
     }
   })}
