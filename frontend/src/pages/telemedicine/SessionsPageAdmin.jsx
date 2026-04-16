@@ -14,6 +14,7 @@ import {
 import StatusBadge from "../../components/telemedicine/StatusBadge";
 import CreateSessionModal from "../../components/telemedicine/CreateSessionModal";
 import { AdminNavBar } from "../../components/shared";
+import { PatientNavBar } from "../../components/shared";
 import { useNavigate } from "react-router-dom";
 
 const SessionsPageAdmin = () => {
@@ -118,6 +119,7 @@ console.log("Sessions:", sessions.map(s => ({ title: s.sessionTitle, status: s.s
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f4f6fb" }}>
       {isAdmin && <AdminNavBar />}
+      {isPatient && <PatientNavBar/>}
 
       <div style={{ flex: 1, overflowY: "auto" }}>
         
