@@ -8,6 +8,7 @@ import BookAppointment from './components/appointments/BookAppointment';
 import PatientAppointments from './pages/patient/Patientappointments';
 import MeetingRoom from './pages/telemedicine/MeetingRoom';
 import SymptomChecker from './pages/patient/SymptomChecker';
+import AdminAppointments from './pages/admin/AdminAppointments';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/patient/appointments" element={<PatientAppointments />} />
         <Route path="/admin/telemedicine/join/:sessionId" element={<MeetingRoom />} />
         <Route path="/patient/symptom-checker" element={<SymptomChecker />} />
+        <Route path="/admin/appointments" element={<AdminAppointments />} />
       </Routes>
     </BrowserRouter>
   );
