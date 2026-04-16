@@ -11,6 +11,7 @@ router.post('/book', verifyToken, appointmentController.bookAppointment);
 router.get('/my-appointments', verifyToken, appointmentController.getMyAppointments);
 router.put('/:id', verifyToken, appointmentController.updateAppointment);
 router.put('/:id/cancel', verifyToken, appointmentController.cancelAppointment);
+router.get('/check-slot', verifyToken, appointmentController.checkNextAvailableSlot);
 router.post('/generate-slots', async (req, res) => {
     try {
         const { doctorId, date } = req.body;

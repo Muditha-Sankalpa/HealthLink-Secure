@@ -277,14 +277,7 @@ const acceptConsultation = async (req, res) => {
 // GET /api/doctors/all - Get all doctors (public - for patient search)
 const getAllDoctors = async (req, res) => {
   try {
-    const { specialty } = req.query;
-    let query = { status: 'active', verified: true };
-    
-    if (specialty) {
-      query.specialty = new RegExp(specialty, 'i');
-    }
-    
-    const doctors = await Doctor.find(query).select('-userId');
+    const doctors = await Doctor.find();
     res.json(doctors);
   } catch (err) {
     res.status(500).json({ error: err.message });

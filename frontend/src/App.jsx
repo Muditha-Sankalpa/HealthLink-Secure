@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AuthPage from "./pages/auth/AuthPage";
 import PatientDashboard from './pages/patient/PatientDashboard';
+import SessionsPage from './pages/telemedicine/SessionsPageAdmin';
+import BookAppointment from './components/appointments/BookAppointment';
 
 function App() {
   return (
@@ -11,7 +13,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/patient" element={<PatientDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/allSessions" element={<SessionsPage />} />
+        <Route path="/book-appointment" element={<BookAppointment />} />
       </Routes>
     </BrowserRouter>
   );

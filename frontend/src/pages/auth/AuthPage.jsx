@@ -88,17 +88,16 @@ const IconGitHub = () => (
 );
 
 const BrandLogo = () => (
-  <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-    <rect width="36" height="36" rx="10" fill="rgba(91,101,220,0.18)" />
-    <defs>
-      <linearGradient id="lg1" x1="8" y1="8" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#4a90e2" />
-        <stop offset="1" stopColor="#22d3a5" />
-      </linearGradient>
-    </defs>
-    <path d="M18 8v20M8 18h20" stroke="url(#lg1)" strokeWidth="3" strokeLinecap="round" />
-    <path d="M14 22 Q18 14 22 18" stroke="url(#lg1)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-  </svg>
+  <img
+    src="/LOGO.png"
+    alt="HealthLink Logo"
+    style={{
+      width: 60,
+      height: 60,
+      borderRadius: 10,
+      objectFit: "cover",
+    }}
+  />
 );
 
 // ── Reusable Field Component ─────────────────────────────────────────────────
@@ -182,7 +181,7 @@ const LoginPanel = ({ onSwitch }) => {
       // Redirect based on role
       if (data.user.role === "Admin") navigate("/admin/dashboard");
       else if (data.user.role === "Doctor") navigate("/doctor");
-      else navigate("/patient");
+      else navigate("/patient/profile");
 
     } catch (err) {
         const status = err?.response?.status;
@@ -228,7 +227,7 @@ const LoginPanel = ({ onSwitch }) => {
 
       setSuccess("Account created successfully!");      
       setTab("login");
-      
+
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -546,10 +545,10 @@ export default function AuthPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 56 }}>
             <BrandLogo />
             <div>
-              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, color: "#fff", letterSpacing: "-0.3px" }}>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 32, color: "#fff", letterSpacing: "-0.3px" }}>
                 HealthLink
               </div>
-              <div style={{ fontSize: 11, color: COLORS.mutedBlue, letterSpacing: "2px", textTransform: "uppercase", marginTop: 1, fontWeight: 500 }}>
+              <div style={{ fontSize: 15, color: COLORS.mutedBlue, letterSpacing: "2px", textTransform: "uppercase", marginTop: 1, fontWeight: 500 }}>
                 Medical System
               </div>
             </div>
