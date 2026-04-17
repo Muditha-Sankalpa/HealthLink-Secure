@@ -137,7 +137,7 @@ const buildAppointmentConfirmedEmail = ({ recipientName, isDoctor, doctorName, p
 
     <table width="100%" cellpadding="0" cellspacing="0"
            style="margin:20px 0 28px;border-collapse:collapse;">
-      ${detailRow('Doctor',           `Dr. ${doctorName}`)}
+      ${detailRow('Doctor',           `${doctorName}`)}
       ${detailRow('Specialty',        specialty || '—')}
       ${detailRow('Patient',          patientName)}
       ${detailRow('Date',             date)}
