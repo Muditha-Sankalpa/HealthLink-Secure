@@ -68,10 +68,10 @@ function App() {
           <ProtectedRoute allowedRoles={['Admin']}><AdminAppointments /></ProtectedRoute>
         } />
         <Route path="/allSessions" element={
-          <ProtectedRoute allowedRoles={['Admin']}><SessionsPage /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={['Admin', , 'Patient']}><SessionsPage /></ProtectedRoute>
         } />
         <Route path="/allPayments" element={
-          <ProtectedRoute allowedRoles={['Admin']}><PaymentsAdmin /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={['Admin', 'Patient']}><PaymentsAdmin /></ProtectedRoute>
         } />
 
         {/* Shared across authenticated roles */}

@@ -22,6 +22,9 @@ const telemedicineSessionSchema = new mongoose.Schema({
     required: true
   },
 
+  doctorName: { type: String }, 
+  patientName: { type: String },
+
   sessionTitle: {
     type: String,
     default: "Telemedicine Consultation"

@@ -10,12 +10,14 @@ import {
   MoreVertical,
   AlertCircle,
   CreditCard,
+  Hash,
   Loader2,
 } from "lucide-react";
 import StatusBadge from "../../components/telemedicine/StatusBadge";
 import CreateSessionModal from "../../components/telemedicine/CreateSessionModal";
 import { AdminNavBar } from "../../components/shared";
 import { PatientNavBar } from "../../components/shared";
+import VirtualConsultationList from "../../components/telemedicine/VirtualDoctorsModal";
 import { useNavigate } from "react-router-dom";
 
 const SessionsPageAdmin = () => {
@@ -25,12 +27,15 @@ const SessionsPageAdmin = () => {
   const isAdmin = userRole === "Admin";
   const isPatient = userRole === "Patient";
 
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [preSelectedDocId, setPreSelectedDocId] = useState("");
+  const [nameMap, setNameMap] = useState({});
 
   // LOGIC: Find if there is a session live for this specific patient
   const activeSessionForPatient = sessions.find(
@@ -40,20 +45,24 @@ const SessionsPageAdmin = () => {
   );
 
   const fetchSessions = async (isSilent = false) => {
-    try {
-      if (!isSilent) setLoading(true);
-      const response = await API.get("/telemedicine");
-      const data = Array.isArray(response.data) ? response.data : response.data.sessions;
-      setSessions(data || []);
-      setError(null);
-    } catch (err) {
-      console.error("Fetch error:", err);
-      setError("Server Error: Unable to connect to the sessions service.");
-    } finally {
-      setLoading(false);
+  try {
+    if (!isSilent) setLoading(true);
+    const response = await API.get("/telemedicine");
+    const data = Array.isArray(response.data) ? response.data : response.data.sessions;
+    setSessions(data || []);
+    
+    // FETCH NAMES HERE
+    if (data && data.length > 0) {
+      fetchNames(data);
     }
-  };
-
+    
+    setError(null);
+  } catch (err) {
+    setError("Server Error");
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
     fetchSessions();
     
@@ -75,7 +84,7 @@ const SessionsPageAdmin = () => {
     });
   };
 
-  const handleDelete = async (sessionId) => {
+ const handleDelete = async (sessionId) => {
     if (!window.confirm("Are you sure you want to delete this session?")) return;
     try {
       await API.delete(`/telemedicine/${sessionId}`);
@@ -102,6 +111,61 @@ const SessionsPageAdmin = () => {
       alert("Failed to complete session");
     }
   };
+
+  const fetchNames = async (sessions) => {
+  // 1. Get unique IDs to avoid duplicate API calls
+  const doctorIds = [...new Set(sessions.map(s => s.doctorId))];
+  const patientIds = [...new Set(sessions.map(s => s.patientId))];
+
+  const newNames = { ...nameMap };
+
+  // 2. Fetch Doctor Names (Assuming you have a route like /doctors/:id)
+  await Promise.all(doctorIds.map(async (id) => {
+    if (!newNames[id]) { // Only fetch if we don't have it yet
+      try {
+        const res = await API.get(`/doctors/${id}`); // Adjust URL to your Doctor Service
+        newNames[id] = res.data.name;
+      } catch {
+        newNames[id] = "Unknown Doctor";
+      }
+    }
+  }));
+
+   await Promise.all(patientIds.map(async (id) => {
+    if (!newNames[id]) {
+      try {
+        const res = await API.get(`/users/${id}`); // Adjust URL to your User Service
+        newNames[id] = res.data.name;
+      } catch {
+        newNames[id] = "TestPatient5";
+      }
+    }
+  }));
+
+  setNameMap(newNames);
+};
+
+  const handleCancelSession = async (session) => {
+  const confirmMsg = isAdmin 
+    ? "Are you sure you want to delete this session?" 
+    : "Are you sure you want to cancel your appointment?";
+    
+  if (!window.confirm(confirmMsg)) return;
+
+  try {
+    // We use the same DELETE endpoint, or a PUT to update status to 'CANCELLED'
+    await API.delete(`/telemedicine/${session.sessionId}`);
+    alert("Session cancelled successfully");
+    fetchSessions(true);
+  } catch (err) {
+    alert("Failed to cancel session");
+  }
+};
+
+  const handleBookDoctor = (doctorObject) => {
+  setSelectedDoctor(doctorObject);
+  setIsModalOpen(true);
+};
 
   
 
@@ -157,13 +221,19 @@ console.log("Sessions:", sessions.map(s => ({ title: s.sessionTitle, status: s.s
               </p>
             </div>
             
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-accent hover:brightness-110 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-md"
-              >
-                <Video size={18} />
-                <span>New Session</span>
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+  {/* The New Component Button */}
+  <VirtualConsultationList onBook={handleBookDoctor} />
+
+  {/* Existing New Session Button */}
+  {/* <button
+    onClick={() => setIsModalOpen(true)}
+    className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-md border border-primary"
+  >
+    <Calendar size={18} />
+    <span>New Session</span>
+  </button> */}
+</div>
             
           </div>
 
@@ -214,21 +284,48 @@ console.log("Sessions:", sessions.map(s => ({ title: s.sessionTitle, status: s.s
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-secondary">
-                    {filteredSessions.map((session) => (
-                      <tr key={session._id} className="hover:bg-background transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="font-semibold text-primary">{session.sessionTitle}</div>
-                          <div className="text-[10px] text-gray-400 font-mono">ID: {session.sessionId}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="text-sm flex flex-col gap-1">
-                            <span className="flex items-center gap-1"><Stethoscope size={12}/> {session.doctorId}</span>
-                            <span className="flex items-center gap-1 text-text-secondary"><User size={12}/> {session.patientId}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-text-primary">{formatDate(session.scheduledTime)}</td>
-                        <td className="px-6 py-4"><StatusBadge status={session.status} /></td>
-                        <td className="px-6 py-4 text-right">
+  {filteredSessions.map((session) => (
+    <tr key={session._id} className="hover:bg-background transition-colors">
+      
+      {/* 1. CLEANER SESSION INFO */}
+      <td className="px-6 py-4">
+        <div className="font-bold text-primary">{session.sessionTitle}</div>
+        <div className="flex items-center gap-1 text-[10px] text-accent font-bold uppercase tracking-tighter">
+          <Hash size={10} /> {session.sessionId}
+        </div>
+      </td>
+
+      {/* 2. HUMAN-READABLE PARTICIPANTS */}
+      <td className="px-6 py-4">
+  <div className="flex flex-col gap-1">
+    {/* Doctor Display */}
+    <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+      <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center">
+        <Stethoscope size={12} className="text-accent"/>
+      </div>
+      {nameMap[session.doctorId] || "Loading..."}
+    </div>
+
+    {/* Patient Display */}
+    <div className="flex items-center gap-2 text-xs text-text-secondary font-medium">
+      <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+        <User size={12} className="text-primary"/>
+      </div>
+      {nameMap[session.patientId] || "Loading..."}
+    </div>
+  </div>
+</td>
+
+      <td className="px-6 py-4 text-sm text-text-primary font-medium">
+        {formatDate(session.scheduledTime)}
+      </td>
+
+      <td className="px-6 py-4">
+        <StatusBadge status={session.status} />
+      </td>
+
+      {/* 3. UPDATED ACTIONS */}
+      <td className="px-6 py-4 text-right">
                           <div className="flex justify-end gap-2">
                             <div className="relative group">
   <button
@@ -265,16 +362,21 @@ console.log("Sessions:", sessions.map(s => ({ title: s.sessionTitle, status: s.s
                             )}
                           </div>
                         </td>
-                      </tr>
-                    ))}
-                  </tbody>
+    </tr>
+  ))}
+</tbody>
                 </table>
               </div>
             )}
           </div>
         </div>
       </div>
-      <CreateSessionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onRefresh={() => fetchSessions(true)} />
+      <CreateSessionModal 
+  isOpen={isModalOpen} 
+  onClose={() => setIsModalOpen(false)} 
+  onRefresh={() => fetchSessions(true)}
+  doctorData={selectedDoctor} // The full object from the list
+/>
     </div>
   );
 };
