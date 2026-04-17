@@ -6,24 +6,41 @@ const { sendEmail,
         buildSessionLinkEmail } = require('../services/emailService');
 const { sendSMS } = require('../services/smsService');
 
-const notify = async ({ email, phone, channels, subject, htmlEmail, smsMessage }) => {
+const notify = async ({ email, phone, channels = [], subject, htmlEmail, smsMessage }) => {
+  const safeChannels = Array.isArray(channels) ? channels : ['email'];
+
   const tasks = [];
-  if (channels.includes('email') && email) {
+
+  if (safeChannels.includes('email') && email) {
     tasks.push(sendEmail({ to: email, subject, html: htmlEmail, text: smsMessage }));
   }
-  if (channels.includes('sms') && phone) {
+
+  if (safeChannels.includes('sms') && phone) {
     tasks.push(sendSMS({ to: phone, message: smsMessage }));
   }
+
   await Promise.all(tasks);
 };
 
 const appointmentNotification = async (req, res) => {
   try {
     const {
-      patientName, patientEmail, patientPhone, patientNotificationPreference,
-      doctorName, doctorEmail, doctorPhone, doctorNotificationPreference,
-      appointmentDate, appointmentTime, appointmentType, queueNumber, specialty
-    } = req.body;
+  patientName = '',
+  patientEmail = '',
+  patientPhone = null,
+  patientNotificationPreference = ['email'],
+
+  doctorName = '',
+  doctorEmail = '',
+  doctorPhone = null,
+  doctorNotificationPreference = ['email'],
+
+  appointmentDate,
+  appointmentTime,
+  appointmentType,
+  queueNumber,
+  specialty
+} = req.body || {};
 
     const subject = 'Appointment Confirmed — HealthLink';
     const plainPatient = `Hi ${patientName}, your appointment with Dr. ${doctorName} is confirmed on ${appointmentDate} at ${appointmentTime}.`;
