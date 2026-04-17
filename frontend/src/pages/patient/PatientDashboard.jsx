@@ -777,7 +777,30 @@ const PatientDashboard = () => {
           {activeNav === 'notifications' && (
             <div style={{ maxWidth: 560 }}>
               <Card className="rounded-2xl">
-                <div style={{ fontSize: 16, fontWeight: 500, color: '#122056', marginBottom: 16, fontFamily: HEADING_FONT }}>My notifications</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+  <button
+    type="button"
+    onClick={() => setActiveNav('profile')}
+    aria-label="Back to dashboard"
+    style={{
+      width: 32,
+      height: 32,
+      borderRadius: 8,
+      border: '1px solid #e5e7eb',
+      background: '#fff',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      color: '#122056',
+    }}
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </button>
+  <div style={{ fontSize: 16, fontWeight: 500, color: '#122056', fontFamily: HEADING_FONT }}>My notifications</div>
+</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
 
                   {upcomingAppointments.length > 0 ? (

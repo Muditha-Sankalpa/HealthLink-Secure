@@ -131,13 +131,13 @@ const buildAppointmentConfirmedEmail = ({ recipientName, isDoctor, doctorName, p
         ? `You have a new appointment with your ${role} <strong>${person}</strong>. Details are below.`
         : `Your appointment with <strong>${person}</strong> has been confirmed. See you soon!`
       }
-    </p>
+    </p> 
 
     ${badge('Confirmed')}
 
     <table width="100%" cellpadding="0" cellspacing="0"
            style="margin:20px 0 28px;border-collapse:collapse;">
-      ${detailRow('Doctor',           `Dr. ${doctorName}`)}
+      ${detailRow('Doctor',           `${doctorName}`)}
       ${detailRow('Specialty',        specialty || '—')}
       ${detailRow('Patient',          patientName)}
       ${detailRow('Date',             date)}
