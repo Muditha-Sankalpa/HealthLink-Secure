@@ -204,7 +204,7 @@ const LoginPanel = ({ onSwitch }) => {
       } else if (data.user.role === "Doctor") {
         navigate("/doctor/profile");
       } else {
-        navigate("/patient");
+        navigate("/");
       }
     } catch (err) {
       const apiMessage = err?.response?.data?.message;
