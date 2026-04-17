@@ -16,10 +16,10 @@ const axios = require('axios');
  * Uses the unauthenticated internal GET /:id route (patientRoutes.js).
  * Returns a safe fallback so a failed lookup never blocks the main action.
  */
-const fetchPatient = async (patientId) => {
+const fetchPatient = async (userId) => {
     try {
-        const res = await axios.get(`${PATIENT_SERVICE_URL}/${patientId}`);
-        return res.data; // { name, email, contactNumber, notificationPreference }
+        const res = await axios.get(`${PATIENT_SERVICE_URL}/internal/by-user/${userId}`);
+        return res.data;
     } catch {
         return { name: 'Patient', email: null, contactNumber: null, notificationPreference: ['email'] };
     }
@@ -41,7 +41,7 @@ const resolveChannels = (preference) => {
 const fireNotification = (endpoint, payload) => {
     axios
         .post(`${NOTIFICATION_SERVICE_URL}/${endpoint}`, payload)
-        .catch(err => console.error(`[Notification/${endpoint}] failed:`, err.message));
+        .catch(err => console.error(`[Notification/${endpoint}] failed:`, err.response?.data || err.message));
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
