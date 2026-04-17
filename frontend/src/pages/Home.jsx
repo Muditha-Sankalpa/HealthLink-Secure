@@ -552,6 +552,7 @@ export default function Home() {
             icon="🩺"
             title="Telemedicine Consultations"
             desc="Connect with specialists via HD video from anywhere in Sri Lanka. Secure, private, and reliable."
+            onClick={() => navigate(isLoggedIn ? "/allSessions" : "/login")}
             delay={0.2}
             cta="Join a session"
           />
@@ -560,7 +561,7 @@ export default function Home() {
             title="Digital Health Records"
             desc="Upload reports, track prescriptions, and share records securely with your care team."
             delay={0.3}
-            onClick={() => navigate(isLoggedIn ? "/patient/upload-report" : "/login")}
+            onClick={() => navigate(isLoggedIn ? "/patient" : "/login")}
             cta="Manage records"
           />
           <FeatureCard
