@@ -35,34 +35,61 @@ const SessionsPageAdmin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [preSelectedDocId, setPreSelectedDocId] = useState("");
-  const [nameMap, setNameMap] = useState({});
 
   // LOGIC: Find if there is a session live for this specific patient
   const activeSessionForPatient = sessions.find(
-    (s) => isPatient && 
-           s.status === "ACTIVE" && 
-           String(s.patientId) === String(user.id || user._id || user.name)
-  );
+  (s) =>
+    isPatient &&
+    s.status === "ACTIVE" &&
+    String(s.patientId?._id) === String(user.id || user._id)
+);
 
-  const fetchSessions = async (isSilent = false) => {
+const fetchSessions = async (isSilent = false) => {
   try {
     if (!isSilent) setLoading(true);
     const response = await API.get("/telemedicine");
-    const data = Array.isArray(response.data) ? response.data : response.data.sessions;
-    setSessions(data || []);
-    
-    // FETCH NAMES HERE
-    if (data && data.length > 0) {
-      fetchNames(data);
-    }
-    
+    const data = Array.isArray(response.data) ? response.data : (response.data.sessions || []);
+
+    const enriched = await Promise.all(
+      data.map(async (session) => {
+        // DOCTOR NAME: Priority logic
+        let doctorName = session.doctorName || session.doctorId?.name;
+        const docId = session.doctorId?._id || session.doctorId;
+
+        // PATIENT NAME: Priority logic
+        let patientName = session.patientName || session.patientId?.name;
+        const patId = session.patientId?._id || session.patientId;
+
+        // IF ADMIN: Just use the ID if the name isn't already there (prevents 404s)
+        if (isAdmin && !patientName) {
+           patientName = patId ? `ID: ${String(patId).substring(String(patId).length - 6)}` : "No ID";
+        }
+
+        // IF PATIENT: Only fetch if it's not the current user
+        if (!isAdmin && !patientName && patId) {
+          if (String(patId) === String(user.id || user._id)) {
+            patientName = user.name;
+          }
+        }
+
+        return {
+          ...session,
+          doctorDisplayName: doctorName || (docId ? `Doc-${String(docId).slice(-4)}` : "Unknown"),
+          patientDisplayName: patientName || "Unknown Patient",
+        };
+      })
+    );
+
+    setSessions(enriched);
     setError(null);
   } catch (err) {
-    setError("Server Error");
+    console.error("Fetch Error:", err);
+    setError("Failed to load");
   } finally {
     setLoading(false);
   }
 };
+
   useEffect(() => {
     fetchSessions();
     
@@ -112,45 +139,7 @@ const SessionsPageAdmin = () => {
     }
   };
 
-  const fetchNames = async (sessions) => {
-  const doctorIds = [...new Set(sessions.map(s => s.doctorId))];
-  const patientIds = [...new Set(sessions.map(s => s.patientId))];
-  const newNames = { ...nameMap };
 
-  // 1. Fetch Doctor Names
-  await Promise.all(doctorIds.map(async (id) => {
-    if (!newNames[id]) {
-      try {
-        const res = await API.get(`/doctors/${id}`);
-        newNames[id] = res.data.name;
-      } catch {
-        newNames[id] = "Unknown Doctor";
-      }
-    }
-  }));
-
-  // 2. Fetch Patient Names with Hardcoded Check
-  await Promise.all(patientIds.map(async (id) => {
-    if (!newNames[id]) {
-      
-      // HARDCODED CHECK FOR YOUR SPECIFIC USER ID
-      if (id === "69c4b7e01c23d6995ac05630") {
-        newNames[id] = "Admin"; 
-        return; // Stop here, don't call the API
-      }
-
-      try {
-        const res = await API.get(`/users/${id}`);
-        newNames[id] = res.data.name;
-      } catch {
-        // Fallback for other IDs that fail
-        newNames[id] = "TestPatient5"; 
-      }
-    }
-  }));
-
-  setNameMap(newNames);
-};
 
   const handleCancelSession = async (session) => {
   const confirmMsg = isAdmin 
@@ -177,11 +166,12 @@ const SessionsPageAdmin = () => {
   
 
   const filteredSessions = sessions.filter(
-    (session) =>
-      session.sessionId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      session.patientId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      session.sessionTitle?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  (session) =>
+    session.sessionId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    session.patientId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    session.doctorId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    session.sessionTitle?.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
@@ -303,14 +293,15 @@ console.log("Sessions:", sessions.map(s => ({ title: s.sessionTitle, status: s.s
       </td>
 
       {/* 2. HUMAN-READABLE PARTICIPANTS */}
-      <td className="px-6 py-4">
+      {/* Inside the Table Body */}
+<td className="px-6 py-4">
   <div className="flex flex-col gap-1">
     {/* Doctor Display */}
     <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
       <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center">
         <Stethoscope size={12} className="text-accent"/>
       </div>
-      {nameMap[session.doctorId] || "Loading..."}
+      <span>{session.doctorDisplayName}</span>
     </div>
 
     {/* Patient Display */}
@@ -318,7 +309,7 @@ console.log("Sessions:", sessions.map(s => ({ title: s.sessionTitle, status: s.s
       <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
         <User size={12} className="text-primary"/>
       </div>
-      {nameMap[session.patientId] || "Loading..."}
+      <span>{session.patientDisplayName}</span>
     </div>
   </div>
 </td>
