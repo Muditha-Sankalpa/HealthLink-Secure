@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doctor-service
+  namespace: healthcare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doctor-service
+  template:
+    metadata:
+      labels:
+        app: doctor-service
+    spec:
+      containers:
+        - name: doctor-service
+          image: doctor-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5002
+          env:
+            - name: PORT
+              value: "5002"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MONGO_URI_DOCTOR
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: JWT_SECRET
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doctor-service
+  namespace: healthcare
+spec:
+  selector:
+    app: doctor-service
+  ports:
+    - port: 5002
+      targetPort: 5002
+  type: ClusterIP

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-service
+  namespace: healthcare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appointment-service
+  template:
+    metadata:
+      labels:
+        app: appointment-service
+    spec:
+      containers:
+        - name: appointment-service
+          image: appointment-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5003
+          env:
+            - name: PORT
+              value: "5003"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MONGO_URI_APPOINTMENT
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: JWT_SECRET
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointment-service
+  namespace: healthcare
+spec:
+  selector:
+    app: appointment-service
+  ports:
+    - port: 5003
+      targetPort: 5003
+  type: ClusterIP
