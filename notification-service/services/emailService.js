@@ -131,7 +131,7 @@ const buildAppointmentConfirmedEmail = ({ recipientName, isDoctor, doctorName, p
         ? `You have a new appointment with your ${role} <strong>${person}</strong>. Details are below.`
         : `Your appointment with <strong>${person}</strong> has been confirmed. See you soon!`
       }
-    </p>
+    </p> 
 
     ${badge('Confirmed')}
 
