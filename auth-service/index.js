@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ Connected to Auth Database'))
+    .then(() => console.log('✅ Connected to:', mongoose.connection.name, '@', mongoose.connection.host))
     .catch((err) => console.error('❌ DB connection error:', err));
 
 // ==========================================
@@ -37,6 +37,7 @@ app.post('/register', async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully!',
             userId: newUser._id,
+            email: newUser.email,
             role: newUser.role });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -68,7 +69,7 @@ app.post('/login', async (req, res) => {
         res.status(200).json({ 
             message: 'Login successful', 
             token, 
-            user: { id: user._id, name: user.name, role: user.role } 
+            user: { id: user._id, name: user.name, email: user.email, role: user.role } 
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
