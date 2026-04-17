@@ -52,29 +52,48 @@ const fetchSessions = async (isSilent = false) => {
 
     const enriched = await Promise.all(
       data.map(async (session) => {
-        // DOCTOR NAME: Priority logic
+        // --- 1. DOCTOR NAME ---
         let doctorName = session.doctorName || session.doctorId?.name;
         const docId = session.doctorId?._id || session.doctorId;
 
-        // PATIENT NAME: Priority logic
+        if (!doctorName && docId && typeof docId === "string") {
+          // Admin shortcut: don't fetch if missing, just show short ID
+          if (isAdmin) {
+            doctorName = `Doc ID: ${docId.slice(-5)}`;
+          } else {
+            try {
+              const res = await API.get(`/doctors/${docId}`);
+              doctorName = res.data?.name || "Unknown Doctor";
+            } catch (err) { doctorName = "Doctor Not Found"; }
+          }
+        }
+
+        // --- 2. PATIENT NAME ---
         let patientName = session.patientName || session.patientId?.name;
         const patId = session.patientId?._id || session.patientId;
 
-        // IF ADMIN: Just use the ID if the name isn't already there (prevents 404s)
-        if (isAdmin && !patientName) {
-           patientName = patId ? `ID: ${String(patId).substring(String(patId).length - 6)}` : "No ID";
+        // Check if current user is the patient
+        if (!patientName && isPatient && String(patId) === String(user.id || user._id)) {
+          patientName = user.name;
         }
 
-        // IF PATIENT: Only fetch if it's not the current user
-        if (!isAdmin && !patientName && patId) {
-          if (String(patId) === String(user.id || user._id)) {
-            patientName = user.name;
+        // FETCH LOGIC
+        if (!patientName && patId && typeof patId === "string") {
+          // ADMIN FIX: If Admin, don't call API. Use ID to avoid 404s and console flood.
+          if (isAdmin) {
+            patientName = `Pat ID: ${patId.slice(-5)}`;
+          } else {
+            // Keep this for Patient Login as it works for them
+            try {
+              const res = await API.get(`/user/profile/${patId}`); 
+              patientName = res.data?.name || "Unknown Patient";
+            } catch (err) { patientName = "Patient Not Found"; }
           }
         }
 
         return {
           ...session,
-          doctorDisplayName: doctorName || (docId ? `Doc-${String(docId).slice(-4)}` : "Unknown"),
+          doctorDisplayName: doctorName || "Unknown Doctor",
           patientDisplayName: patientName || "Unknown Patient",
         };
       })
@@ -83,8 +102,8 @@ const fetchSessions = async (isSilent = false) => {
     setSessions(enriched);
     setError(null);
   } catch (err) {
-    console.error("Fetch Error:", err);
-    setError("Failed to load");
+    console.error("Fetch Sessions Error:", err);
+    setError("Failed to load sessions");
   } finally {
     setLoading(false);
   }
