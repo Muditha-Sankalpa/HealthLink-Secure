@@ -113,17 +113,15 @@ const SessionsPageAdmin = () => {
   };
 
   const fetchNames = async (sessions) => {
-  // 1. Get unique IDs to avoid duplicate API calls
   const doctorIds = [...new Set(sessions.map(s => s.doctorId))];
   const patientIds = [...new Set(sessions.map(s => s.patientId))];
-
   const newNames = { ...nameMap };
 
-  // 2. Fetch Doctor Names (Assuming you have a route like /doctors/:id)
+  // 1. Fetch Doctor Names
   await Promise.all(doctorIds.map(async (id) => {
-    if (!newNames[id]) { // Only fetch if we don't have it yet
+    if (!newNames[id]) {
       try {
-        const res = await API.get(`/doctors/${id}`); // Adjust URL to your Doctor Service
+        const res = await API.get(`/doctors/${id}`);
         newNames[id] = res.data.name;
       } catch {
         newNames[id] = "Unknown Doctor";
@@ -131,13 +129,22 @@ const SessionsPageAdmin = () => {
     }
   }));
 
-   await Promise.all(patientIds.map(async (id) => {
+  // 2. Fetch Patient Names with Hardcoded Check
+  await Promise.all(patientIds.map(async (id) => {
     if (!newNames[id]) {
+      
+      // HARDCODED CHECK FOR YOUR SPECIFIC USER ID
+      if (id === "69c4b7e01c23d6995ac05630") {
+        newNames[id] = "Admin"; 
+        return; // Stop here, don't call the API
+      }
+
       try {
-        const res = await API.get(`/users/${id}`); // Adjust URL to your User Service
+        const res = await API.get(`/users/${id}`);
         newNames[id] = res.data.name;
       } catch {
-        newNames[id] = "TestPatient5";
+        // Fallback for other IDs that fail
+        newNames[id] = "TestPatient5"; 
       }
     }
   }));
