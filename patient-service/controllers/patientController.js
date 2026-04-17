@@ -148,7 +148,7 @@ const getHistory = async (req, res) => {
     try {
       const teleRes = await axios.get(
 
-          `http://localhost:5004/api/telemedicine?patientId=${patient._id}&status=COMPLETED`,
+          `http://localhost:5004/api/telemedicine?status=COMPLETED`,
           { headers: { Authorization: req.headers.authorization } }
 
 );
@@ -170,7 +170,7 @@ const getScheduledSessions = async (req, res) => {
     if (!patient) return res.status(404).json({ message: 'Profile not found' });
 
     const teleRes = await axios.get(
-      `http://localhost:5004/api/telemedicine?patientId=${patient._id}&status=SCHEDULED`,
+      `http://localhost:5004/api/telemedicine?status=SCHEDULED`,
       { headers: { Authorization: req.headers.authorization } }
     );
     console.log('Tele response:', teleRes.data);
