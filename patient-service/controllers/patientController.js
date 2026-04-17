@@ -3,6 +3,10 @@ const cloudinary = require('../config/cloudinary');
 const Patient = require('../models/Patient');
 const MedicalReport = require('../models/MedicalReport');
 
+// Service URLs (env-driven for Docker/K8s compatibility)
+const DOCTOR_SERVICE_URL = process.env.DOCTOR_SERVICE_URL || 'http://localhost:5002';
+const TELEMEDICINE_SERVICE_URL = process.env.TELEMEDICINE_SERVICE_URL || 'http://localhost:5004';
+
 // POST /api/patients/profile
 const createProfile = async (req, res) => {
   try {
@@ -73,12 +77,10 @@ const uploadReport = async (req, res) => {
     if (patient.status === 'deactivated') return res.status(403).json({ message: 'Account is deactivated' });
 
     const report = new MedicalReport({ 
-      
       patientId: patient._id,
       fileName: req.file.originalname,
       fileUrl: req.file.path,
       fileType: req.file.mimetype,
-
     });
 
     await report.save();
@@ -130,11 +132,12 @@ const getHistory = async (req, res) => {
 
     const reports = await MedicalReport.find({ patientId: patient._id });
 
-    //API call to doctor-service to get prescriptions
+    // API call to doctor-service to get prescriptions
     let prescriptions = [];
 
     try {
-      const doctorRes = await axios.get(`http://localhost:5002/api/doctors/prescriptions/patient/${patient._id}`,
+      const doctorRes = await axios.get(
+        `${DOCTOR_SERVICE_URL}/api/doctors/prescriptions/patient/${patient._id}`,
         { headers: { Authorization: req.headers.authorization } }
       );
       prescriptions = doctorRes.data;
@@ -142,18 +145,16 @@ const getHistory = async (req, res) => {
       prescriptions = [];
     }
 
-    //API call to Telemedince service to get consultation history
+    // API call to Telemedicine service to get consultation history
     let consultations = [];
 
     try {
       const teleRes = await axios.get(
-
-          `http://localhost:5004/api/telemedicine?status=COMPLETED`,
-          { headers: { Authorization: req.headers.authorization } }
-
-);
+        `${TELEMEDICINE_SERVICE_URL}/api/telemedicine?status=COMPLETED`,
+        { headers: { Authorization: req.headers.authorization } }
+      );
       consultations = teleRes.data;
-    } catch(err) {
+    } catch (err) {
       console.log('Telemedicine error:', err.message);
       consultations = [];
     }
@@ -170,7 +171,7 @@ const getScheduledSessions = async (req, res) => {
     if (!patient) return res.status(404).json({ message: 'Profile not found' });
 
     const teleRes = await axios.get(
-      `http://localhost:5004/api/telemedicine?status=SCHEDULED`,
+      `${TELEMEDICINE_SERVICE_URL}/api/telemedicine?status=SCHEDULED`,
       { headers: { Authorization: req.headers.authorization } }
     );
     console.log('Tele response:', teleRes.data);
@@ -195,7 +196,6 @@ const getPatientById = async (req, res) => {
 // GET /api/patients/all (Admin)
 const getAllPatients = async (req, res) => {
   try {
-
     const query = req.query.search
       ? { name: { $regex: req.query.search, $options: 'i' } }
       : {};
@@ -232,7 +232,6 @@ const getStats = async (req, res) => {
     const deactivated = await Patient.countDocuments({ status: 'deactivated' });
 
     res.json({ total, newRegistrations, active, deactivated });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -240,6 +239,6 @@ const getStats = async (req, res) => {
 
 module.exports = {
   createProfile, getProfile, updateAvatar, updateProfile,
-  uploadReport, deleteReport, getHistory,getScheduledSessions, getPatientById,
+  uploadReport, deleteReport, getHistory, getScheduledSessions, getPatientById,
   getAllPatients, updateStatus, getStats
 };

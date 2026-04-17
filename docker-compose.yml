@@ -1,5 +1,3 @@
-version: "3.9"
- 
 services:
   auth-service:
     build: ./auth-service
@@ -10,7 +8,7 @@ services:
       - ./auth-service/.env
     networks:
       - healthnet
- 
+
   patient-service:
     build: ./patient-service
     container_name: patient-service
@@ -18,11 +16,14 @@ services:
       - "5001:5001"
     env_file:
       - ./patient-service/.env
+    environment:
+      - DOCTOR_SERVICE_URL=http://doctor-service:5002
+      - TELEMEDICINE_SERVICE_URL=http://telemedicine-service:5004
     depends_on:
       - auth-service
     networks:
       - healthnet
- 
+
   doctor-service:
     build: ./doctor-service
     container_name: doctor-service
@@ -34,7 +35,7 @@ services:
       - auth-service
     networks:
       - healthnet
- 
+
   appointment-service:
     build: ./appointment-service
     container_name: appointment-service
@@ -48,7 +49,7 @@ services:
       - patient-service
     networks:
       - healthnet
- 
+
   telemedicine-service:
     build: ./telemedicine-service
     container_name: telemedicine-service
@@ -60,7 +61,7 @@ services:
       - auth-service
     networks:
       - healthnet
- 
+
   payment-service:
     build: ./payment-service
     container_name: payment-service
@@ -72,7 +73,7 @@ services:
       - auth-service
     networks:
       - healthnet
- 
+
   notification-service:
     build: ./notification-service
     container_name: notification-service
@@ -82,7 +83,7 @@ services:
       - ./notification-service/.env
     networks:
       - healthnet
- 
+
   symptom-checker-service:
     build: ./AISymptomChecker-service
     container_name: symptom-checker-service
@@ -90,7 +91,7 @@ services:
       - "5008:5008"
     networks:
       - healthnet
- 
+
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway
@@ -117,7 +118,7 @@ services:
       - symptom-checker-service
     networks:
       - healthnet
- 
+
 networks:
   healthnet:
     driver: bridge
