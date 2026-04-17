@@ -26,4 +26,17 @@ router.put('/:id/status', verifyToken, authorizeRole('Admin'), updateStatus);
 // Internal (service-to-service) — no auth
 router.get('/:id', getPatientById);
 
+// Internal lookup by userId (no auth)
+router.get('/internal/by-user/:userId', async (req, res) => {
+  const Patient = require('../models/Patient');
+  try {
+    const patient = await Patient.findOne({ userId: req.params.userId })
+      .select('_id userId name email contactNumber notificationPreference status');
+    if (!patient) return res.status(404).json({ message: 'Patient not found' });
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
