@@ -61,8 +61,7 @@ exports.getAllSessions = async (req, res) => {
 
 exports.createSession = async (req, res) => {
   try {
-    const { appointmentId, doctorId, scheduledTime, doctorName, patientName,
-            patientEmail, doctorEmail } = req.body; // 👈 add email fields
+    const { appointmentId, doctorId, scheduledTime, doctorName, patientName } = req.body;
 
     const session = new TelemedicineSession({
       sessionId: uuidv4(),
@@ -78,25 +77,42 @@ exports.createSession = async (req, res) => {
 
     await session.save();
 
-    // 🔥 Fire-and-forget — same pattern as bookAppointment
+    // 🔥 Fetch emails from other services instead of relying on frontend
+    let patientEmail, resolvedPatientName;
+    let doctorEmail, resolvedDoctorName;
+
+    try {
+      const userRes = await axios.get(`http://localhost:5006/users/${req.user.id}`);
+      console.log('[User fetch]', userRes.data);
+      patientEmail        = userRes.data.email;
+      resolvedPatientName = userRes.data.name;
+    } catch(err) { 
+      console.error('[User fetch failed]', err.message);
+      resolvedPatientName = patientName || 'Patient'; }
+
+    try {
+      const doctorRes = await axios.get(`http://localhost:5002/api/doctors/${doctorId}`);
+      console.log('[Doctor fetch]', doctorRes.data);
+      doctorEmail        = doctorRes.data.email;
+      resolvedDoctorName = doctorRes.data.name;
+    } catch(err) { 
+      console.error('[Doctor fetch failed]', err.message);
+      resolvedDoctorName = doctorName || 'Doctor'; }
+
     const sessionDate = new Date(scheduledTime).toLocaleDateString();
     const sessionTime = new Date(scheduledTime).toLocaleTimeString();
-    console.log('[Session Notification]', {
-  patientName, patientEmail, doctorName, doctorEmail
-});
 
     axios.post(`${NOTIFICATION_SERVICE_URL}/session-link`, {
-      patientName,
+      patientName:  resolvedPatientName,
       patientEmail,
-      doctorName,
+      doctorName:   resolvedDoctorName,
       doctorEmail,
       sessionLink:  session.meetingLink,
       sessionDate,
       sessionTime
     }).catch(err => {
       console.error('[Notification] session email failed:', err.message);
-      console.error('[Notification] response data:', err.response?.data);  
-  console.error('[Notification] status:', err.response?.status);
+      console.error('[Notification] response data:', err.response?.data);
     });
 
     res.status(201).json(session);
