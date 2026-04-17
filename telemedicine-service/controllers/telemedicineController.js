@@ -1,6 +1,8 @@
 // controllers/telemedicineController.js
 const TelemedicineSession = require('../models/TelemedicineSession');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
+const NOTIFICATION_SERVICE_URL = 'http://localhost:5007/api/notifications';
 
 // Get All Sessions (with optional filters)
 // exports.getAllSessions = async (req, res) => {
@@ -56,24 +58,47 @@ exports.getAllSessions = async (req, res) => {
 
 // Create Session - POST
 // controllers/telemedicineController.js
+
 exports.createSession = async (req, res) => {
   try {
-    // Add doctorName and patientName to the destructuring
-    const { appointmentId, doctorId, scheduledTime, doctorName, patientName } = req.body;
+    const { appointmentId, doctorId, scheduledTime, doctorName, patientName,
+            patientEmail, doctorEmail } = req.body; // 👈 add email fields
 
     const session = new TelemedicineSession({
       sessionId: uuidv4(),
       appointmentId,
       doctorId,
       patientId: req.user.id,
-      doctorName,    // Save the name here
-      patientName,   // Save the name here
+      doctorName,
+      patientName,
       scheduledTime,
       roomId: `room-${uuidv4()}`,
       meetingLink: `https://meet.jit.si/room-${uuidv4()}`
     });
 
     await session.save();
+
+    // 🔥 Fire-and-forget — same pattern as bookAppointment
+    const sessionDate = new Date(scheduledTime).toLocaleDateString();
+    const sessionTime = new Date(scheduledTime).toLocaleTimeString();
+    console.log('[Session Notification]', {
+  patientName, patientEmail, doctorName, doctorEmail
+});
+
+    axios.post(`${NOTIFICATION_SERVICE_URL}/session-link`, {
+      patientName,
+      patientEmail,
+      doctorName,
+      doctorEmail,
+      sessionLink:  session.meetingLink,
+      sessionDate,
+      sessionTime
+    }).catch(err => {
+      console.error('[Notification] session email failed:', err.message);
+      console.error('[Notification] response data:', err.response?.data);  
+  console.error('[Notification] status:', err.response?.status);
+    });
+
     res.status(201).json(session);
   } catch (error) {
     res.status(500).json({ message: error.message });
