@@ -1,0 +1,123 @@
+version: "3.9"
+ 
+services:
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "5006:5006"
+    env_file:
+      - ./auth-service/.env
+    networks:
+      - healthnet
+ 
+  patient-service:
+    build: ./patient-service
+    container_name: patient-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./patient-service/.env
+    depends_on:
+      - auth-service
+    networks:
+      - healthnet
+ 
+  doctor-service:
+    build: ./doctor-service
+    container_name: doctor-service
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./doctor-service/.env
+    depends_on:
+      - auth-service
+    networks:
+      - healthnet
+ 
+  appointment-service:
+    build: ./appointment-service
+    container_name: appointment-service
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./appointment-service/.env
+    depends_on:
+      - auth-service
+      - doctor-service
+      - patient-service
+    networks:
+      - healthnet
+ 
+  telemedicine-service:
+    build: ./telemedicine-service
+    container_name: telemedicine-service
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./telemedicine-service/.env
+    depends_on:
+      - auth-service
+    networks:
+      - healthnet
+ 
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./payment-service/.env
+    depends_on:
+      - auth-service
+    networks:
+      - healthnet
+ 
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "5007:5007"
+    env_file:
+      - ./notification-service/.env
+    networks:
+      - healthnet
+ 
+  symptom-checker-service:
+    build: ./AISymptomChecker-service
+    container_name: symptom-checker-service
+    ports:
+      - "5008:5008"
+    networks:
+      - healthnet
+ 
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - AUTH_SERVICE_URL=http://auth-service:5006
+      - PATIENT_SERVICE_URL=http://patient-service:5001
+      - DOCTOR_SERVICE_URL=http://doctor-service:5002
+      - APPOINTMENT_SERVICE_URL=http://appointment-service:5003
+      - TELEMEDICINE_SERVICE_URL=http://telemedicine-service:5004
+      - PAYMENT_SERVICE_URL=http://payment-service:5005
+      - NOTIFICATION_SERVICE_URL=http://notification-service:5007
+      - SYMPTOM_CHECKER_URL=http://symptom-checker-service:5008
+    depends_on:
+      - auth-service
+      - patient-service
+      - doctor-service
+      - appointment-service
+      - telemedicine-service
+      - payment-service
+      - notification-service
+      - symptom-checker-service
+    networks:
+      - healthnet
+ 
+networks:
+  healthnet:
+    driver: bridge

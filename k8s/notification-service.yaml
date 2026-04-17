@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: healthcare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: notification-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5007
+          env:
+            - name: PORT
+              value: "5007"
+            - name: EMAIL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: EMAIL_USER
+            - name: EMAIL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: EMAIL_PASS
+            - name: NOTIFY_USER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: NOTIFY_USER_ID
+            - name: NOTIFY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: NOTIFY_API_KEY
+            - name: NOTIFY_SENDER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: NOTIFY_SENDER_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: healthcare
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - port: 5007
+      targetPort: 5007
+  type: ClusterIP

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: healthcare
+data:
+  CLOUDINARY_CLOUD_NAME: "dggsppbcz"
+  EMAIL_USER: "smarthealthcare83@gmail.com"
+  NOTIFY_USER_ID: "31415"
+  NOTIFY_SENDER_ID: "NotifyDEMO"
