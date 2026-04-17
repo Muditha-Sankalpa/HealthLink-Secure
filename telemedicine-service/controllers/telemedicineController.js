@@ -1,6 +1,8 @@
 // controllers/telemedicineController.js
 const TelemedicineSession = require('../models/TelemedicineSession');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
+const NOTIFICATION_SERVICE_URL = 'http://localhost:5007/api/notifications';
 
 // Get All Sessions (with optional filters)
 // exports.getAllSessions = async (req, res) => {
@@ -56,9 +58,9 @@ exports.getAllSessions = async (req, res) => {
 
 // Create Session - POST
 // controllers/telemedicineController.js
+
 exports.createSession = async (req, res) => {
   try {
-    // Add doctorName and patientName to the destructuring
     const { appointmentId, doctorId, scheduledTime, doctorName, patientName } = req.body;
 
     const session = new TelemedicineSession({
@@ -66,14 +68,53 @@ exports.createSession = async (req, res) => {
       appointmentId,
       doctorId,
       patientId: req.user.id,
-      doctorName,    // Save the name here
-      patientName,   // Save the name here
+      doctorName,
+      patientName,
       scheduledTime,
       roomId: `room-${uuidv4()}`,
       meetingLink: `https://meet.jit.si/room-${uuidv4()}`
     });
 
     await session.save();
+
+    // 🔥 Fetch emails from other services instead of relying on frontend
+    let patientEmail, resolvedPatientName;
+    let doctorEmail, resolvedDoctorName;
+
+    try {
+      const userRes = await axios.get(`http://localhost:5006/users/${req.user.id}`);
+      console.log('[User fetch]', userRes.data);
+      patientEmail        = userRes.data.email;
+      resolvedPatientName = userRes.data.name;
+    } catch(err) { 
+      console.error('[User fetch failed]', err.message);
+      resolvedPatientName = patientName || 'Patient'; }
+
+    try {
+      const doctorRes = await axios.get(`http://localhost:5002/api/doctors/${doctorId}`);
+      console.log('[Doctor fetch]', doctorRes.data);
+      doctorEmail        = doctorRes.data.email;
+      resolvedDoctorName = doctorRes.data.name;
+    } catch(err) { 
+      console.error('[Doctor fetch failed]', err.message);
+      resolvedDoctorName = doctorName || 'Doctor'; }
+
+    const sessionDate = new Date(scheduledTime).toLocaleDateString();
+    const sessionTime = new Date(scheduledTime).toLocaleTimeString();
+
+    axios.post(`${NOTIFICATION_SERVICE_URL}/session-link`, {
+      patientName:  resolvedPatientName,
+      patientEmail,
+      doctorName:   resolvedDoctorName,
+      doctorEmail,
+      sessionLink:  session.meetingLink,
+      sessionDate,
+      sessionTime
+    }).catch(err => {
+      console.error('[Notification] session email failed:', err.message);
+      console.error('[Notification] response data:', err.response?.data);
+    });
+
     res.status(201).json(session);
   } catch (error) {
     res.status(500).json({ message: error.message });
