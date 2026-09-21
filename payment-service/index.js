@@ -6,7 +6,11 @@ require('dotenv').config();
 const paymentRoutes  = require('./routes/paymentRoutes');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 app.use(express.json());
 
 // Connect DB

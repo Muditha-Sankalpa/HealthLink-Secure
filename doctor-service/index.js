@@ -5,7 +5,11 @@ require('dotenv').config();
 const doctorRoutes = require('./routes/doctorRoutes');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 app.use(express.json());
 app.use('/api/doctors', doctorRoutes);
 
