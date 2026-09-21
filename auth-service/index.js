@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const User = require('./models/User');
 const { verifyToken, authorizeRole } = require('./middleware/authMiddleware');
+const passport = require('./config/passport');
 
 const app = express();
 app.use(cors({
@@ -15,6 +17,8 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(passport.initialize());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -123,6 +127,50 @@ app.get('/users/:id', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+// ==========================================
+// 3. GOOGLE OAUTH (OIDC) ROUTES
+// ==========================================
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    session: false,
+}));
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:5173/login' }),
+    (req, res) => {
+        const user = req.user;
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+        });
+
+        res.redirect('http://localhost:5173/oauth-success');
+    }
+);
+
+// Returns the current user based on the httpOnly cookie set above.
+// Used by the frontend's /oauth-success page to fetch who just logged in.
+app.get('/auth/me', async (req, res) => {
+    const token = req.cookies?.token;
+    if (!token) return res.status(401).json({ message: 'Not authenticated' });
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+        if (err) return res.status(401).json({ message: 'Invalid token' });
+
+        const user = await User.findById(decoded.id).select('name email role');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.json(user);
+    });
 });
 
 const PORT = process.env.PORT || 5006;
