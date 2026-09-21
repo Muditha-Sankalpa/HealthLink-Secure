@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const User = require('./models/User');
+const { verifyToken, authorizeRole } = require('./middleware/authMiddleware');
 
 const app = express();
 app.use(cors());
@@ -21,7 +22,11 @@ mongoose.connect(process.env.MONGO_URI)
 // ==========================================
 app.post('/register', async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        // role is intentionally NOT read from the request body here — public
+        // self-registration always creates a Patient account. Elevated roles
+        // (Doctor, Admin) can only be created via POST /admin/register by an
+        // already-authenticated Admin. See fix for V01.
+        const { name, email, password } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -32,7 +37,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create new user
-        const newUser = new User({ name, email, password: hashedPassword, role });
+        const newUser = new User({ name, email, password: hashedPassword, role: 'Patient' });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully!',
@@ -43,7 +48,36 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
- 
+
+// ==========================================
+// 1b. ADMIN-ONLY: CREATE USER WITH ELEVATED ROLE
+// ==========================================
+app.post('/admin/register', verifyToken, authorizeRole('Admin'), async (req, res) => {
+    try {
+        const { name, email, password, role } = req.body;
+
+        if (!['Patient', 'Doctor', 'Admin'].includes(role)) {
+            return res.status(400).json({ message: 'Invalid role' });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) return res.status(400).json({ message: 'User already exists' });
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = new User({ name, email, password: hashedPassword, role });
+        await newUser.save();
+
+        res.status(201).json({ message: 'User created successfully!',
+            userId: newUser._id,
+            email: newUser.email,
+            role: newUser.role });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ==========================================
 // 2. LOGIN ROUTE
 // ==========================================
