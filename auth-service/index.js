@@ -9,6 +9,7 @@ require('dotenv').config();
 const User = require('./models/User');
 const { verifyToken, authorizeRole } = require('./middleware/authMiddleware');
 const passport = require('./config/passport');
+const { rateLimit } = require('express-rate-limit');
 
 const app = express();
 app.use(cors({
@@ -20,6 +21,27 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
+//V08 - fix
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    message: {
+        message: 'Too many login attempts. Please try again later.'
+    }
+});
+
+const registrationLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 3,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    message: {
+        message: 'Too many registration attempts. Please try again later.'
+    }
+});
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ Connected to:', mongoose.connection.name, '@', mongoose.connection.host))
@@ -28,7 +50,9 @@ mongoose.connect(process.env.MONGO_URI)
 // ==========================================
 // 1. REGISTER ROUTE
 // ==========================================
-app.post('/register', async (req, res) => {
+// app.post('/register', async (req, res) => {
+//V08 - fix
+app.post('/register', registrationLimiter, async (req, res) => {    
     try {
         // role is intentionally NOT read from the request body here — public
         // self-registration always creates a Patient account. Elevated roles
@@ -89,7 +113,9 @@ app.post('/admin/register', verifyToken, authorizeRole('Admin'), async (req, res
 // ==========================================
 // 2. LOGIN ROUTE
 // ==========================================
-app.post('/login', async (req, res) => {
+// app.post('/login', async (req, res) => {
+    //V08 - fix
+app.post('/login', loginLimiter, async (req, res) => {
     try {
         const { email, password } = req.body;
 
