@@ -9,7 +9,11 @@ const User = require('./models/User');
 const { verifyToken, authorizeRole } = require('./middleware/authMiddleware');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 app.use(express.json());
 
 // Connect to MongoDB
