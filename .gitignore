@@ -1,5 +1,4 @@
 node_modules/
-appointment-service/.env
-auth-service/.env
 .env
-** /.env
+**/.env
+k8s/secrets.yaml
