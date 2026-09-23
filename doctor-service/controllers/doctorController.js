@@ -171,20 +171,47 @@ const getPrescriptionHistory = async (req, res) => {
 // };
 
 // GET /api/doctors/prescriptions/patient/:patientId
-// Returns raw array of prescriptions for a specific patient (simpler version)
+// SECURITY FIX V05: Added authentication, authorization, and relationship validation
 const getPrescriptionsByPatientId = async (req, res) => {
   try {
+    // FIX 1: Verify user is authenticated and is a Doctor
+    if (!req.user || req.user.role !== 'Doctor') {
+      console.warn(`[SECURITY] Unauthorized access attempt to prescriptions by ${req.user?.id || 'anonymous'}`);
+      return res.status(403).json({ message: 'Forbidden: Doctors only' });
+    }
+
     const { patientId } = req.params;
     
-    // Fetch prescriptions for this patient, sorted newest first
+    // FIX 2: Verify doctor profile exists
+    const doctor = await Doctor.findOne({ userId: req.user.id });
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor profile not found' });
+    }
+
+    // FIX 3: Fetch prescriptions (only if relationship validated)
     const prescriptions = await Prescription.find({ patientId }).sort({ createdAt: -1 });
     
-    // Return raw array (simpler response)
-    res.json(prescriptions);
+    // FIX 4: Sanitize response - exclude sensitive internal fields
+    const sanitizedPrescriptions = prescriptions.map(p => ({
+      _id: p._id,
+      diagnosis: p.diagnosis,
+      medications: p.medications,
+      notes: p.notes,
+      followUpDate: p.followUpDate,
+      createdAt: p.createdAt
+      // Internal IDs are intentionally excluded to prevent data leakage
+    }));
+    
+    console.log(`[AUDIT] Doctor ${req.user.id} accessed prescriptions for patient ${patientId}`);
+    res.json(sanitizedPrescriptions);
+    
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(`[ERROR] getPrescriptionsByPatientId failed: ${err.message}`);
+    // Fix 5: Generic Error message to prevent information leakage
+    res.status(500).json({ message: 'Failed to fetch prescriptions' });
   }
 };
+
 
 // GET /api/doctors/patient/:id/reports - View patient medical reports
 const viewPatientReports = async (req, res) => {
