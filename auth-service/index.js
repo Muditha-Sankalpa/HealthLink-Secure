@@ -119,13 +119,28 @@ app.post('/login', loginLimiter, async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find user
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        // V07 - FIX: Prevents attackers to map which emails are registered accounts 
+        // Previously, returning a 404 "user not found" vs 400 "invalid credentials" 
+        // let an attacker map which emails are registered accounts before brute-forcing them.
+        if(!email || !password){
+            return res.status(401).json({message: 'Invalid email or password'});
+        }
 
-        // Check password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+        //Find user
+        const user = await User.findOne({email});
+
+        // V07 FIX: Check password only if user exists
+        let isMatch = false;
+        if(user){
+            isMatch = await bcrypt.compare(password, user.password);
+        }
+
+        //V07 FIX: Always returns the exact same status code and message 
+        // regardless of whether the user doesn't exist OR the password is wrong.
+        if(!user || !isMatch){
+            (`[AUTH SECURITY] Failed login attempt for email: ${email}`);
+            return res.status(401).json({message:'Invalid email or password'});
+        }
 
         // Generate JWT Token (Includes User ID and Role)
         const token = jwt.sign(
@@ -140,7 +155,10 @@ app.post('/login', loginLimiter, async (req, res) => {
             user: { id: user._id, name: user.name, email: user.email, role: user.role } 
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        //logs the failed attempt for the admin to review, without revealing to the attacker why it faild
+        console.error('Login error:', err);
+        //V07 FIX: Generic error message to prevent internal server detail leakage
+        res.status(500).json({ message:'Internal server error'});
     }
 });
 
