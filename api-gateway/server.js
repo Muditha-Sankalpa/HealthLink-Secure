@@ -41,6 +41,25 @@ app.use("/api/payment", createProxyMiddleware({
   changeOrigin: true,
 }));
 
+//Dinuri - OAuth - security hardening
+// Google OAuth routes must retain the auth-service "/auth" prefix.
+app.use("/api/auth/google", createProxyMiddleware({
+  target: process.env.AUTH_SERVICE_URL || "http://localhost:5006",
+  changeOrigin: true,
+  pathRewrite: {
+    "^/api/auth/google": "/auth/google",
+  },
+}));
+
+// Fetch the OAuth-authenticated user through the gateway.
+app.use("/api/auth/me", createProxyMiddleware({
+  target: process.env.AUTH_SERVICE_URL || "http://localhost:5006",
+  changeOrigin: true,
+  pathRewrite: {
+    "^/api/auth/me": "/auth/me",
+  },
+}));
+
 // Auth Service
 app.use("/api/auth", createProxyMiddleware({
   target: process.env.AUTH_SERVICE_URL || "http://localhost:5006",
