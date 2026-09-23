@@ -1,23 +1,23 @@
-const Stripe = require('stripe');
+const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
-const Payment = require('../models/Payment'); 
+const Payment = require("../models/Payment");
 
 exports.createPaymentIntent = async (req, res) => {
   try {
     const { amount, appointmentId, patientId } = req.body;
 
     if (!amount || !appointmentId || !patientId) {
-      return res.status(400).json({ message: 'Missing required fields' });
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100, // convert to cents
-      currency: 'usd',
+      currency: "usd",
       metadata: {
         appointmentId,
-        patientId
-      }
+        patientId,
+      },
     });
 
     // Save payment as pending
@@ -26,15 +26,14 @@ exports.createPaymentIntent = async (req, res) => {
       appointmentId,
       patientId,
       amount,
-      status: 'PENDING'
+      status: "PENDING",
     });
 
     await payment.save();
 
     res.status(200).json({
-      clientSecret: paymentIntent.client_secret
+      clientSecret: paymentIntent.client_secret,
     });
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -45,7 +44,7 @@ exports.confirmPayment = async (req, res) => {
     const { paymentIntentId } = req.body;
 
     if (!paymentIntentId) {
-      return res.status(400).json({ message: 'paymentIntentId is required' });
+      return res.status(400).json({ message: "paymentIntentId is required" });
     }
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -53,30 +52,28 @@ exports.confirmPayment = async (req, res) => {
     const payment = await Payment.findOne({ paymentIntentId });
 
     if (!payment) {
-      return res.status(404).json({ message: 'Payment not found' });
+      return res.status(404).json({ message: "Payment not found" });
     }
 
-    if (paymentIntent.status === 'succeeded') {
-      payment.status = 'SUCCESS';
+    if (paymentIntent.status === "succeeded") {
+      payment.status = "SUCCESS";
       await payment.save();
 
       return res.json({
         success: true,
-        status: paymentIntent.status
+        status: paymentIntent.status,
       });
 
       //Optional: Call Appointment Service here
-
     } else {
-      payment.status = 'FAILED';
+      payment.status = "FAILED";
       await payment.save();
 
       return res.json({
         success: false,
-        status: paymentIntent.status
+        status: paymentIntent.status,
       });
     }
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -84,11 +81,9 @@ exports.confirmPayment = async (req, res) => {
 
 exports.getAllPayments = async (req, res) => {
   try {
-    const payments = await Payment.find()
-      .sort({ createdAt: -1 });
+    const payments = await Payment.find().sort({ createdAt: -1 });
 
     res.json(payments);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -96,12 +91,22 @@ exports.getAllPayments = async (req, res) => {
 
 exports.getPaymentsByPatient = async (req, res) => {
   try {
+    //V03 - fix
+
+    const requestedPatientId = String(req.params.patientId);
+    const loggedInUserId = String(req.user.id);
+
+    if (req.user.role === "Patient" && requestedPatientId !== loggedInUserId) {
+      return res.status(403).json({
+        message: "Forbidden: You can only access your own payments",
+      });
+    }
+
     const payments = await Payment.find({
-      patientId: req.params.patientId
+      patientId: req.params.patientId,
     }).sort({ createdAt: -1 });
 
     res.json(payments);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -109,16 +114,25 @@ exports.getPaymentsByPatient = async (req, res) => {
 
 exports.getPaymentByAppointment = async (req, res) => {
   try {
-    const payment = await Payment.findOne({
-      appointmentId: req.params.appointmentId
-    });
+    //V03 - fix
+
+    const query = {
+      appointmentId: req.params.appointmentId,
+    };
+
+    // Patients can only search within their own payment records.
+    // Admins can search all records.
+    if (req.user.role === "Patient") {
+      query.patientId = String(req.user.id);
+    }
+
+    const payment = await Payment.findOne(query);
 
     if (!payment) {
-      return res.status(404).json({ message: 'Payment not found' });
+      return res.status(404).json({ message: "Payment not found" });
     }
 
     res.json(payment);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
