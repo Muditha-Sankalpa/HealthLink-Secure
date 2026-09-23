@@ -29,7 +29,7 @@ app.use(passport.initialize());
 
 //V08 - fix
 const loginLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, //temp; org: 15 * 60 * 1000
+    windowMs: 15 * 60 * 1000, 
     limit: 5,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
