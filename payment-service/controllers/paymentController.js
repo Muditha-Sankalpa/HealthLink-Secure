@@ -2,17 +2,25 @@ const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
 const Payment = require("../models/Payment");
+const CONSULTATION_FEE_USD = 50; //v04
 
+//V04 - fix
 exports.createPaymentIntent = async (req, res) => {
   try {
-    const { amount, appointmentId, patientId } = req.body;
+    const appointmentId = String(req.body.appointmentId || "").trim();
 
-    if (!amount || !appointmentId || !patientId) {
-      return res.status(400).json({ message: "Missing required fields" });
+    if (!appointmentId) {
+      return res.status(400).json({
+        message: "appointmentId is required",
+      });
     }
 
+    // Security: never trust payment amount or payer identity from the client.
+    const amount = CONSULTATION_FEE_USD;
+    const patientId = String(req.user.id);
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100, // convert to cents
+      amount: amount * 100,
       currency: "usd",
       metadata: {
         appointmentId,
@@ -20,7 +28,6 @@ exports.createPaymentIntent = async (req, res) => {
       },
     });
 
-    // Save payment as pending
     const payment = new Payment({
       paymentIntentId: paymentIntent.id,
       appointmentId,
@@ -31,28 +38,58 @@ exports.createPaymentIntent = async (req, res) => {
 
     await payment.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      amount,
+      patientId,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
+//v04 - fix
 exports.confirmPayment = async (req, res) => {
   try {
     const { paymentIntentId } = req.body;
 
     if (!paymentIntentId) {
-      return res.status(400).json({ message: "paymentIntentId is required" });
+      return res.status(400).json({
+        message: "paymentIntentId is required",
+      });
+    }
+
+    const query = { paymentIntentId };
+
+    // Patients may only confirm their own payments.
+    // Admins retain access to all payment records.
+    if (req.user.role === "Patient") {
+      query.patientId = String(req.user.id);
+    }
+
+    const payment = await Payment.findOne(query);
+
+    if (!payment) {
+      return res.status(404).json({
+        message: "Payment not found",
+      });
     }
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-    const payment = await Payment.findOne({ paymentIntentId });
+    // Verify that Stripe's data matches the trusted database record.
+    const detailsMatch =
+      paymentIntent.amount === payment.amount * 100 &&
+      paymentIntent.currency === "usd" &&
+      String(paymentIntent.metadata.patientId) === String(payment.patientId) &&
+      String(paymentIntent.metadata.appointmentId) ===
+        String(payment.appointmentId);
 
-    if (!payment) {
-      return res.status(404).json({ message: "Payment not found" });
+    if (!detailsMatch) {
+      return res.status(409).json({
+        message: "Payment integrity validation failed",
+      });
     }
 
     if (paymentIntent.status === "succeeded") {
@@ -63,19 +100,17 @@ exports.confirmPayment = async (req, res) => {
         success: true,
         status: paymentIntent.status,
       });
-
-      //Optional: Call Appointment Service here
-    } else {
-      payment.status = "FAILED";
-      await payment.save();
-
-      return res.json({
-        success: false,
-        status: paymentIntent.status,
-      });
     }
+
+    payment.status = "FAILED";
+    await payment.save();
+
+    return res.json({
+      success: false,
+      status: paymentIntent.status,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
