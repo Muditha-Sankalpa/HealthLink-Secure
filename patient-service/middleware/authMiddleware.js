@@ -17,4 +17,13 @@ const authorizeRole = (...roles) => (req, res, next) => {
   next();
 };
 
-module.exports = { verifyToken, authorizeRole };
+//Internal service key verification middleware (V06)
+const verifyInternalKey = (req, res, next) => {
+  const key = req.headers['x-internal-key'];
+  if (!key || key !== process.env.INTERNAL_SERVICE_KEY) {
+    return res.status(401).json({ message: 'Missing or invalid internal service key' });
+  }
+  next();
+};
+
+module.exports = { verifyToken, authorizeRole, verifyInternalKey };

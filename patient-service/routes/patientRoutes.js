@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { verifyToken, authorizeRole } = require('../middleware/authMiddleware');
+const { verifyToken, authorizeRole, verifyInternalKey } = require('../middleware/authMiddleware');
 const upload = require('../middleware/upload');
 const {
   createProfile, getProfile, updateProfile, updateAvatar,
@@ -23,11 +23,11 @@ router.get('/all', verifyToken, authorizeRole('Admin'), getAllPatients);
 router.get('/stats', verifyToken, authorizeRole('Admin'), getStats);
 router.put('/:id/status', verifyToken, authorizeRole('Admin'), updateStatus);
 
-// Internal (service-to-service) — no auth
-router.get('/:id', getPatientById);
+// Internal (service-to-service) — requires x-internal-key (V06)
+router.get('/:id', verifyInternalKey, getPatientById);
 
-// Internal lookup by userId (no auth)
-router.get('/internal/by-user/:userId', async (req, res) => {
+// Internal lookup by userId - requires x-internal-key (V06)
+router.get('/internal/by-user/:userId', verifyInternalKey, async (req, res) => {
   const Patient = require('../models/Patient');
   try {
     const patient = await Patient.findOne({ userId: req.params.userId })

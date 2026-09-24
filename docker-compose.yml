@@ -9,11 +9,10 @@ services:
     networks:
       - healthnet
 
+  # Host port removed (V06) — patient-service is reachable only via api-gateway over the internal Docker network (healthnet), not directly from the host.
   patient-service:
     build: ./patient-service
     container_name: patient-service
-    ports:
-      - "5001:5001"
     env_file:
       - ./patient-service/.env
     environment:

@@ -1,6 +1,6 @@
 const NOTIFICATION_SERVICE_URL = 'http://localhost:5007/api/notifications';
-const PATIENT_SERVICE_URL      = 'http://localhost:5001/api/patients'; // patient-service (no-auth internal route)
-const DOCTOR_SERVICE_URL       = 'http://localhost:5002/api/doctors';
+const PATIENT_SERVICE_URL = 'http://patient-service:5001/api/patients'; // patient-service (no-auth internal route)
+const DOCTOR_SERVICE_URL = 'http://doctor-service:5002/api/doctors';
 
 const Appointment = require('../models/Appointment');
 const TimeSlot    = require('../models/TimeSlot');
@@ -13,14 +13,20 @@ const axios = require('axios');
 
 /**
  * Fetch full patient profile from patient-service.
- * Uses the unauthenticated internal GET /:id route (patientRoutes.js).
- * Returns a safe fallback so a failed lookup never blocks the main action.
+ * Uses the internal GET /internal/by-user/:userId (patientRoutes.js).
  */
+
+// Internal (service-to-service) call to patient-service — requires x-internal-key (V06)
 const fetchPatient = async (userId) => {
     try {
-        const res = await axios.get(`${PATIENT_SERVICE_URL}/internal/by-user/${userId}`);
+        const res = await axios.get(
+            `${PATIENT_SERVICE_URL}/internal/by-user/${userId}`,
+            { headers: { 'x-internal-key': process.env.INTERNAL_SERVICE_KEY } }
+        );
         return res.data;
-    } catch {
+    } catch (err) {
+        // Logged instead of failing silently, so a bad/missing INTERNAL_SERVICE_KEY or a down patient-service is visible during testing (V06 follow-up note).
+        console.error('fetchPatient failed:', err.message);
         return { name: 'Patient', email: null, contactNumber: null, notificationPreference: ['email'] };
     }
 };
