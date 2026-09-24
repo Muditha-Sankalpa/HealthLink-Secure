@@ -195,9 +195,10 @@ const viewPatientReports = async (req, res) => {
     const { id: patientId } = req.params;
     
     // Call Patient Service to fetch reports
+    //Internal (service-to-service) call to patient-service — requires x-internal-key (V06)
     const response = await axios.get(
-      `http://localhost:5001/api/patients/${patientId}`,
-      { headers: { Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}` } }
+      `http://patient-service:5001/api/patients/${patientId}`,
+      { headers: { 'x-internal-key': process.env.INTERNAL_SERVICE_KEY } }
     );
     
     res.json({ message: 'Patient verified', patient: response.data });
