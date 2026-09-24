@@ -3,5 +3,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --production
 COPY . .
+
+#V13 FIX: run as the built-in-non-root "node" user instead of root.
+RUN chown -R node:node /app
+USER node
+
 EXPOSE 5003
 CMD ["node", "index.js"]

@@ -13,10 +13,32 @@ spec:
       labels:
         app: doctor-service
     spec:
+      # V13 fix: pod-level default — enforce non-root regardless of what
+      # the image itself does.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: doctor-service
           image: doctor-service:latest
           imagePullPolicy: Never
+          # V13 fix: no ceiling meant a compromised or runaway container
+          # could exhaust the node's CPU/memory and starve every other
+          # service scheduled on it.
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 5002
           env:

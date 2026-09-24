@@ -13,10 +13,32 @@ spec:
       labels:
         app: symptom-checker-service
     spec:
+      # V13 fix: pod-level default — enforce non-root regardless of what
+      # the image itself does.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: symptom-checker-service
           image: symptom-checker-service:latest
           imagePullPolicy: Never
+          # This service loads an ML model at startup (scikit-learn), which
+          # is heavier than the plain Node services, so it gets a larger
+          # ceiling than the others.
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 5008
 ---
