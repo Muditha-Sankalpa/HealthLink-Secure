@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/shared/PatientNavbar";
 import { StatCard, TabBar, Button, Card, ErrorMessage } from "../../components/shared";
+import { getToken } from "../../utils/auth";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -9,7 +10,7 @@ const API = "http://localhost:5000/api/appointments";
 
 const authHeaders = () => ({
   "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
+  Authorization: `Bearer ${getToken()}`, //V09
 });
 
 const formatDate = (dateStr) =>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { getUser, logout } from '../../utils/auth';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -63,14 +64,15 @@ const extractDisplayInfo = (token) => {
   return { firstName, role };
 };
 
+//Token lives only in the httpOnly cookie (unreadable by JS). (V09)
 const resolveAuthInfo = (requireAuth, demoUser) => {
   if (!requireAuth) {
     return { isAuthenticated: true, ...(demoUser || { firstName: 'Admin', role: 'Admin' }) };
   }
-  const token = localStorage.getItem('token');
-  if (!token) return { isAuthenticated: false, firstName: '', role: '' };
-  const { firstName, role } = extractDisplayInfo(token);
-  return { isAuthenticated: true, firstName, role };
+  const user = getUser();
+  if (!user) return { isAuthenticated: false, firstName: '', role: '' };
+  const firstName = (user.name || user.firstName || user.email || 'User').split('@')[0].split(/\s+/)[0];
+  return { isAuthenticated: true, firstName, role: user.role || 'User' };
 };
 
 // ---------------------------------------------------------------------------
@@ -104,7 +106,7 @@ const AdminNavbar = ({ requireAuth = false, demoUser }) => {
   if (requireAuth && !userInfo.isAuthenticated) return null;
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout(); // V09
     navigate('/login');
   };
 

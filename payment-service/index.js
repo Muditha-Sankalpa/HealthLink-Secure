@@ -1,11 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser'); //Parse httpOnly auth cookie (V09)
 require('dotenv').config();
 
 const paymentRoutes  = require('./routes/paymentRoutes');
 
 const app = express();
+app.use(cookieParser()); //Enables req.cookies (V09)
 app.use(cors({
     origin: 'http://localhost:5173',
     allowedHeaders: ['Content-Type', 'Authorization'],

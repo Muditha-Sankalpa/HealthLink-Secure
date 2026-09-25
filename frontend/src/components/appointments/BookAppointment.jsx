@@ -5,6 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import API from '../../api/axiosClient';
 import { PaymentFormInner } from "../payments/PaymentForm";
+import { getToken } from '../../utils/auth';
 
 // ── Step indicator ────────────────────────────────────────────────────────────
 const steps = ["Details", "Review", "Payment", "Confirmed"];
@@ -150,7 +151,7 @@ export default function BookAppointment() {
     if (form.doctorId && form.date) {
       const fetchSlotPreview = async () => {
         try {
-          const token = localStorage.getItem("token");
+          const token = getToken();
           const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/appointments/check-slot?doctorId=${form.doctorId}&date=${form.date}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
@@ -247,7 +248,7 @@ export default function BookAppointment() {
     setError("");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();;
 
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/appointments/book`, {
         method: "POST",

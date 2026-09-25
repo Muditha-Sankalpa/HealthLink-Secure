@@ -9,6 +9,7 @@ import {
   COLORS, inputStyle, Field, PrimaryButton, SocialButton, Divider,
   IconEmail, IconLock, IconArrowRight, IconGoogle, IconGitHub,
 } from "./authTheme";
+import { setToken, logout } from '../../utils/auth';
 
 // Maps role to the function that checks whether their profile exists
 const PROFILE_CHECKERS = {
@@ -34,8 +35,8 @@ export default function LoginPanel({ onSwitch, onResumeProfile }) {
     try {
       setError("");
       const data = await loginUser({ email, password });
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      setToken(data.token); //V09
+      localStorage.setItem("user", JSON.stringify(data.user)); //non-sensitive display info only.
 
       const role = data?.user?.role;
       const checkProfile = PROFILE_CHECKERS[role];
@@ -51,7 +52,7 @@ export default function LoginPanel({ onSwitch, onResumeProfile }) {
           const isDeactivated = status === 403 || String(apiMessage || err?.message || "").toLowerCase().includes("deactivated");
 
           if (isDeactivated) {
-            localStorage.removeItem("token");
+            logout(); //Clears in-memory token with user.
             localStorage.removeItem("user");
             setError("Your account has been deactivated. Please contact support.");
             return;
