@@ -1,4 +1,4 @@
-const NOTIFICATION_SERVICE_URL = 'http://localhost:5007/api/notifications';
+const NOTIFICATION_SERVICE_URL = 'http://notification-service:5007/api/notifications';
 const PATIENT_SERVICE_URL = 'http://patient-service:5001/api/patients'; // patient-service (no-auth internal route)
 const DOCTOR_SERVICE_URL = 'http://doctor-service:5002/api/doctors';
 
@@ -46,7 +46,9 @@ const resolveChannels = (preference) => {
  */
 const fireNotification = (endpoint, payload) => {
     axios
-        .post(`${NOTIFICATION_SERVICE_URL}/${endpoint}`, payload)
+        .post(`${NOTIFICATION_SERVICE_URL}/${endpoint}`, payload, {
+            headers: { 'x-internal-key': process.env.INTERNAL_SERVICE_KEY } //internal-service auth (V10)
+        })
         .catch(err => console.error(`[Notification/${endpoint}] failed:`, err.response?.data || err.message));
 };
 
