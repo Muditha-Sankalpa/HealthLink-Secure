@@ -17,7 +17,7 @@ export const getUserRole = () => {
 };
 
 export const isAuthenticated = () => {
-  return !!getToken();
+  return !!getToken() || !!getUser();
 };
 
 export const logout = () => {
