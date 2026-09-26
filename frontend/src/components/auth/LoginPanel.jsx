@@ -19,7 +19,7 @@ const PROFILE_CHECKERS = {
 // Maps role to the dashboard route after successful login + profile check
 const DASHBOARD_ROUTES = {
   Patient: "/patient",
-  Doctor: "/doctor",
+  Doctor: "/doctor/appointments",
   Admin: "/admin/dashboard",
 };
 
