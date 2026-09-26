@@ -76,8 +76,6 @@ services:
   notification-service:
     build: ./notification-service
     container_name: notification-service
-    ports:
-      - "5007:5007"
     env_file:
       - ./notification-service/.env
     networks:

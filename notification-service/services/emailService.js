@@ -8,6 +8,15 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Escape user-supplied fields before interpolating into HTML templates so injected markup renders as literal text, not live HTML. (V10)
+const escapeHTML = (str = '') =>
+  String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
 // ── Shared branded email shell ──────────────────────────────────────────────
 // Every notification uses this — just pass a title, body HTML, and optional footer note
 const buildEmailHTML = ({ title, bodyHTML, footerNote = '' }) => `
@@ -121,6 +130,13 @@ const badge = (text, color = '#16A34A', bg = '#F0FDF4', border = '#BBF7D0') => `
 // ── Named template builders ─────────────────────────────────────────────────
 
 const buildAppointmentConfirmedEmail = ({ recipientName, isDoctor, doctorName, patientName, date, time, appointmentType, queueNumber, specialty }) => {
+  // Escape user-controlled fields before use in the template (V10)
+  recipientName = escapeHTML(recipientName);
+  doctorName = escapeHTML(doctorName);
+  patientName = escapeHTML(patientName);
+  specialty = escapeHTML(specialty);
+  appointmentType = escapeHTML(appointmentType);
+
   const person = isDoctor ? patientName : `${doctorName}`;
   const role   = isDoctor ? 'patient' : 'doctor';
 
@@ -164,6 +180,11 @@ const buildAppointmentConfirmedEmail = ({ recipientName, isDoctor, doctorName, p
 };
 
 const buildCancellationEmail = ({ recipientName, isDoctor, doctorName, patientName, date, time }) => {
+  // Escape user-controlled fields before use in the template (V10)
+  recipientName = escapeHTML(recipientName);
+  doctorName = escapeHTML(doctorName);
+  patientName = escapeHTML(patientName);
+
   const bodyHTML = `
     <p style="margin:0 0 20px;font-size:15px;color:#4A5280;line-height:1.7;">
       Hi <strong style="color:#122056;">${recipientName}</strong>,<br/>
@@ -195,6 +216,11 @@ const buildCancellationEmail = ({ recipientName, isDoctor, doctorName, patientNa
 };
 
 const buildRescheduleEmail = ({ recipientName, isDoctor, doctorName, patientName, newDate, newTime }) => {
+  // Escape user-controlled fields before use in the template (V10)
+  recipientName = escapeHTML(recipientName);
+  doctorName = escapeHTML(doctorName);
+  patientName = escapeHTML(patientName);
+
   const bodyHTML = `
     <p style="margin:0 0 20px;font-size:15px;color:#4A5280;line-height:1.7;">
       Hi <strong style="color:#122056;">${recipientName}</strong>,<br/>
@@ -220,6 +246,9 @@ const buildRescheduleEmail = ({ recipientName, isDoctor, doctorName, patientName
 };
 
 const buildDoctorVerificationEmail = ({ doctorName, approved }) => {
+  // Escape user-controlled fields before use in the template (V10)
+  doctorName = escapeHTML(doctorName);
+
   const bodyHTML = `
     <p style="margin:0 0 20px;font-size:15px;color:#4A5280;line-height:1.7;">
       Hi <strong style="color:#122056;">Dr. ${doctorName}</strong>,<br/>
@@ -252,6 +281,12 @@ const buildDoctorVerificationEmail = ({ doctorName, approved }) => {
 };
 
 const buildSessionLinkEmail = ({ recipientName, isDoctor, doctorName, patientName, sessionDate, sessionTime, sessionLink }) => {
+  // Escape user-controlled name fields before use in the template (V10).
+  // sessionLink is left as-is (it's a server-generated URL used in an href, not free text, and HTML-escaping it would corrupt the link.)
+  recipientName = escapeHTML(recipientName);
+  doctorName = escapeHTML(doctorName);
+  patientName = escapeHTML(patientName);
+
   const bodyHTML = `
     <p style="margin:0 0 20px;font-size:15px;color:#4A5280;line-height:1.7;">
       Hi <strong style="color:#122056;">${recipientName}</strong>,<br/>
