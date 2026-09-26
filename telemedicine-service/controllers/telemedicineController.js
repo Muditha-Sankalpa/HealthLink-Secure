@@ -2,7 +2,7 @@
 const TelemedicineSession = require('../models/TelemedicineSession');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
-const NOTIFICATION_SERVICE_URL = 'http://localhost:5007/api/notifications';
+const NOTIFICATION_SERVICE_URL = 'http://notification-service:5007/api/notifications';
 
 // Get All Sessions (with optional filters)
 // exports.getAllSessions = async (req, res) => {
@@ -110,6 +110,8 @@ exports.createSession = async (req, res) => {
       sessionLink:  session.meetingLink,
       sessionDate,
       sessionTime
+    }, {
+      headers: { 'x-internal-key': process.env.INTERNAL_SERVICE_KEY } //internal-service auth (V10)
     }).catch(err => {
       console.error('[Notification] session email failed:', err.message);
       console.error('[Notification] response data:', err.response?.data);
