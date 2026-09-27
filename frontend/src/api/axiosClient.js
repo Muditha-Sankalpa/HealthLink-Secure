@@ -9,18 +9,18 @@ const axiosClient = axios.create({
   withCredentials: true, //always send the httpOnly cookie as a fallback
 });
 
-const COOKIE_AUTH_PATHS = ['/auth', '/patients', '/doctors', '/payment'];
-
 axiosClient.interceptors.request.use((config) => {
-  const usesCookieAuth = COOKIE_AUTH_PATHS.some((p) => config.url?.includes(p));
-
-  if (!usesCookieAuth) {
-    const token = getToken();
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    // appointment/telemedicine now also get the cookie automatically via withCredentials above.
-    // Bearer users get both (server prefers header),
-    // OAuth users fall back to the cookie since they have no in-memory token.
-  }
+  // Always attach the header when we have an in-memory token, regardless of
+  // path — a previous version skipped this for /auth, /patients, /doctors,
+  // /payment on the assumption those routes rely solely on the httpOnly
+  // cookie, but a normal email/password login never sets that cookie (only
+  // the Google OAuth callback does), so that logic silently sent no valid
+  // credential at all for non-OAuth users and broke every login.
+  // Bearer users get both (server prefers header per each service's
+  // authMiddleware — checks header first, cookie as fallback).
+  // OAuth users fall back to the cookie since they have no in-memory token.
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
