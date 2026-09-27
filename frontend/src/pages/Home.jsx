@@ -182,10 +182,12 @@ export default function Home() {
   }, []);
 
   const token = localStorage.getItem("token");
-  const isLoggedIn = !!token;
+  const user = localStorage.getItem("user");
+  const isLoggedIn = !!token || !!user;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/");
   };
 

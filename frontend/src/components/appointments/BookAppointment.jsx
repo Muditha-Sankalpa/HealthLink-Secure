@@ -153,7 +153,8 @@ export default function BookAppointment() {
         try {
           const token = getToken();
           const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/appointments/check-slot?doctorId=${form.doctorId}&date=${form.date}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            credentials: "include",
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
           });
           if (res.ok) {
             const data = await res.json();
@@ -248,13 +249,14 @@ export default function BookAppointment() {
     setError("");
 
     try {
-      const token = getToken();;
+      const token = getToken();
 
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/appointments/book`, {
         method: "POST",
+        credentials: "include", // OAuth/V09: send the httpOnly cookie as a fallback
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}), // only attach when a real Bearer token exists
         },
         body: JSON.stringify({
           doctorId: form.doctorId,

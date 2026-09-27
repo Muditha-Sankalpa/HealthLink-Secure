@@ -8,10 +8,13 @@ import { getToken } from "../../utils/auth";
 
 const API = "http://localhost:5000/api/appointments";
 
-const authHeaders = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${getToken()}`, //V09
-});
+const authHeaders = () => {
+  const token = getToken();
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}), // V09/OAuth: only attach when a real token exists; httpOnly cookie covers OAuth sessions
+  };
+};
 
 const formatDate = (dateStr) =>
   new Date(dateStr).toLocaleDateString("en-LK", {
@@ -75,6 +78,7 @@ const RescheduleModal = ({ appointment, onClose, onSave }) => {
     try {
       const res = await fetch(`${API}/${appointment._id}`, {
         method: "PUT",
+        credentials: "include",
         headers: authHeaders(),
         body: JSON.stringify({ date, notes }),
       });
@@ -155,7 +159,9 @@ const AppointmentCard = ({ appt, onCancel, onReschedule }) => {
     setCancelling(true);
     try {
       const res = await fetch(`${API}/${appt._id}/cancel`, {
-        method: "PUT", headers: authHeaders(),
+        method: "PUT",
+        credentials: "include",
+        headers: authHeaders(),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -290,7 +296,10 @@ export default function PatientAppointments() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API}/my-appointments`, { headers: authHeaders() });
+      const res = await fetch(`${API}/my-appointments`, {
+        credentials: "include",
+        headers: authHeaders(),
+      });
       if (res.status === 401) { navigate("/login"); return; }
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to load appointments");
