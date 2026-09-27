@@ -1,3 +1,4 @@
+import OAuthSuccess from './components/auth/OAuthSuccess';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Home from './pages/Home';
@@ -25,6 +26,7 @@ function App() {
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
 
         {/* Patient-only routes */}
         <Route path="/patient" element={

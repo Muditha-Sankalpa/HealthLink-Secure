@@ -138,7 +138,7 @@ const getHistory = async (req, res) => {
     try {
       const doctorRes = await axios.get(
         `${DOCTOR_SERVICE_URL}/api/doctors/prescriptions/patient/${patient._id}`,
-        { headers: { Authorization: req.headers.authorization } }
+        { headers: { Authorization: `Bearer ${req.rawToken}` } } // Forward the token to doctor-service (V09)
       );
       prescriptions = doctorRes.data;
     } catch {
@@ -151,7 +151,7 @@ const getHistory = async (req, res) => {
     try {
       const teleRes = await axios.get(
         `${TELEMEDICINE_SERVICE_URL}/api/telemedicine?status=COMPLETED`,
-        { headers: { Authorization: req.headers.authorization } }
+        { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
       );
       consultations = teleRes.data;
     } catch (err) {
@@ -172,7 +172,7 @@ const getScheduledSessions = async (req, res) => {
 
     const teleRes = await axios.get(
       `${TELEMEDICINE_SERVICE_URL}/api/telemedicine?status=SCHEDULED`,
-      { headers: { Authorization: req.headers.authorization } }
+      { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
     );
     console.log('Tele response:', teleRes.data);
     res.json(teleRes.data);

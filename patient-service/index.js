@@ -1,10 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser'); //parse httpOnly auth cookie (V09)
 require('dotenv').config();
 const patientRoutes = require('./routes/patientRoutes');
 
 const app = express();
+app.use(cookieParser()); //Enables req. cookies (V09)
 
 app.use(cors({
   origin: 'http://localhost:5173',

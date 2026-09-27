@@ -1,4 +1,3 @@
-// frontend/src/components/auth/DoctorRoute.jsx
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { getProfile as getDoctorProfile } from "../../api/doctorApi";
@@ -7,9 +6,7 @@ export default function DoctorRoute({ children }) {
   const [status, setStatus] = useState("checking");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) { setStatus("unauth"); return; }
-
+    //Doctor-service authenticates via httpOnly cookie now, not the in-memory Bearer token — We no longer gate on getToken() here. (V09)
     getDoctorProfile()
       .then(() => setStatus("ok"))
       .catch((err) => {

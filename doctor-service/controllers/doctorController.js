@@ -68,8 +68,8 @@ const getAppointments = async (req, res) => {
     
     // Call Appointment Service to get appointments for this doctor
     const response = await axios.get(
-      `http://localhost:5003/api/appointments/admin/appoinments?doctorId=${doctor._id}`,
-      { headers: { Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}` } }
+      `http://appointment-service:5003/api/appointments/doctor/${doctor._id}`,
+      { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
     );
     
     res.json(response.data);
@@ -91,9 +91,9 @@ const updateAppointmentStatus = async (req, res) => {
 
     // Call Appointment Service to update status
     const response = await axios.put(
-      `http://localhost:5003/api/appointments/${id}/cancel`,// Reuse cancel endpoint or add new one
+      `http://appointment-service:5003/api/appointments/${id}/status`,
       { status },
-      { headers: { Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}` } }
+      { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
     );
     
     res.json({ message: `Appointment ${status}`, appointment: response.data.appointment });
@@ -220,9 +220,9 @@ const startTelemedicineSession = async (req, res) => {
 
     // Call Telemedicine Service to create room
     const response = await axios.post(
-      'http://localhost:5004/api/telemedicine/create-room',
+      'http://telemedicine-service:5004/api/telemedicine/create-room',
       { doctorId: doctor._id, appointmentId },
-      { headers: { Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}` } }
+      { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
     );
     
     res.json({ roomUrl: response.data.roomUrl, roomId: response.data.roomId });
@@ -246,9 +246,9 @@ const acceptConsultation = async (req, res) => {
     const newStatus = accept ? 'Confirmed' : 'Rejected';
     
     const appointmentResponse = await axios.put(
-      `http://localhost:5003/api/appointments/${appointmentId}/status`,
+      `http://appointment-service:5003/api/appointments/${appointmentId}/status`,
       { status: newStatus },
-      { headers: { Authorization: `Bearer ${req.headers.authorization?.split(' ')[1]}` } }
+      { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
     );
     
     let sessionData = null;
@@ -256,14 +256,14 @@ const acceptConsultation = async (req, res) => {
     // If accepted, create telemedicine session via teammate's service
     if (accept) {
       const teleResponse = await axios.post(
-        'http://localhost:5004/api/telemedicine/create', // ← Match teammate's route exactly
+        'http://telemedicine-service:5004/api/telemedicine/create', // ← Match teammate's route exactly
         {
           appointmentId,
           doctorId: doctor._id,
           patientId: appointmentResponse.data.appointment.patientId,
           scheduledTime: appointmentResponse.data.appointment.date
         },
-        { headers: { Authorization: `Bearer ${req.headers.authorization?.split(' ')[1]}` } }
+        { headers: { Authorization: `Bearer ${req.rawToken}` } } // V09
       );
       sessionData = teleResponse.data;
     }

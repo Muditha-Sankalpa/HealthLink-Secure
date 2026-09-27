@@ -5,6 +5,7 @@ import { ErrorMessage } from "../shared";
 import {
   COLORS, IconUser, IconStethoscope,
 } from "./authTheme";
+import { setToken } from '../../utils/auth';
 
 const RoleCard = ({ title, subtitle, icon, onClick, loading }) => {
   const [hovered, setHovered] = useState(false);
@@ -47,8 +48,8 @@ export default function RoleSelectPanel({ regData, onBack, onRegistered }) {
       setLoading(true);
       await registerUser({ ...regData, role: selectedRole });
       const data = await loginUser({ email: regData.email, password: regData.password });
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      setToken(data.token);
+      localStorage.setItem("user", JSON.stringify(data.user)); // non-sensitive display info only
       onRegistered(selectedRole);
     } catch (err) {
       setError(err?.response?.data?.message || err?.message || "Something went wrong");

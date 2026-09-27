@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { getUser, logout } from '../../utils/auth';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -63,14 +64,19 @@ const extractDisplayInfo = (token) => {
   return { firstName, role };
 };
 
+//V09
 const resolveAuthInfo = (requireAuth, demoUser) => {
   if (!requireAuth) {
     return { isAuthenticated: true, ...(demoUser || { firstName: 'Patient', role: 'Patient' }) };
   }
-  const token = localStorage.getItem('token');
-  if (!token) return { isAuthenticated: false, firstName: '', role: '' };
-  const { firstName, role } = extractDisplayInfo(token);
-  return { isAuthenticated: true, firstName, role };
+
+  // OAuth-fix (V09): read from the stored user object — works for both
+  // Bearer-token and cookie/OAuth logins — instead of decoding a JWT that
+  // OAuth users never have in localStorage.
+  const user = getUser();
+  if (!user) return { isAuthenticated: false, firstName: '', role: '' };
+  const firstName = (user.name || user.firstName || user.email || 'User').split('@')[0].split(/\s+/)[0];
+  return { isAuthenticated: true, firstName, role: user.role || 'User' };
 };
 
 // ---------------------------------------------------------------------------
@@ -104,7 +110,7 @@ const PatientNavbar = ({ requireAuth = true, demoUser }) => {
   if (requireAuth && !userInfo.isAuthenticated) return null;
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout(); // V09
     navigate('/');
   };
 

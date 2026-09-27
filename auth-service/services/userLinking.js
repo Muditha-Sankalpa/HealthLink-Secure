@@ -41,6 +41,31 @@ async function findOrCreateGoogleUser({ email, name }) {
     });
 
     await newUser.save();
+
+    // Provision a bare Patient profile so a first-time Google sign-in isn't
+    // left with an authenticated User but no profile record (patient-service
+    // owns Patient documents in its own DB, so this is a service-to-service
+    // call via the shared internal key — same boundary pattern as V06/V10).
+    try {
+        await fetch(`${process.env.PATIENT_SERVICE_URL}/api/patients/internal/provision`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-internal-key': process.env.INTERNAL_SERVICE_KEY,
+            },
+            body: JSON.stringify({
+                userId: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+            }),
+        });
+    } catch (err) {
+        // Don't fail the whole sign-in if patient-service is briefly
+        // unreachable — the user can retry, and /profile GET will 404
+        // until provisioning succeeds, same as today's known gap.
+        console.error('Failed to provision Patient profile for OAuth user:', err.message);
+    }
+
     return newUser;
 }
 

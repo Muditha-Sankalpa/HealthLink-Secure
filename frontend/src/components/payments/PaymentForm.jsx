@@ -13,7 +13,7 @@ import API from '../../api/axiosClient';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Initialize Stripe outside of the component to avoid re-initializing on every render
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '' /*process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY*/);
 
 export const PaymentFormInner = ({ appointmentData, onSuccess }) => {
     if (!appointmentData) {

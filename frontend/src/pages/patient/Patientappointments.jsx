@@ -2,15 +2,19 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/shared/PatientNavbar";
 import { StatCard, TabBar, Button, Card, ErrorMessage } from "../../components/shared";
+import { getToken } from "../../utils/auth";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const API = "http://localhost:5000/api/appointments";
 
-const authHeaders = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
-});
+const authHeaders = () => {
+  const token = getToken();
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}), // V09/OAuth: only attach when a real token exists; httpOnly cookie covers OAuth sessions
+  };
+};
 
 const formatDate = (dateStr) =>
   new Date(dateStr).toLocaleDateString("en-LK", {
@@ -74,6 +78,7 @@ const RescheduleModal = ({ appointment, onClose, onSave }) => {
     try {
       const res = await fetch(`${API}/${appointment._id}`, {
         method: "PUT",
+        credentials: "include",
         headers: authHeaders(),
         body: JSON.stringify({ date, notes }),
       });
@@ -154,7 +159,9 @@ const AppointmentCard = ({ appt, onCancel, onReschedule }) => {
     setCancelling(true);
     try {
       const res = await fetch(`${API}/${appt._id}/cancel`, {
-        method: "PUT", headers: authHeaders(),
+        method: "PUT",
+        credentials: "include",
+        headers: authHeaders(),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -289,7 +296,10 @@ export default function PatientAppointments() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API}/my-appointments`, { headers: authHeaders() });
+      const res = await fetch(`${API}/my-appointments`, {
+        credentials: "include",
+        headers: authHeaders(),
+      });
       if (res.status === 401) { navigate("/login"); return; }
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to load appointments");
