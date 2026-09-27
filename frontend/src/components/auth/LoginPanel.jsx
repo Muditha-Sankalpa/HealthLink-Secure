@@ -93,7 +93,13 @@ export default function LoginPanel({ onSwitch, onResumeProfile }) {
       </PrimaryButton>
       <Divider />
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <SocialButton icon={<IconGoogle />}>Continue with Google</SocialButton>
+        {/* OAuth: full page navigation required (not axios) so Google's consent screen loads */}
+        <SocialButton
+          icon={<IconGoogle />}
+          onClick={() => { window.location.href = 'http://localhost:5000/api/auth/google'; }}
+        >
+          Continue with Google
+        </SocialButton>
         <SocialButton icon={<IconGitHub />}>Continue with GitHub</SocialButton>
       </div>
       <br />

@@ -69,6 +69,10 @@ const resolveAuthInfo = (requireAuth, demoUser) => {
   if (!requireAuth) {
     return { isAuthenticated: true, ...(demoUser || { firstName: 'Patient', role: 'Patient' }) };
   }
+
+  // OAuth-fix (V09): read from the stored user object — works for both
+  // Bearer-token and cookie/OAuth logins — instead of decoding a JWT that
+  // OAuth users never have in localStorage.
   const user = getUser();
   if (!user) return { isAuthenticated: false, firstName: '', role: '' };
   const firstName = (user.name || user.firstName || user.email || 'User').split('@')[0].split(/\s+/)[0];

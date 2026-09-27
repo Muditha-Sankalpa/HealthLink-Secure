@@ -39,4 +39,18 @@ router.get('/internal/by-user/:userId', verifyInternalKey, async (req, res) => {
   }
 });
 
+// Internal — creates a bare Patient profile for a new OAuth user (auth-service only)
+router.post('/internal/provision', verifyInternalKey, async (req, res) => {
+  const Patient = require('../models/Patient');
+  try {
+    const { userId, name, email } = req.body;
+    const existing = await Patient.findOne({ userId });
+    if (existing) return res.status(200).json(existing);
+    const patient = await Patient.create({ userId, name, email });
+    res.status(201).json(patient);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

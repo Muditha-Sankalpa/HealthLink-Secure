@@ -132,10 +132,11 @@ export const PrimaryButton = ({ children, color = COLORS.accent, icon, onClick, 
   );
 };
 
-export const SocialButton = ({ children, icon }) => {
+export const SocialButton = ({ children, icon, onClick }) => {
   const [hovered, setHovered] = useState(false);
   return (
     <button
+      onClick={onClick}
       style={{
         height: 40,
         border: "1.5px solid " + (hovered ? COLORS.accent : COLORS.border),
