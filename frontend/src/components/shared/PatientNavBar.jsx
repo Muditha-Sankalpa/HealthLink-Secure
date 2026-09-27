@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { getUser } from '../../utils/auth'; 
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -67,10 +68,12 @@ const resolveAuthInfo = (requireAuth, demoUser) => {
   if (!requireAuth) {
     return { isAuthenticated: true, ...(demoUser || { firstName: 'Patient', role: 'Patient' }) };
   }
-  const token = localStorage.getItem('token');
-  if (!token) return { isAuthenticated: false, firstName: '', role: '' };
-  const { firstName, role } = extractDisplayInfo(token);
-  return { isAuthenticated: true, firstName, role };
+
+// OAuth-fix: read from the stored user object (works for both Bearer-token and cookie/OAuth logins) instead of decoding a JWT from localStorage, which OAuth users never have.
+const user = getUser();
+if (!user) return { isAuthenticated: false, firstName: '', role: '' };
+const firstName = user.name?.split(' ')[0] || 'Patient';
+return { isAuthenticated: true, firstName, role: user.role };
 };
 
 // ---------------------------------------------------------------------------

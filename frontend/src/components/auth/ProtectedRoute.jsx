@@ -61,11 +61,23 @@ export default function ProtectedRoute({ children, allowedRoles, requireProfile 
 
   // 4. Still checking
   if (profileStatus === 'checking') {
-    return <div style={{ padding: 40 }}>Loading...</div>;
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'system-ui, sans-serif',
+        background: '#f8f9fb',
+      }}>
+        <p style={{ color: '#1d4ed8', fontSize: 17, fontWeight: 700 }}>Loading…</p>
+      </div>
+    );
   }
 
-  // 5. Profile missing, bounce to login which will resume the wizard
-  if (profileStatus === 'missing' || profileStatus === 'deactivated' || profileStatus === 'error') {
+  // 5. Deactivated or unexpected error, bounce to login. A missing profile (404) is NOT treated as fatal here — it's the expected first-login
+  // state for OAuth users, and falls through to render children so PatientDashboard.jsx's bootstrapProfileIfMissing() can create it.
+  if (profileStatus === 'deactivated' || profileStatus === 'error') {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     return <Navigate to="/login" replace />;

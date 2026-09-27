@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser'); 
 require('dotenv').config();
 const patientRoutes = require('./routes/patientRoutes');
 
@@ -12,6 +13,7 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(cookieParser());
 app.use(express.json());
 app.use('/api/patients', patientRoutes);
 

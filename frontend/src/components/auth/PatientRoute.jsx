@@ -7,9 +7,9 @@ export default function PatientRoute({ children }) {
   const [status, setStatus] = useState("checking");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) { setStatus("unauth"); return; }
-
+    // V09/OAuth: don't gate on localStorage token — Bearer-token users and
+    // cookie/OAuth-authenticated users both hit this check, so let the API
+    // call itself determine auth status instead of assuming a token exists.
     getPatientProfile()
       .then(() => setStatus("ok"))
       .catch((err) => {

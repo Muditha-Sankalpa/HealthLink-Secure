@@ -14,20 +14,47 @@ export default function OAuthSuccess() {
         return res.json();
       })
       .then((user) => {
-        // /auth/me confirms identity via the httpOnly cookie set by
-        // auth-service's OAuth callback. Store the non-sensitive display
-        // info the rest of the app expects (matches utils/auth.js's
-        // existing getUser()/getUserRole() pattern).
         localStorage.setItem('user', JSON.stringify(user));
-        // Note: no JWT is stored here (httpOnly cookie only) — route guards
-        // (ProtectedRoute.jsx) currently key off localStorage's 'token' key
-        // for Bearer-header services, which OAuth users won't have. This is
-        // a known limitation flagged for the team, not something to fix here.
+        localStorage.setItem('user', JSON.stringify(user));
         navigate(DASHBOARD_ROUTES[user.role] || '/', { replace: true });
       })
       .catch(() => setError('Google sign-in failed. Please try again.'));
   }, [navigate]);
 
-  if (error) return <div style={{ padding: 40 }}>{error}</div>;
-  return <div style={{ padding: 40 }}>Signing you in…</div>;
+  const containerStyle = {
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'system-ui, sans-serif',
+    background: '#f8f9fb',
+  };
+
+  if (error) {
+    return (
+      <div style={containerStyle}>
+        <p style={{ color: '#dc2626', fontSize: 16, fontWeight: 700 }}>{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={containerStyle}>
+      <div
+        style={{
+          width: 40,
+          height: 40,
+          border: '4px solid #dbeafe',
+          borderTopColor: '#2563eb',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+          marginBottom: 16,
+        }}
+      />
+      <p style={{ color: '#1d4ed8', fontSize: 17, fontWeight: 700 }}>Signing you in…</p>
+      {/* <p style={{ color: '#2563eb', fontSize: 13, fontWeight: 700, marginTop: 4 }}>Loading</p> */}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
 }
